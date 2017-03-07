@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+   >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="?attr/colorPrimary"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Upload"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:gravity="center"/>
+    </android.support.v7.widget.Toolbar>
+    <FrameLayout
+        android:id="@+id/frameHoldContent"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:padding="20dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/gray_border">
+        <ImageView
+            android:src="@android:drawable/ic_menu_camera"
+            android:id="@+id/uploadImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            />
+
+        <RelativeLayout
+            android:id="@+id/layoutDeleteContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+            <ImageView
+                android:id="@+id/imgDeleteContent"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_close"/>
+        </RelativeLayout>
+
+    </FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/uploadBigHash"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        android:background="@drawable/gray_border">
+    </android.support.v7.widget.RecyclerView>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:padding="10dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/gray_border">
+        <EditText
+            android:id="@+id/uploadEditText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:gravity="bottom"
+            android:textSize="20sp"
+            android:lines="7"
+            android:minLines="5"
+            android:hint="하고싶은 말을 적어보세요."/>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/uploadButton"
+        android:layout_width="match_parent"
+        android:background="@drawable/gray_border"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:text="upload"/>
+
+</LinearLayout>

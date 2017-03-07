@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+        android:orientation="horizontal">
+        <EditText
+            android:layout_weight="4"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="2dp"
+            android:hint="단어를 입력해주세요"
+            android:id="@+id/editTextSearchHashtag"
+            android:singleLine="true"/>
+        <Button
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="search"
+            android:background="@drawable/gray_border"
+            android:id="@+id/btnSearchHashtag"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recySearchHashtag">
+        </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:id="@+id/textSearchResultMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="20sp"
+           />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+        android:orientation="horizontal">
+        <EditText
+            android:layout_weight="4"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="2dp"
+            android:hint="친구의 아이디나 이름을 입력해주세요"
+            android:id="@+id/search_friend_editText_in_search_fragment"
+            android:singleLine="true"/>
+        <Button
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="search"
+            android:background="@drawable/gray_border"
+            android:id="@+id/search_friend_imageButton_in_search_fragment"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/firend_recycler">
+    </android.support.v7.widget.RecyclerView>
+    
+
+</LinearLayout>
