@@ -10,64 +10,60 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+
     tools:context="com.example.mk.mysmartsns.activity.LoginActivity">
 
     <ImageView
-        android:layout_weight="2"
-        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="10"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:background="@drawable/sns"
+
         android:id="@+id/imageView"
+        android:focusableInTouchMode="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <LinearLayout
+        android:layout_weight="2"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textStyle="bold"
-            android:fontFamily="monospace"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:text="ID"
-            android:gravity="center"
-            android:textSize="20dp"
-            android:layout_gravity="center"/>
-        <EditText
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:textSize="18dp"
-            android:fontFamily="monospace"
-            android:singleLine="true"
-            android:gravity="center"
-            android:id="@+id/input_id"/>
-        <TextView
-            android:textStyle="bold"
-            android:fontFamily="monospace"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:text="password"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="20dp" />
+        android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <EditText
+            android:background="@drawable/gray_border_for_login"
+            android:hint="ID"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:textSize="18dp"
-            android:gravity="center"
             android:fontFamily="monospace"
             android:singleLine="true"
+            android:gravity="left|center"
+            android:paddingLeft="16dp"
+            android:id="@+id/input_id"/>
+
+        <EditText
+            android:hint="PASSWORD"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:textSize="18dp"
+            android:gravity="left|center"
+            android:paddingLeft="16dp"
+            android:fontFamily="monospace"
+            android:singleLine="true"
+            android:background="@drawable/gray_border_for_password"
             android:id="@+id/input_password"/>
 
     </LinearLayout>
 
     <LinearLayout
+        android:background="#ffffff"
+        android:gravity="center"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -75,15 +71,19 @@
             android:layout_weight="1"
             android:text="login"
             android:textSize="20dp"
+            android:textColor="@color/colorPrimary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="#ffffff"
             android:id="@+id/login_button"/>
         <Button
             android:layout_weight="1"
             android:text="sing up"
             android:textSize="20dp"
+            android:textColor="@color/colorPrimary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="#ffffff"
             android:id="@+id/register_button"/>
 
     </LinearLayout>

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
+import com.example.mk.mysmartsns.model.CallManagement;
 import com.example.mk.mysmartsns.network.SNSService;
 import com.example.mk.mysmartsns.network.ServerController;
 import com.example.mk.mysmartsns.network.info.LoginInfo;
@@ -47,6 +48,10 @@ public class UserManager {
     // Login
     public void requestUserLogin(String id, String pw) {
         SNSService snsService = ServerController.getInstance().getSnsService();
+
+        final CallManagement callManagement = CallManagement.getInstance();
+        callManagement.addCall("requestUserLogin", true);
+
         Call<UserInfo> callLoginUser = snsService.loginUser(new LoginInfo(id, pw));
         callLoginUser.enqueue(new Callback<UserInfo>() {
             @Override
@@ -61,6 +66,7 @@ public class UserManager {
                     if(response.code() == 401)
                         Toast.makeText(context, "아이디 혹은 비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show();
                 }
+                callManagement.subtractCall("requestUserLogin", false);
             }
 
             @Override
@@ -68,6 +74,7 @@ public class UserManager {
                 Log.d(TAG, "requestUserLogin::onFailure() : " + t.getMessage());
                 t.printStackTrace();
                 Toast.makeText(context, "네트워크 상황을 확인하여 주세요", Toast.LENGTH_SHORT).show();
+                callManagement.subtractCall("requestUserLogin", false);
             }
         });
     }
@@ -75,6 +82,10 @@ public class UserManager {
     // register
     public void requestUserRegister(String id, String pw, String name, String gender, String user_profile_url, String user_interest_first, String user_interest_second, String user_interest_third) {
         SNSService snsService = ServerController.getInstance().getSnsService();
+
+        final CallManagement callManagement = CallManagement.getInstance();
+        callManagement.addCall("requestUserRegister", true);
+
         Call<Void> callRegisterUser = snsService.registerUser(new RegisterInfo(id, pw, name, gender, user_profile_url, user_interest_first, user_interest_second, user_interest_third));
         callRegisterUser.enqueue(new Callback<Void>() {
             @Override
@@ -87,11 +98,13 @@ public class UserManager {
                     Log.d(TAG, "requestUserRegister::isNotSuccessful() : " + response.code());
                     Toast.makeText(context, "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();       // 아이디 중복 확인 해야됨
                 }
+                callManagement.subtractCall("requestUserRegister", false);
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.d(TAG, "requestUserRegister::onFailure() : " + t.getMessage());
                 Toast.makeText(context, "네트워크 상황을 확인하여 주세요", Toast.LENGTH_SHORT).show();
+                callManagement.subtractCall("requestUserRegister", false);
             }
         });
     }

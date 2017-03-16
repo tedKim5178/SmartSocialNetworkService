@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.mk.mysmartsns.R;
 import com.example.mk.mysmartsns.config.MyConfig;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
@@ -27,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     Button login_button;
     @Bind(R.id.register_button)
     Button register_button;
+    @Bind(R.id.imageView)
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         // Butterknife bind
         ButterKnife.bind(this);
+        Glide.with(this).load(R.drawable.smart).override(700,550).into(imageView);
+
     }
 
     //on click
