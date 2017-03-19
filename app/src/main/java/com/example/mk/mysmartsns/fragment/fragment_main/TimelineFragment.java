@@ -14,14 +14,12 @@ import com.example.mk.mysmartsns.adapter.EndlessRecyclerOnScrollListener;
 import com.example.mk.mysmartsns.adapter.TimelineAdapter;
 import com.example.mk.mysmartsns.config.MyConfig;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
-import com.example.mk.mysmartsns.model.CallManagement;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
 import com.example.mk.mysmartsns.ztest.ListItems;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 
 /**

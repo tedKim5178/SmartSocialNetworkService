@@ -22,10 +22,10 @@ import com.bumptech.glide.Glide;
 import com.example.mk.mysmartsns.R;
 import com.example.mk.mysmartsns.adapter.InterestsAdapter;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
-import com.example.mk.mysmartsns.model.Interest_item;
 import com.example.mk.mysmartsns.network.info.BigHashInfo;
 import com.example.mk.mysmartsns.network.info.RegisterInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,16 +60,13 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     CheckBox checkbox_for_woman;
 
     InterestsAdapter interestsAdapter;
-
-    ArrayList<Interest_item> itemlist;
-    ArrayList<String> bigHashList;
-
+    ArrayList<Integer> bigHashArrayList;
     RegisterInfo registerInfo;
-
     String imagePath;
     boolean isImageUpload;
-
     ArrayAdapter<String> adapter;
+
+    List<BigHashInfo> bigHashList;
 
 
     @Override
@@ -78,8 +75,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         setContentView(R.layout.activity_register);
         // Butterknife bind
         ButterKnife.bind(this);
-        itemlist = new ArrayList<Interest_item>();
-        bigHashList = new ArrayList<>();
+        bigHashArrayList = new ArrayList<>();
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         recycler_view_in_register.setLayoutManager(linearLayoutManager);
 
@@ -120,18 +116,19 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 //                Log.d(TAG, "[레트로핏테스트1] onFail" + t.getMessage());
 //            }
 //        });
+        ArrayList<Integer> bigList = new ArrayList<>();
 
         // ** Download BigHashInfo
         InteractionManager.getInstance(this).requestContentBighashDownload(new OnMyApiListener() {
             @Override
             public void success(Object response) {
-                List<BigHashInfo> bigHashInfo = (List<BigHashInfo>)response;
-               if(bigHashInfo != null) {
-                   for (int i = 0; i < bigHashInfo.size(); i++) {
-                       Interest_item interest_item= new Interest_item(bigHashInfo.get(i).getBighash_name(), false);
-                       itemlist.add(i, interest_item);
-                   }
-                   interestsAdapter = new InterestsAdapter(getApplicationContext(), itemlist);
+                bigHashList = (List<BigHashInfo>)response;
+                for(int i=0; i<bigHashList.size(); i++){
+                    Log.d(TAG, "listbighash test : " + bigHashList.get(i).getBighash_no() + bigHashList.get(i).getBighash_name() + bigHashList.get(i).getBighash_count());
+                }
+               if(bigHashList != null) {
+
+                   interestsAdapter = new InterestsAdapter(getApplicationContext(), bigHashList);
                    recycler_view_in_register.setAdapter(interestsAdapter);
 
                }
@@ -161,21 +158,22 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 // hash들은 지금 어디에있냐면.... 바로 adapter에 있다...!
                 // 여기서 arraylist 접근해볼까..?
                 int count = 0;
-                for(int i=0; i < itemlist.size(); i++){
+                for(int i=0; i < bigHashList.size(); i++){
                     // 우선 click이 3개인걸 세야됨
-                    if(itemlist.get(i).isClicked() == true){
-                        bigHashList.add(itemlist.get(i).getInterest());
+                    if(bigHashList.get(i).isCheck() == true){
+                        bigHashArrayList.add(bigHashList.get(i).getBighash_no());
                         count = count + 1;
                     }
                 }
                 if(count == 3){
                     // ** User Register
                     Toast.makeText(this, "정상적으로 3개 들어옴", Toast.LENGTH_SHORT).show();
-                    String user_interest_bighash1 = bigHashList.get(0).toString();
-                    String user_interest_bighash2 = bigHashList.get(1).toString();
-                    String user_interest_bighash3 = bigHashList.get(2).toString();
-                    InteractionManager.getInstance(this).requestUserRegister(id, pw, name, gender,user_profile_url, user_interest_bighash1,
-                            user_interest_bighash2, user_interest_bighash3, new OnMyApiListener() {
+
+                    Gson gson = new Gson();
+                    String jsonBigHash = gson.toJson(bigHashArrayList);                             // bighash 정보를 json형태로 바꾼다.
+
+
+                    InteractionManager.getInstance(this).requestUserRegister(id, pw, name, gender,user_profile_url, jsonBigHash, new OnMyApiListener() {
                         @Override
                         public void success(Object response) {
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -190,7 +188,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                     });
                 }else{
                     Toast.makeText(this, "3개 이상 선택해주세요", Toast.LENGTH_SHORT).show();
-                    bigHashList.clear();
+                    bigHashArrayList.clear();
                 }
 
                 break;

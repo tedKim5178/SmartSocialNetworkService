@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -159,23 +158,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "오는지dftest");
         if(requestCode == 888){
             if(resultCode == RESULT_OK){
-                Log.d(TAG, "onActivityReult : here comes");
                 android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.frame_layout, MyTimelineFragment.newInstance(), "nav_my_timeline_fragment");
                 transaction.addToBackStack("");
                 transaction.commit();
             }
         }else if(requestCode == 0){
-            Log.d(TAG, "오는지dftest" + requestCode);
             if(resultCode == RESULT_OK){
-                Log.d(TAG, "오는지dftest" + requestCode);
-//                Log.d(TAG, "오는지test" + data);
                 int position = data.getIntExtra("position", 0);
                 int the_number_of_comment = data.getIntExtra("the_number_of_comments", 0);
-                Log.d(TAG, "오는지 onActiviyResult : " + position + " , " + the_number_of_comment);
                 fragmentManager = getSupportFragmentManager();
                 fragment = fragmentManager.findFragmentById(R.id.frame_layout);
 //                ((TimelineFragment)fragment).setDataChanged(position, the_number_of_comment);

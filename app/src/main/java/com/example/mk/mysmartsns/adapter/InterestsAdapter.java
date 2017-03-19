@@ -3,7 +3,6 @@ package com.example.mk.mysmartsns.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mk.mysmartsns.R;
-import com.example.mk.mysmartsns.model.Interest_item;
+import com.example.mk.mysmartsns.network.info.BigHashInfo;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mk on 2017-02-22.
@@ -22,11 +21,11 @@ import java.util.ArrayList;
 public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.InterestsViewHolder>{
     private static final String TAG = InterestsAdapter.class.getSimpleName();
     Context mContext;
-    ArrayList<Interest_item> arraylist;
+    List<BigHashInfo> bigHashList;
 
-    public InterestsAdapter(Context mContext, ArrayList<Interest_item> arraylist) {
+    public InterestsAdapter(Context mContext, List<BigHashInfo> bigHashList) {
         this.mContext = mContext;
-        this.arraylist = arraylist;
+        this.bigHashList = bigHashList;
     }
 
     @Override
@@ -37,20 +36,20 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.Inte
 
     @Override
     public void onBindViewHolder(InterestsViewHolder holder, int position) {
-        Log.d(TAG, "Position테스트 : " + position);
-        Log.d(TAG, "Position테스트 : " + arraylist.get(position).isClicked());
-        if(arraylist.get(position).isClicked() == false){
-            holder.interest.setText("#" + arraylist.get(position).getInterest() + ", ");
+
+        if(bigHashList.get(position).isCheck() == false){
+            holder.interest.setText("#" + bigHashList.get(position).getBighash_name() + ", ");
             holder.interest.setTextColor(Color.BLACK);
         }else{
-            holder.interest.setText("#" + arraylist.get(position).getInterest() + ", ");
+            holder.interest.setText("#" + bigHashList.get(position).getBighash_name() + ", ");
             holder.interest.setTextColor(Color.BLUE);
         }
     }
 
+
     @Override
     public int getItemCount() {
-        return arraylist.size();
+        return bigHashList.size();
     }
 
     class InterestsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -66,19 +65,19 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.Inte
         public void onClick(View view) {
             int position = getAdapterPosition();
             int count = 0;
-            if(arraylist.get(position).isClicked() == false){
-                for(int i=0; i<arraylist.size(); i++){
-                    if( arraylist.get(i).isClicked() == true){
+            if(bigHashList.get(position).isCheck() == false){
+                for(int i=0; i<bigHashList.size(); i++){
+                    if( bigHashList.get(i).isCheck() == true){
                         count = count + 1;
                     }
                 }
                 if(count == 3){
                     Toast.makeText(mContext, "3개를 모두 선택하셨습니다.", Toast.LENGTH_SHORT).show();
                 }else if(count < 3){
-                    arraylist.get(position).setClicked(true);
+                    bigHashList.get(position).setCheck(true);
                 }
             }else{
-                arraylist.get(position).setClicked(false);
+                bigHashList.get(position).setCheck(false);
             }
             notifyItemChanged(position);
         }
