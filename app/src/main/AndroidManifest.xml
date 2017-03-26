@@ -17,22 +17,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.LoginActivity">
+
+        </activity>
+        <activity android:name=".activity.OriginalImageActivity" />
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:windowSoftInputMode="adjustNothing"></activity>
+        <activity android:name=".activity.CommentActivity" />
+        <activity android:name=".PeopleWhoLikeThisPostActivity" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activity.OtherTimelineActivity" />
+        <activity android:name=".prefetch.PrefetchTestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.OriginalImageActivity" />
-        <activity android:name=".activity.RegisterActivity"
-            android:windowSoftInputMode="adjustNothing">
-        </activity>
-        <activity android:name=".activity.CommentActivity"></activity>
-        <activity android:name=".PeopleWhoLikeThisPostActivity" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity android:name=".activity.OtherTimelineActivity"></activity>
     </application>
 
 </manifest>

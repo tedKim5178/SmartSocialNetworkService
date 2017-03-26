@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.example.mk.mysmartsns.prefetch.PrefetchTestActivity">
+    <Button
+        android:id="@+id/btnStartPrefetch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="start"
+        android:onClick="onPrefetchBtnClick"/>
+
+    <Button
+        android:id="@+id/btnStopPrefetch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="stop"
+        android:onClick="onPrefetchBtnClick"/>
+
+    <Button
+        android:id="@+id/btnChangeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onPrefetchBtnClick"/>
+
+    <TextView
+        android:id="@+id/textPrefetch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="refresh the list"/>
+
+</LinearLayout>
