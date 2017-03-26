@@ -80,13 +80,13 @@ public class UserManager {
     }
 
     // register
-    public void requestUserRegister(String id, String pw, String name, String gender, String user_profile_url, String jsonBigHash) {
+    public void requestUserRegister(String id, String pw, String name, int age, String gender, int user_interest_bighash1,int user_interest_bighash2,int user_interest_bighash3,String user_profile_url) {
         SNSService snsService = ServerController.getInstance().getSnsService();
 
         final CallManagement callManagement = CallManagement.getInstance();
         callManagement.addCall("requestUserRegister", true);
 
-        Call<Void> callRegisterUser = snsService.registerUser(new RegisterInfo(id, pw, name, gender, user_profile_url, jsonBigHash));
+        Call<Void> callRegisterUser = snsService.registerUser(new RegisterInfo(id, pw, name, age, gender, user_interest_bighash1, user_interest_bighash2, user_interest_bighash3, user_profile_url));
         callRegisterUser.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

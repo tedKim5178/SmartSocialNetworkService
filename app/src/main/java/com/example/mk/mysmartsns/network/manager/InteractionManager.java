@@ -25,9 +25,9 @@ public class InteractionManager {
     public void requestUserLogin(String id, String pw, OnMyApiListener listener){
         new UserManager(context,listener).requestUserLogin(id, pw);
     }
-    public void requestUserRegister(String id, String pw, String name, String gender, String user_profile_url,
-                                    String jsonBigHash,OnMyApiListener listener){
-        new UserManager(context, listener).requestUserRegister(id, pw, name, gender, user_profile_url, jsonBigHash);
+    public void requestUserRegister(String id, String pw, String name, int age, String gender, int user_interest_bighash1,
+                                    int user_interest_bighash2, int user_interest_bighash3, String user_profile_url, OnMyApiListener listener){
+        new UserManager(context, listener).requestUserRegister(id, pw, name, age, gender,user_interest_bighash1, user_interest_bighash2, user_interest_bighash3, user_profile_url);
     }
 
     //** To ContentManager

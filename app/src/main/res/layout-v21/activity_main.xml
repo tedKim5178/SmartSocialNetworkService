@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -14,13 +13,26 @@
         android:minHeight="?attr/actionBarSize"
          />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"/>
+
+    <TextView
+        android:id="@+id/progress_bar_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progress_bar"/>
 
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="4"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/progress_bar_tv"
         android:layout_above="@+id/bottom_navigation"
         >
     </FrameLayout>

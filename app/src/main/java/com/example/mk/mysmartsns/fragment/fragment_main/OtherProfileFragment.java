@@ -40,6 +40,7 @@ public class OtherProfileFragment extends android.support.v4.app.Fragment{
     private String user_id;
     private String user_name;
 
+
     public static OtherProfileFragment newInstance(int user_no, String profile_url, String user_name, String user_id) {
         OtherProfileFragment fragment = new OtherProfileFragment();
         Bundle bundle = new Bundle();
@@ -81,7 +82,7 @@ public class OtherProfileFragment extends android.support.v4.app.Fragment{
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        InteractionManager.getInstance(getContext()).requestUserThumbnailContents(MyConfig.myInfo.getUser_no(), MyConfig.myInfo.getUser_no(), new OnMyApiListener() {
+        InteractionManager.getInstance(getContext()).requestUserThumbnailContents(MyConfig.myInfo.getUser_no(), user_no, new OnMyApiListener() {
             @Override
             public void success(Object response) {
                 List<ContentInfo> contentInfoList = (List<ContentInfo>) response;

@@ -8,23 +8,29 @@ public class RegisterInfo {
     public String user_id;
     public String user_pw;
     public String user_name;
+    public int user_age;
     public String user_gender;
-    public String big_hash;
     public String user_profile_url;
+    public int user_interest_bighash1;
+    public int user_interest_bighash2;
+    public int user_interest_bighash3;
 
     public RegisterInfo(){
 
     }
 
-    public RegisterInfo(String id, String password, String name,
-                        String gender, String user_profile_url, String big_hash){
+    public RegisterInfo(String id, String password, String name, int age,
+                        String gender, int user_interest_bighash1, int user_interest_bighash2, int user_interest_bighash3,String user_profile_url){
         // 우선 url 은 뺏다..
         this.user_id = id;
         this.user_pw = password;
         this.user_name = name;
+        this.user_age = age;
         this.user_gender = gender;
         this.user_profile_url = user_profile_url;
-        this.big_hash = big_hash;
+        this.user_interest_bighash1 = user_interest_bighash1;
+        this.user_interest_bighash2 = user_interest_bighash2;
+        this.user_interest_bighash3 = user_interest_bighash3;
     }
 
     public String getUser_id() {
@@ -59,12 +65,36 @@ public class RegisterInfo {
         this.user_gender = user_gender;
     }
 
-    public String getBig_hash() {
-        return big_hash;
+    public int getUser_age() {
+        return user_age;
     }
 
-    public void setBig_hash(String big_hash) {
-        this.big_hash = big_hash;
+    public void setUser_age(int user_age) {
+        this.user_age = user_age;
+    }
+
+    public int getUser_interest_bighash1() {
+        return user_interest_bighash1;
+    }
+
+    public void setUser_interest_bighash1(int user_interest_bighash1) {
+        this.user_interest_bighash1 = user_interest_bighash1;
+    }
+
+    public int getUser_interest_bighash2() {
+        return user_interest_bighash2;
+    }
+
+    public void setUser_interest_bighash2(int user_interest_bighash2) {
+        this.user_interest_bighash2 = user_interest_bighash2;
+    }
+
+    public int getUser_interest_bighash3() {
+        return user_interest_bighash3;
+    }
+
+    public void setUser_interest_bighash3(int user_interest_bighash3) {
+        this.user_interest_bighash3 = user_interest_bighash3;
     }
 
     public String getUser_profile_url() {

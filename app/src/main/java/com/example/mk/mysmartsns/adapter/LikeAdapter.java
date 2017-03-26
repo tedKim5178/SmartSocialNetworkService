@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.mk.mysmartsns.activity.OtherTimelineActivity;
 import com.example.mk.mysmartsns.R;
+import com.example.mk.mysmartsns.activity.OtherTimelineActivity;
 import com.example.mk.mysmartsns.config.MyConfig;
 import com.example.mk.mysmartsns.fragment.fragment_main.MyTimelineFragment;
 import com.example.mk.mysmartsns.network.info.UserInfo;
@@ -103,6 +103,11 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeViewHolder
                         intent.putExtra("user_no", MyConfig.myInfo.getUser_no());
                         intent.putExtra("host_no", String.valueOf(userInfoList.get(getAdapterPosition()).getUser_no()));
                         mContext.startActivity(intent);
+
+//                        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                        transaction.replace(R.id.frame_layout, OtherProfileFragment.newInstance(user_no, profile_url, user_name, user_id), "nav_other_profile_fragment");
+//                        transaction.addToBackStack("");
+//                        transaction.commit();
 
                     }
                     break;

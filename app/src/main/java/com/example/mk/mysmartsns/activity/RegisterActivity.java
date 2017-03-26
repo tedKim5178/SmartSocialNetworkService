@@ -25,7 +25,6 @@ import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.network.info.BigHashInfo;
 import com.example.mk.mysmartsns.network.info.RegisterInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,43 +80,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
         // registerInfo 초기화
         registerInfo = new RegisterInfo();
-
-        // onCreate를 하면서 bighash 정들을 받아와야한다. 그리고 그렇게 받아온 bighas 정보들은
-        // view들에 업데이트 시켜줄 수 있다..!
-//        Retrofit client = new Retrofit.Builder().baseUrl("http://172.16.21.148:3001").addConverterFactory(GsonConverterFactory.create()).build();
-//        SNSService snsService = client.create(SNSService.class);
-//        Call<List<BigHashInfo>> call = snsService.requestBighash();
-//        call.enqueue(new Callback<List<BigHashInfo>>() {
-//            @Override
-//            public void onResponse(Call<List<BigHashInfo>> cll, Response<List<BigHashInfo>> response) {
-//                if(response.isSuccessful()){
-//                    Log.d(TAG, "[레트로핏테스트1] success");
-//                    // response 부분 어떻게 받아와야 되는지 잘 모르겠다.
-//                    // 이렇게 받는게 맞나,..?
-//                    List<BigHashInfo> hashInfo = response.body();
-//
-//                    for(int i=0; i< hashInfo.size(); i++){
-//                        arraylist.add(i, hashInfo.get(i).getBighash_name());
-//                    }
-//
-//                    // 이런식으로 HashInfo에서 데이터를 받아와서 넣어준다.
-////                    arraylist.add("data0");
-////                    arraylist.add("data1");
-////                    arraylist.add("data2");
-////                    arraylist.add("data3");
-//
-//                }else{
-//                    Log.d(TAG, "[레트로핏테스트1] Fail");
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<BigHashInfo>> call, Throwable t) {
-//                Log.d(TAG, "[레트로핏테스트1] onFail" + t.getMessage());
-//            }
-//        });
         ArrayList<Integer> bigList = new ArrayList<>();
-
         // ** Download BigHashInfo
         InteractionManager.getInstance(this).requestContentBighashDownload(new OnMyApiListener() {
             @Override
@@ -169,11 +132,14 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                     // ** User Register
                     Toast.makeText(this, "정상적으로 3개 들어옴", Toast.LENGTH_SHORT).show();
 
-                    Gson gson = new Gson();
-                    String jsonBigHash = gson.toJson(bigHashArrayList);                             // bighash 정보를 json형태로 바꾼다.
-
-
-                    InteractionManager.getInstance(this).requestUserRegister(id, pw, name, gender,user_profile_url, jsonBigHash, new OnMyApiListener() {
+                    int user_interest_bighash1, user_interest_bighash2, user_interest_bighash3=0;
+//                    Gson gson = new Gson();
+//                    String jsonBigHash = gson.toJson(bigHashArrayList);                             // bighash 정보를 json형태로 바꾼다.
+                    user_interest_bighash1 = bigHashArrayList.get(0);
+                    user_interest_bighash2 = bigHashArrayList.get(1);
+                    user_interest_bighash3 = bigHashArrayList.get(2);
+                    int age = 20;
+                    InteractionManager.getInstance(this).requestUserRegister(id, pw, name, age, gender, user_interest_bighash1, user_interest_bighash2, user_interest_bighash3, user_profile_url, new OnMyApiListener() {
                         @Override
                         public void success(Object response) {
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
