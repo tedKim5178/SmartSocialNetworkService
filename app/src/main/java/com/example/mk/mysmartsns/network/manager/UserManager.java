@@ -84,8 +84,6 @@ public class UserManager {
         SNSService snsService = ServerController.getInstance().getSnsService();
 
         final CallManagement callManagement = CallManagement.getInstance();
-        callManagement.addCall("requestUserRegister", true);
-
         Call<Void> callRegisterUser = snsService.registerUser(new RegisterInfo(id, pw, name, age, gender, user_interest_bighash1, user_interest_bighash2, user_interest_bighash3, user_profile_url));
         callRegisterUser.enqueue(new Callback<Void>() {
             @Override
@@ -98,13 +96,11 @@ public class UserManager {
                     Log.d(TAG, "requestUserRegister::isNotSuccessful() : " + response.code());
                     Toast.makeText(context, "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();       // 아이디 중복 확인 해야됨
                 }
-                callManagement.subtractCall("requestUserRegister", false);
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.d(TAG, "requestUserRegister::onFailure() : " + t.getMessage());
                 Toast.makeText(context, "네트워크 상황을 확인하여 주세요", Toast.LENGTH_SHORT).show();
-                callManagement.subtractCall("requestUserRegister", false);
             }
         });
     }

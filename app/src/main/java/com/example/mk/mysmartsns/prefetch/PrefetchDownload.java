@@ -31,19 +31,21 @@ public class PrefetchDownload {
     private AsyncTask asyncTask;
     private boolean asytaskFinished = true;
     private static PrefetchDownload prefetchDownload;
+    ResumeDownloadListener resumeDownloadListener;
 
-
-    public PrefetchDownload() {
+    public PrefetchDownload(ResumeDownloadListener resumeDownloadListener) {
         fileDir = new File(String.valueOf(Environment.getExternalStorageDirectory()) + PrefetchConfig.Local_Name);
         mDownloader = new ResumeDownloader(mDownloader.PAUSE);
-
+        this.resumeDownloadListener = resumeDownloadListener;
     }
 
-    public static PrefetchDownload newInstance() {
-        if(prefetchDownload == null)
-            prefetchDownload = new PrefetchDownload();
+    public static PrefetchDownload newInstance(ResumeDownloadListener resumeDownloadListener) {
+        if(prefetchDownload == null){
+            prefetchDownload = new PrefetchDownload(resumeDownloadListener);
+        }
         return prefetchDownload;
     }
+
 
     /**
      * 인자 url정보, SharePreferences
@@ -58,6 +60,18 @@ public class PrefetchDownload {
         filename = file.substring(0, file.lastIndexOf("."));
         //int progress = settings.getInt(PREFS_KEY_PROGRESS, 0);
         Log.d(TAG, "file extension: " + fileExtension + "; file name: " + filename);
+        return prefetchDownload;
+    }
+
+    public PrefetchDownload initUrl(String urlStr) {
+        this.urlStr = urlStr;
+
+        Log.d(TAG, "file extension: " + fileExtension + ", file name: " + filename);
+        String file = urlStr.substring(urlStr.lastIndexOf("/") + 1);
+        fileExtension = file.substring(file.lastIndexOf("."));
+        filename = file.substring(0, file.lastIndexOf("."));
+        //int progress = settings.getInt(PREFS_KEY_PROGRESS, 0);
+        Log.d(TAG, "file extension: " + fileExtension + ", file name: " + filename);
         return prefetchDownload;
     }
 
@@ -90,11 +104,7 @@ public class PrefetchDownload {
                     }
                     mDownloader.downloadFile(urlStr,
                             (new File(fileDir.getAbsolutePath(), filename + fileExtension)).getAbsolutePath(),
-                            new ResumeDownloadListener() {
-                                public void progressUpdate() {
-//                                    publishProgress();
-                                }
-                            });
+                           resumeDownloadListener);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     Log.d(TAG, "File not found !");
@@ -115,6 +125,9 @@ public class PrefetchDownload {
                 Log.d(TAG, "Async task finished");
                 PrefetchConfig.prefetching_queue.poll();        // 완료된 프레페칭 콘텐츠 큐에서 제거
                 asytaskFinished = true;
+
+                // 콜백
+                resumeDownloadListener.onComplete();
             }
 
             protected void onCancelled() {

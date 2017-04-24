@@ -1,12 +1,15 @@
 package com.example.mk.mysmartsns.network.info;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by mk on 2017-02-05.
  */
 
-public class ContentInfo {
+public class ContentInfo implements Serializable{
+
     private int content_no;
     private String content_desc;
     private String content_url;
@@ -22,6 +25,20 @@ public class ContentInfo {
     private int content_like_flag;          // 추가
     private int content_comment_count;
     List<BigHashInfo> hash_list;
+    List<SmallHashInfo> small_hash_list;
+
+    public ContentInfo(){
+        this.small_hash_list = new ArrayList<>();
+    }
+
+    public List<SmallHashInfo> getSmallHash_list() {
+        return small_hash_list;
+    }
+
+    public void setSmallHash_list(List<SmallHashInfo> smallHash_list) {
+        this.small_hash_list = smallHash_list;
+    }
+
     public String getHost_url(){
         return host_url;
     }

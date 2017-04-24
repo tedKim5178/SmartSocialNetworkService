@@ -11,8 +11,10 @@ import com.example.mk.mysmartsns.network.ServerController;
 import com.example.mk.mysmartsns.network.info.BigHashInfo;
 import com.example.mk.mysmartsns.network.info.CommentInfo;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
+import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
 import com.example.mk.mysmartsns.network.info.SmallHashInfo;
 import com.example.mk.mysmartsns.network.info.UserInfo;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.List;
@@ -39,13 +41,13 @@ public class ContentManager {
         this.listener = listener;
     }
 
-    public void requestAddComment(int user_no, int content_no, String uc_comment_name){
+    public void requestAddComment(int user_no, String host_no, int content_no, String uc_comment_name){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
         final CallManagement callManagement = CallManagement.getInstance();
         callManagement.addCall("requestAddComment", true);
 
-        Call<List<CommentInfo>> callRequestAddComment = snsService.requestAddComment(user_no, content_no, uc_comment_name);
+        Call<List<CommentInfo>> callRequestAddComment = snsService.requestAddComment(user_no, host_no, content_no, uc_comment_name);
         callRequestAddComment.enqueue(new Callback<List<CommentInfo>>() {
             @Override
             public void onResponse(Call<List<CommentInfo>> call, Response<List<CommentInfo>> response) {
@@ -145,13 +147,13 @@ public class ContentManager {
     }
 
     // download the original image
-    public void requestContentOriginalDownload(String thumnbail_url){
+    public void requestContentOriginalDownload(String thumnbail_url, String bigHashInfo, String smallHashInfo, int user_no){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
         final CallManagement callManagement = CallManagement.getInstance();
         callManagement.addCall("requestContentOriginalDownload", true);
 
-        Call<ContentInfo> callRequestOriginContent = snsService.requestOriginContent(thumnbail_url);
+        Call<ContentInfo> callRequestOriginContent = snsService.requestOriginContent(thumnbail_url, bigHashInfo, smallHashInfo, user_no);
         callRequestOriginContent.enqueue(new Callback<ContentInfo>() {
             @Override
             public void onResponse(Call<ContentInfo> call, Response<ContentInfo> response) {
@@ -297,8 +299,9 @@ public class ContentManager {
                     listener.success(response.body());
                 }else{
                     Log.d(TAG, "requestContentSmallhashDownload::isNotSuccessful() : " + response.code());
-                    callManagement.subtractCall("requestContentSmallhashDownload", false);
                 }
+                callManagement.subtractCall("requestContentSmallhashDownload", false);
+
             }
 
             @Override
@@ -389,4 +392,170 @@ public class ContentManager {
         });
 
     }
+
+    public void requestCountLikeIncrease(int user_no, ContentInfo contentInfo){
+        SNSService snsService = ServerController.getInstance().getSnsService();
+        final CallManagement callManagement = CallManagement.getInstance();
+        callManagement.addCall("requestCountLikeIncrease", true);
+        Gson gson = new Gson();
+        String contentInfoJson = gson.toJson(contentInfo);
+        Call<Void> call = snsService.countLikeIncrease(user_no, contentInfoJson);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "좋아요카운트테스트 isSuccessful");
+                    listener.success(response.body());
+                }else{
+                    Log.d(TAG, "좋아요카운트테스트 isfail");
+                    listener.fail();
+                }
+                callManagement.subtractCall("requestCountLikeIncrease", false);
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d(TAG, "좋아요카운트테스트 onFailure");
+                callManagement.subtractCall("requestCountLikeIncrease", false);
+            }
+        });
+    }
+
+    public void requestCountCommentIncrease(int user_no, ContentInfo contentInfo){
+        SNSService snsService = ServerController.getInstance().getSnsService();
+        final CallManagement callManagement = CallManagement.getInstance();
+        callManagement.addCall("requestCountCommentIncrease", true);
+        Gson gson = new Gson();
+        String contentInfoJson = gson.toJson(contentInfo);
+        Call<Void> call = snsService.countCommentIncrease(user_no, contentInfoJson);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "커멘트isSuccessful");
+                }else{
+                    Log.d(TAG, "커멘트isFail");
+                }
+
+                callManagement.subtractCall("requestCountCommentIncrease", false);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d(TAG, "커멘트onFailure");
+                callManagement.subtractCall("requestCountCommentIncrease", false);
+            }
+        });
+    }
+
+    public void requestCountSmallHashIncrease(int user_no, String bighash, int hash){
+        SNSService snsService = ServerController.getInstance().getSnsService();
+        final CallManagement callManagement = CallManagement.getInstance();
+        callManagement.addCall("requestCountSmallHashIncrease", true);
+
+        Call<Void> call = snsService.countSmallHashIncrease(user_no, bighash, hash);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "스몰해쉬카운트테스트 isSuccessful");
+                }else{
+                    Log.d(TAG, "스몰해쉬카운트테스트 isFail");
+                }
+
+                callManagement.subtractCall("requestCountSmallHashIncrease", false);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d(TAG, "커멘트onFailure");
+
+                callManagement.subtractCall("requestCountSmallHashIncrease", false);
+            }
+        });
+    }
+
+    public void requestCountBigHashIncrease(int user_no, int bighash_no){
+        SNSService snsService = ServerController.getInstance().getSnsService();
+        final CallManagement callManagement = CallManagement.getInstance();
+        callManagement.addCall("requestCountBigHashIncrease", true);
+
+        Log.d(TAG, "빅해쉬카운트테스트 : " + user_no + " , " + bighash_no);
+        Call<Void> call = snsService.countBigHashIncrease(user_no, bighash_no);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "빅해쉬카운트테스트 isSuccessful");
+                }else{
+                    Log.d(TAG, "빅해쉬카운트테스트 isFail");
+                }
+
+                callManagement.subtractCall("requestCountBigHashIncrease", false);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d(TAG, "커멘트onFailure");
+
+                callManagement.subtractCall("requestCountBigHashIncrease", false);
+            }
+        });
+    }
+
+    public void requestCountSearchedHashIncrease(int user_no, String hash){
+        SNSService snsService = ServerController.getInstance().getSnsService();
+        final CallManagement callManagement = CallManagement.getInstance();
+        callManagement.addCall("requestCountSearchedHashIncrease", true);
+
+        Call<Void> call = snsService.countSearchedHashIncrease(user_no, hash);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "서치해쉬카운트테스트 isSuccessful");
+                }else{
+                    Log.d(TAG, "서치해쉬카운트테스트 isFail");
+                }
+
+                callManagement.subtractCall("requestCountSearchedHashIncrease", false);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d(TAG, "커멘트onFailure");
+
+                callManagement.subtractCall("requestCountSearchedHashIncrease", false);
+            }
+        });
+    }
+
+    public void requestPrefetchingList(int user_no){
+        SNSService snsService = ServerController.getInstance().getSnsService();
+        final CallManagement callManagement = CallManagement.getInstance();
+        callManagement.addCall("requestPrefetchingList", true);
+
+        Call<List<PrefetchImageInfo>> call = snsService.requestPrefetchingList(user_no);
+        call.enqueue(new Callback<List<PrefetchImageInfo>>() {
+            @Override
+            public void onResponse(Call<List<PrefetchImageInfo>> call, Response<List<PrefetchImageInfo>> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "프리페칭테스트 isSuccessful");
+                    listener.success(response.body());
+                }else{
+                    Log.d(TAG, "프리페칭테스트 isFail");
+                    Log.d(TAG, response.message());
+                }
+
+                callManagement.subtractCall("requestPrefetchingList", false);
+            }
+
+            @Override
+            public void onFailure(Call<List<PrefetchImageInfo>> call, Throwable t) {
+                Log.d(TAG, "프리페칭테스트 onFail");
+
+                callManagement.subtractCall("requestPrefetchingList", false);
+            }
+        });
+    }
+
 }

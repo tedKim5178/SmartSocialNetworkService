@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.mk.mysmartsns.R;
 import com.example.mk.mysmartsns.config.APIConfig;
+import com.example.mk.mysmartsns.config.MyConfig;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
@@ -25,7 +26,12 @@ public class OriginalImageActivity extends AppCompatActivity{
         setContentView(R.layout.activity_original_image);
 
         original_image_view = (ImageView)findViewById(R.id.original_image_view);
-        InteractionManager.getInstance(this).requestContentOriginalDownload(getIntent().getStringExtra("thumbnail_url"), new OnMyApiListener() {
+        String bigHashInfo = getIntent().getStringExtra("big_hash_info");
+        String smallHashInfo = getIntent().getStringExtra("small_hash_info");
+        String thumbnail_url = getIntent().getStringExtra("thumbnail_url");
+        int user_no = MyConfig.myInfo.getUser_no();
+
+        InteractionManager.getInstance(this).requestContentOriginalDownload(thumbnail_url,bigHashInfo, smallHashInfo, user_no, new OnMyApiListener() {
             @Override
             public void success(Object response) {
                 ContentInfo contentInfo = (ContentInfo) response;

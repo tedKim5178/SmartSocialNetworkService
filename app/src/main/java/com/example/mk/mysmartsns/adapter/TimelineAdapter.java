@@ -34,7 +34,9 @@ import com.example.mk.mysmartsns.fragment.fragment_main.SearchFragment;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
@@ -93,10 +95,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
         // 여기서 디스크립션을 그냥 setText 해준다. 결국 이부분에서 로직을 돌려야 할거같음...!
         String description = contentInfoList.get(position).getContent_desc();
         span = Spannable.Factory.getInstance().newSpannable(description);
-        descriptionToHashNavigation(description, holder.post_description_textview);
+        descriptionToHashNavigation(description, holder.post_description_textview, position);
         holder.post_description_textview.setText(span);
         holder.post_description_textview.setMovementMethod(LinkMovementMethod.getInstance());
 //        holder.post_description.setText(contentInfoList.get(position).getContent_desc());
+
 
         // add bighash
         holder.layoutPostBigHash.removeAllViews();                                     // 부모의 자식 뷰를 모두 지우고
@@ -117,7 +120,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
                     @Override
                     public void onClick(View v) {
                         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.frame_layout, SearchFragment.newInstance(hashText.getText().toString().substring(1)), "nav_search_fragment");
+                        // 빅해쉬 넘버를 넘겨줘야함
+                        int bighash_no = 0;
+                        for(int i=0; i<contentInfoList.get(position).getHash_list().size(); i++){
+                            if(contentInfoList.get(position).getHash_list().get(i).getBighash_name().equals(hashText.getText().toString().substring(1))){
+                                bighash_no = contentInfoList.get(position).getHash_list().get(i).getBighash_no();
+                            }
+                        }
+                        Log.d(TAG, "빅해쉬카운트테스트 in TimelineAdapter : " + bighash_no);
+                        transaction.replace(R.id.frame_layout, SearchFragment.newInstance(hashText.getText().toString().substring(1), bighash_no, 0), "nav_search_fragment");
                         transaction.addToBackStack("hash_serach_fragment");
                         transaction.commit();
                     }
@@ -192,17 +203,51 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
             // 아이템이클릭되면 여기로옴
             int viewId = view.getId();
             if(viewId == R.id.image_view){
+                // 원본이미지(original보기) 보기
+                Gson gson = new Gson();
+                ArrayList<String> smallHashArray = new ArrayList<>();
+                for(int i=0; i<contentInfoList.get(getAdapterPosition()).getSmallHash_list().size(); i++){
+                    smallHashArray.add(gson.toJson(contentInfoList.get(getAdapterPosition()).getSmallHash_list().get(i).getSmallhash_no()));
+                    Log.d(TAG, "스몰해시테스트 : " + contentInfoList.get(getAdapterPosition()).getSmallHash_list().size());
+                }
+                String smallHashInfo = gson.toJson(smallHashArray);
+                ArrayList bigHashArray = new ArrayList();
+                if(contentInfoList.get(getAdapterPosition()).getHash_list() != null){
+                    for(int i=0; i<contentInfoList.get(getAdapterPosition()).getHash_list().size(); i++){
+                        bigHashArray.add(contentInfoList.get(getAdapterPosition()).getHash_list().get(i).getBighash_no());
+                    }
+                }
+
+                String bigHashInfo = gson.toJson(bigHashArray);
+
                 Intent intent = new Intent(mContext, OriginalImageActivity.class);
+                intent.putExtra("big_hash_info", bigHashInfo);
+                intent.putExtra("small_hash_info", smallHashInfo);
                 intent.putExtra("thumbnail_url", contentInfoList.get(getAdapterPosition()).getContent_url());
                 mContext.startActivity(intent);
             }else if(viewId == R.id.like_button){
+                // 좋아요 눌렀을때
                 Log.d(TAG, "position : likf_flag value in clicklistener  - "+contentInfoList.get(position).getContent_like_flag());
-                if(contentInfoList.get(position).getContent_like_flag() == 0){          // 좋아요 event
+                if(contentInfoList.get(position).getContent_like_flag() == 0){
+
+                    // 좋아요를 누르면
+                    InteractionManager.getInstance(mContext).requestCountLikeIncrease(MyConfig.myInfo.getUser_no(), contentInfoList.get(position), new OnMyApiListener() {
+                        @Override
+                        public void success(Object response) {
+                            Log.d(TAG, "좋아요카운트테스트!!");
+                        }
+
+                        @Override
+                        public void fail() {
+                            Log.d(TAG, "좋아요카운트테스트 fail!!");
+                        }
+                    });
+
+                    // 유저 정보와 contentInfo에서의 정보를 넘겨줌. 그렇다면 contentInfo속의 주인 즉 host정보를 빼올 수 있을 것이다. 그럼 이 두가지 이용해서 count 증가 시켜주자
                     InteractionManager.getInstance(mContext).requestLikeClicked(MyConfig.myInfo.getUser_no(), contentInfoList.get(position).getContent_no(), new OnMyApiListener() {
                         @Override
                         public void success(Object response) {
                             ContentInfo contentInfo = (ContentInfo) response;
-                            Log.d(TAG,"좋아요눌렀을때테스트 contentinfo like 갯수" + contentInfo.getContent_like_count());
                             contentInfoList.get(position).setContent_like_count(contentInfo.getContent_like_count());
                             contentInfoList.get(position).setContent_like_flag(contentInfo.getContent_like_flag());
                             notifyItemChanged(position);
@@ -214,6 +259,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
                         }
                     });
                 }else{                                                                  // 좋아요 취소 event
+                    // 유저 정보와 contentInfo에서의 정보를 넘겨줌. 그렇다면 contentInfo속의 주인 즉 host정보를 빼올 수 있을 것이다. 그럼 이 두가지 이용해서 count 빼주자
                     InteractionManager.getInstance(mContext).requestUnLikeClicked(MyConfig.myInfo.getUser_no(), contentInfoList.get(position).getContent_no(), new OnMyApiListener() {
                         @Override
                         public void success(Object response) {
@@ -253,9 +299,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
                 int content_no = contentInfoList.get(position).getContent_no();
                 String width = contentInfoList.get(position).getContent_width();
                 String height = contentInfoList.get(position).getContent_height();
-
+                String host_no = contentInfoList.get(position).getContent_host_no();
+                Log.d(TAG, "댓글눌렀을때테스트 host_no : " + host_no);
                 android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(content_no, user_no, position, content_url, width, height), "nav_comment_fragment");
+                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(contentInfoList.get(position)), "nav_comment_fragment");
                 transaction.addToBackStack("");
                 transaction.commit();
 
@@ -268,12 +315,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
 
             }else if(viewId == R.id.the_number_of_comments){
                 String content_url = APIConfig.baseUrl + "/" + contentInfoList.get(position).getContent_url();
+
                 int user_no = MyConfig.myInfo.getUser_no();
                 int content_no = contentInfoList.get(position).getContent_no();
+                String host_no = contentInfoList.get(position).getContent_host_no();
+                Log.d(TAG, "댓글눌렀을때테스트 host_no : " + host_no);
                 String width = contentInfoList.get(position).getContent_width();
                 String height = contentInfoList.get(position).getContent_height();
                 android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(content_no, user_no, position, content_url, width, height), "nav_comment_fragment");
+                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(contentInfoList.get(position)), "nav_comment_fragment");
                 transaction.addToBackStack("");
                 transaction.commit();
 
@@ -323,8 +373,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
     }
 
 
-    public void descriptionToHashNavigation(String description, TextView tv){
+    public void descriptionToHashNavigation(String description, TextView tv, int position){
 
+        // 서버에서는 smallhash를 description형태로 가지고 있었던거다..!
         boolean start_tag = false;
         String des = "";
         description = " " + description + " ";
@@ -340,8 +391,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
 
             }else if(((String.valueOf(description.charAt(i)).equals("#")|| String.valueOf(description.charAt(i)).equals(" ")) && start_tag == true)){
                 end = i;
-                span(start, end);
+                span(start, end, position);
+                // start+1 부터 end까지 smallhash 임..!
+                String smallHash = description.substring(start+1, end);
 
+//                if(!contentInfoList.get(position).getSmallHash_list().contains(smallHash)){
+//                    contentInfoList.get(position).getSmallHash_list().add(description.substring(start+1, end));
+//                }
 //                des = description.substring(start, end);
 //                final TextView textView = new TextView(mContext);
 //                textView.setText(String.valueOf(description.substring(start,end)));
@@ -370,7 +426,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
 
     }
 
-    public void span(int start, int end){
+    public void span(int start, int end, final int position){
+        final int position_final = position;
         Log.d(TAG, "span테스트 : " + start + " , " + end);
         span.setSpan(new ClickableSpan() {
             @Override
@@ -382,9 +439,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
                 int end = s.getSpanEnd(this);
                 Log.d(TAG, "테스트 : " + s.subSequence(start, end));
 
-                // 여기서 네비게이션 처리..!
+                // 여기서 스몰 해쉬 네비게이션 처리..!
                 android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_layout, SearchFragment.newInstance(s.subSequence(start, end).toString()), "nav_search_fragment");
+                String smallhash = s.subSequence(start, end).toString();
+                int smallhash_no = 0;
+                // 검색
+                for(int i=0; i<contentInfoList.get(position).getSmallHash_list().size(); i++){
+                    if(contentInfoList.get(position).getSmallHash_list().get(i).getSmallhash_name().equals(smallhash)){
+                        smallhash_no = contentInfoList.get(position).getSmallHash_list().get(i).getSmallhash_no();
+                    };
+                }
+
+                Log.d(TAG, "리스트테스트 왜 여기 안되는데 ㅆㅃ");
+                transaction.replace(R.id.frame_layout, SearchFragment.newInstance(smallhash, contentInfoList.get(position_final).getHash_list(), smallhash_no,1), "nav_search_fragment");
                 transaction.addToBackStack("hash_serach_fragment");
                 transaction.commit();
             }

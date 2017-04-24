@@ -92,33 +92,33 @@ public class CommentActivity extends AppCompatActivity{
             case R.id.add_comment_button_in_comment_activity: {
                 // add 누르면 해당 post의 댓글 갯수를 올려줘야함..!
 
-                // 서버로 보내주는거 실행하자
-                // uc_comment_name 은 지금 댓글을 남긴 내용이다..!
+                // 서버로 보내주는거
+                // uc_comment_name 은 지금 댓글을 남긴 내용이다..!실행하자
                 String uc_comment_name = comment_edittext_in_comment_activity.getText().toString();
-                InteractionManager.getInstance(this).requestAddComment(user_no, content_no, uc_comment_name, new OnMyApiListener() {
-                    @Override
-                    public void success(Object response) {
-                        // 이제 그 데이터 이용
-                        commentInfoList = (List<CommentInfo>) response;
-                        Log.d(TAG, "requestComment" + commentInfoList.size());
-                        for (int i = 0; i < commentInfoList.size(); i++) {
-                            Log.d(TAG, "requestComment" + commentInfoList.get(i).getComment_name());
-                            Log.d(TAG, "requestComment" + commentInfoList.get(i).getUser_no());
-                            Log.d(TAG, "requestComment" + commentInfoList.get(i).getUser_profile());
-                            Log.d(TAG, "requestComment" + commentInfoList.get(i).getUser_id());
-                        }
-
-                        commentAdapter.setCommentData(commentInfoList);
-                        commentAdapter.notifyDataSetChanged();
-
-                        comment_edittext_in_comment_activity.setText("");
-                    }
-
-                    @Override
-                    public void fail() {
-
-                    }
-                });
+//                InteractionManager.getInstance(this).requestAddComment(user_no, content_no, uc_comment_name, new OnMyApiListener() {
+//                    @Override
+//                    public void success(Object response) {
+//                        // 이제 그 데이터 이용
+//                        commentInfoList = (List<CommentInfo>) response;
+//                        Log.d(TAG, "requestComment" + commentInfoList.size());
+//                        for (int i = 0; i < commentInfoList.size(); i++) {
+//                            Log.d(TAG, "requestComment" + commentInfoList.get(i).getComment_name());
+//                            Log.d(TAG, "requestComment" + commentInfoList.get(i).getUser_no());
+//                            Log.d(TAG, "requestComment" + commentInfoList.get(i).getUser_profile());
+//                            Log.d(TAG, "requestComment" + commentInfoList.get(i).getUser_id());
+//                        }
+//
+//                        commentAdapter.setCommentData(commentInfoList);
+//                        commentAdapter.notifyDataSetChanged();
+//
+//                        comment_edittext_in_comment_activity.setText("");
+//                    }
+//
+//                    @Override
+//                    public void fail() {
+//
+//                    }
+//                });
                 break;
             }
         }

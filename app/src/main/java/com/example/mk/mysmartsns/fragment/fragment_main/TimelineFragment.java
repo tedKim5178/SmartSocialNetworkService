@@ -4,6 +4,7 @@ package com.example.mk.mysmartsns.fragment.fragment_main;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,23 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
             @Override
             public void success(Object response) {
                 List<ContentInfo> contentInfoList = (List<ContentInfo>) response;
+
+                for(int i=0; i<contentInfoList.size(); i++){
+                    if(contentInfoList.get(i).getHash_list() != null){
+                        for(int j=0; j<contentInfoList.get(i).getHash_list().size(); j++){
+                            Log.d(TAG, "빅해쉬테스트 : " +contentInfoList.get(i).getHash_list().get(j).getBighash_no() + ", " + contentInfoList.get(i).getHash_list().get(j).getBighash_name());
+                        }
+                    }
+                    Log.d(TAG, "빅해쉬테스트 : 절취선 =================================");
+                }
+
+                for(int i=0; i<contentInfoList.size(); i++){
+                    if(contentInfoList.get(i).getSmallHash_list() != null){
+                        for(int j=0; j<contentInfoList.get(i).getSmallHash_list().size(); j++){
+                            Log.d(TAG, "스몰해시테스트 : " + contentInfoList.get(i).getSmallHash_list().get(j).getSmallhash_name() + " , " +contentInfoList.get(i).getSmallHash_list().get(j).getSmallhash_no());
+                        }
+                    }
+                }
                 if(getActivity() != null){
                     mAdapter = new TimelineAdapter(getContext(), contentInfoList, getActivity().getSupportFragmentManager());
                     mRecyclerView.setAdapter(mAdapter);

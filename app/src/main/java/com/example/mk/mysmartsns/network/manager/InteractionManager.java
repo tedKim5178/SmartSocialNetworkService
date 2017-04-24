@@ -1,8 +1,12 @@
 package com.example.mk.mysmartsns.network.manager;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
+import com.example.mk.mysmartsns.network.info.ContentInfo;
+
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
  * Created by gilsoo on 2017-02-13.
@@ -34,8 +38,8 @@ public class InteractionManager {
     public void requestContentThumbnailDownload(int user_no, OnMyApiListener listener){
         new ContentManager(context, listener).requestContentThumbnailDownload(user_no);
     }
-    public void requestContentOriginalDownload(String thumbnail_url, OnMyApiListener listener){
-        new ContentManager(context, listener).requestContentOriginalDownload(thumbnail_url);
+    public void requestContentOriginalDownload(String thumbnail_url, String bigHashInfo, String smallHashInfo, int user_no, OnMyApiListener listener){
+        new ContentManager(context, listener).requestContentOriginalDownload(thumbnail_url, bigHashInfo, smallHashInfo, user_no);
     }
 
     public void requestContentBighashDownload(OnMyApiListener listener){
@@ -73,8 +77,8 @@ public class InteractionManager {
         new ContentManager(context, listener).requestDownloadComment(content_no);
     }
 
-    public void requestAddComment(int user_no, int content_no, String uc_comment_name, OnMyApiListener listener){
-        new ContentManager(context, listener).requestAddComment(user_no, content_no, uc_comment_name);
+    public void requestAddComment(int user_no, String host_no, int content_no, String uc_comment_name, OnMyApiListener listener){
+        new ContentManager(context, listener).requestAddComment(user_no, host_no, content_no, uc_comment_name);
     }
 //    public void requestAddComment(int User_no, int content_no, )
 
@@ -88,4 +92,28 @@ public class InteractionManager {
         new FriendManager(context, listener).requestSearchUser(user_no,search_name);
     }
 
+    public void requestCountLikeIncrease(int user_no, ContentInfo contentInfo, OnMyApiListener listener){
+        new ContentManager(context, listener).requestCountLikeIncrease(user_no, contentInfo);
+    }
+
+    public void requestCountCommentIncrease(int user_no, ContentInfo contentInfo, OnMyApiListener listener){
+        new ContentManager(context, listener).requestCountCommentIncrease(user_no, contentInfo);
+    }
+
+    public void requestCountSmallHashIncrease(int user_no, String bighash, int hash, OnMyApiListener listener){
+        new ContentManager(context, listener).requestCountSmallHashIncrease(user_no, bighash, hash);
+    }
+
+    public void requestCountBigHashIncrease(int user_no, int bighash_no, OnMyApiListener listener){
+        Log.d(TAG, "빅해쉬카운트테스트 in interaction Manager " + bighash_no);
+        new ContentManager(context, listener).requestCountBigHashIncrease(user_no, bighash_no);
+    }
+
+    public void requestCountSearchedHashIncrease(int user_no, String hash, OnMyApiListener listener){
+        new ContentManager(context, listener).requestCountSearchedHashIncrease(user_no, hash);
+    }
+
+    public void requestPrefetchingList(int user_no, OnMyApiListener listener){
+        new ContentManager(context, listener).requestPrefetchingList(user_no);
+    }
 }

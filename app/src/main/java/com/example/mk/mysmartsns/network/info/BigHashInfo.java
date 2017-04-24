@@ -1,15 +1,28 @@
 package com.example.mk.mysmartsns.network.info;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by mk on 2017-02-09.
  */
 
-public class BigHashInfo {
+public class BigHashInfo implements Serializable{
     int bighash_no;
     String bighash_name;
     int bighash_count;   // 이건모지?
 
     private boolean isCheck;      // 서버에 올릴때도 이 클래스를 사용하기 때문에 선택을 했는지 안했는지 체크해주는 변수 추가
+
+    protected BigHashInfo(Parcel in) {
+        bighash_no = in.readInt();
+        bighash_name = in.readString();
+        bighash_count = in.readInt();
+        isCheck = in.readByte() != 0;
+    }
+
 
     public int getBighash_no() {
         return bighash_no;
@@ -42,4 +55,6 @@ public class BigHashInfo {
     public void setCheck(boolean isCheck) {
         this.isCheck = isCheck;
     }
+
+
 }

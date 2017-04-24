@@ -1,38 +1,33 @@
 package com.example.mk.mysmartsns.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mk.mysmartsns.BottomNavigationViewHelper;
-import com.example.mk.mysmartsns.Message;
 import com.example.mk.mysmartsns.R;
-import com.example.mk.mysmartsns.ResumableDownloader;
+import com.example.mk.mysmartsns.config.MyConfig;
+import com.example.mk.mysmartsns.config.PrefetchConfig;
 import com.example.mk.mysmartsns.fragment.fragment__search.HashTagSearchFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.LogFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.MyTimelineFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.PostFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.SearchFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.TimelineFragment;
+import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
+import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
+import com.example.mk.mysmartsns.network.manager.InteractionManager;
 
 import java.io.File;
-import java.net.URL;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import java.util.List;
 
 /**
  * Created by mk on 2017-02-02.
@@ -46,10 +41,6 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     private long backKeyPressedTime = 0;
 
-    @Bind(R.id.progress_bar)
-    private ProgressBar progressBar;
-    @Bind(R.id.progress_bar_tv)
-    private TextView percentageTV;
     private AsyncTask asyncTask;
     private String urlStr = "http://114.70.21.116:3001/prefetch/original/dodo.jpg";
     private String filename;
@@ -60,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     public final String PREFS_KEY_LASTMODIFIED = "LastModified";
 
     private File fileDir;
-    private ResumableDownloader mDownloader;
 
     private boolean asyncTaskFinished = true;
 
@@ -69,16 +59,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Butterknife bind
-        ButterKnife.bind(this);
-
-        fileDir = new File(String.valueOf(Environment.getExternalStorageDirectory()) + "/prefetch");
-        initView();
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        mDownloader = new ResumableDownloader(settings.getString(PREFS_KEY_LASTMODIFIED, " "), mDownloader.PAUSE);
-        int progress = settings.getInt(PREFS_KEY_PROGRESS, 0);
-        progressBar.setProgress(progress);
-        percentageTV.setText(String.format("%1$" + 3 + "s", progress) + "%");
-
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -109,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.action_post:
                                 if(bottomNavigationView.getMenu().getItem(0).isChecked())
                                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                                Log.d(TAG, "프레그먼트 테스트 : " + fragment.getTag().equals("post_fragment"));
                                 if (!fragment.getTag().equals("post_fragment")) {
 //                                    if (fragment.getTag().equals("timeline_fragment")) {
 //                                        transaction.addToBackStack(null);
@@ -141,11 +122,31 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 break;
                         }
-
                         return true;
                     }
                 }
         );
+
+
+        InteractionManager.getInstance(getApplicationContext()).requestPrefetchingList(MyConfig.myInfo.getUser_no(), new OnMyApiListener() {
+            @Override
+            public void success(Object response) {
+                List<PrefetchImageInfo> prefetching_image = (List<PrefetchImageInfo>)response;
+                Log.d(TAG, "프리페칭테스트 정상적으로 success! 콜백 완료");
+                for(int i=0; i< prefetching_image.size(); i++){
+                    String str = "thumbnail_contents/";
+                    int str_length = str.length();
+                    String prefetchImageUrl = prefetching_image.get(i).getContent_url().substring(str_length);
+                    Log.d(TAG, "프리페칭테스트 : " + prefetchImageUrl);
+                    PrefetchConfig.prefetching_queue.offer(prefetchImageUrl);
+                }
+            }
+
+            @Override
+            public void fail() {
+
+            }
+        });
 
         // 프레그먼트
         fragmentManager = getSupportFragmentManager();
@@ -153,9 +154,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.frame_layout, TimelineFragment.newInstance(), "timeline_fragment");
         transaction.commit();
-
-        SharedPreferencesCompat settings = getSharedPreferences(PREFS_NAME, 0);
-
     }
     @Override
     public void onBackPressed(){
@@ -229,17 +227,5 @@ public class MainActivity extends AppCompatActivity {
         filename = file.substring(0, file.lastIndexOf("."));
         Log.d(TAG, "프리페칭테스트 : " + fileExtension + " , " + filename);
     }
-
-    private void startDownload(){
-        asyncTaskFinished = false;
-        asyncTask = new AsyncTask<URL, Message, ResumableDownloader>(){
-
-            @Override
-            protected ResumableDownloader doInBackground(URL... urls) {
-                return null;
-            }
-        }.execute();
-    }
-
 }
 

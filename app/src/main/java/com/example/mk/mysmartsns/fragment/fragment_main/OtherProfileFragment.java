@@ -82,6 +82,7 @@ public class OtherProfileFragment extends android.support.v4.app.Fragment{
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
+        // 나의 유저 no, 상대방의 user_no 두개 다 있으니까 이 두 가지를 이용해서 서버에서 테이블에 count 올려줄 수 있음..!
         InteractionManager.getInstance(getContext()).requestUserThumbnailContents(MyConfig.myInfo.getUser_no(), user_no, new OnMyApiListener() {
             @Override
             public void success(Object response) {

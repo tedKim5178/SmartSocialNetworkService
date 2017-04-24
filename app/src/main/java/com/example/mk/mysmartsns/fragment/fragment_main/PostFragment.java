@@ -194,7 +194,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements Vie
                         progressDialog.dismiss();
                         uploadEditText.setText(" ");
                         android.support.v4.app.FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.frame_layout, TimelineFragment.newInstance());
+                        transaction.replace(R.id.frame_layout, TimelineFragment.newInstance(), "timeline_fragment");
                         transaction.commit();
                     }
                     @Override

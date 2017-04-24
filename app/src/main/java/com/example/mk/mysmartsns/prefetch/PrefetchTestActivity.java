@@ -12,7 +12,7 @@ import com.example.mk.mysmartsns.config.PrefetchConfig;
 
 import java.util.Iterator;
 
-public class PrefetchTestActivity extends AppCompatActivity {
+public class PrefetchTestActivity extends AppCompatActivity implements ResumeDownloadListener{
     private final String TAG = PrefetchTestActivity.class.getSimpleName();
     TextView textPrefetch;
 
@@ -22,13 +22,7 @@ public class PrefetchTestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_prefetch_test);
 //      'thumbnail_contents/' 자르고 보내야함!
         // ToDo. gilsoo_이런식으로 큐에다가 받을 이미지 담아논다. 그리고 그냥 시작하면 큐에서 하나씩 빼와서 받아옴, 완료되면 큐에서 제거
-        PrefetchConfig.prefetching_queue.offer("thumb_[2017-02-19-17-45-18]20150109_125245.jpg");
-        PrefetchConfig.prefetching_queue.offer("thumb_[2017-03-04-16-19-02]1.jpg");
-        PrefetchConfig.prefetching_queue.offer("thumb_[2017-03-04-16-21-31]1217780500_tMBpgmLU_1319513078_11.jpg");
-        PrefetchConfig.prefetching_queue.offer("thumb_[2017-03-04-16-28-24]7.jpg");
-        PrefetchConfig.prefetching_queue.offer("thumb_[2017-02-15-08-49-30]00995_HD.jpg");
-        PrefetchConfig.prefetching_queue.offer("thumb_[2017-02-15-08-53-18]01410_HD.jpg");
-        PrefetchConfig.prefetching_queue.offer("thumb_[2017-02-16-02-42-49]10848_HD.jpg");
+
         textPrefetch = (TextView)findViewById(R.id.textPrefetch);
         Iterator<String> iterator = PrefetchConfig.prefetching_queue.iterator();
         String text = "";
@@ -42,10 +36,10 @@ public class PrefetchTestActivity extends AppCompatActivity {
     public void onPrefetchBtnClick(View v){
         switch(v.getId()){
             case R.id.btnStartPrefetch:
-                PrefetchDownload.newInstance().initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek(), getSharedPreferences(PrefetchConfig.PREFS_NAME, 0)).startPrefetching();
+                PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek(), getSharedPreferences(PrefetchConfig.PREFS_NAME, 0)).startPrefetching();
                 break;
             case R.id.btnStopPrefetch:
-                PrefetchDownload.newInstance().stopPrefetching();
+                PrefetchDownload.newInstance(this).stopPrefetching();
                 break;
             case R.id.btnChangeText:
                 Iterator<String> iterator = PrefetchConfig.prefetching_queue.iterator();
@@ -68,4 +62,13 @@ public class PrefetchTestActivity extends AppCompatActivity {
         editor.commit();
     }
 
+    @Override
+    public void progressUpdate() {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
 }

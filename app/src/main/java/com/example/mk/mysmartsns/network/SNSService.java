@@ -4,6 +4,7 @@ import com.example.mk.mysmartsns.network.info.BigHashInfo;
 import com.example.mk.mysmartsns.network.info.CommentInfo;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.info.LoginInfo;
+import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
 import com.example.mk.mysmartsns.network.info.RegisterInfo;
 import com.example.mk.mysmartsns.network.info.SmallHashInfo;
 import com.example.mk.mysmartsns.network.info.UserInfo;
@@ -52,8 +53,16 @@ public interface SNSService {
     Call<List<ContentInfo>> requestThumbnailContents(@Query("user_no") int user_no);
 
     // original image !!
+    // user_no, bighash, smallhash 넘겨줘야됨... 즉 그냥 컨텐츠 정보를 넘겨주자
     @GET("/download/original/{thumb_content_url}")
-    Call<ContentInfo> requestOriginContent(@Path("thumb_content_url") String thumb_content_url);         // original image 받아오기
+    Call<ContentInfo> requestOriginContent(@Path("thumb_content_url") String thumb_content_url,@Query("big_hash_info") String bigHashInfo, @Query("small_hash_info") String smallHashInfo, @Query("user_no") int user_no);         // original image 받아오기
+
+//
+//    // original image !!
+//    // user_no, bighash, smallhash 넘겨줘야됨... 즉 그냥 컨텐츠 정보를 넘겨주자
+//    @GET("/download/original/{thumb_content_url}")
+//    Call<ContentInfo> requestOriginContent(@Path("thumb_content_url") String thumb_content_url);         // original image 받아오기
+
 
     // contents upload
     @Multipart
@@ -92,5 +101,24 @@ public interface SNSService {
     Call<List<CommentInfo>> requestDownloadComment(@Query("content_no") int content_no);
 
     @GET("/others/add_comment")
-    Call<List<CommentInfo>> requestAddComment(@Query("user_no") int user_no, @Query("content_no") int content_no, @Query("uc_comment_name") String uc_comment_name);
+    Call<List<CommentInfo>> requestAddComment(@Query("user_no") int user_no,@Query("host_no") String host_no, @Query("content_no") int content_no, @Query("uc_comment_name") String uc_comment_name);
+
+    // count increase
+    @GET("/count/like")
+    Call<Void> countLikeIncrease(@Query("user_no") int user_no, @Query("content_info") String contentInfo);
+
+    @GET("/count/comment")
+    Call<Void> countCommentIncrease(@Query("user_no") int user_no, @Query("content_info") String contentInfo);
+
+    @GET("/count/smallhash_surf")
+    Call<Void> countSmallHashIncrease(@Query("user_no") int user_no, @Query("bighash_list") String bighash_list, @Query("smallhash") int smallhash);
+
+    @GET("/count/bighash_surf")
+    Call<Void> countBigHashIncrease(@Query("user_no") int user_no, @Query("bighash") int bighash);
+
+    @GET("/count/search")
+    Call<Void> countSearchedHashIncrease(@Query("user_no") int user_no, @Query("searched_hash") String hash);
+
+    @GET("/prefetch/list/{user_no}")
+    Call<List<PrefetchImageInfo>> requestPrefetchingList(@Path("user_no") int user_no);
 }

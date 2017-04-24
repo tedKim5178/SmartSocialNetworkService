@@ -8,6 +8,9 @@ import android.util.Log;
 import com.example.mk.mysmartsns.activity.LoginActivity;
 import com.example.mk.mysmartsns.fragment.fragment__search.FriendSearchFragment;
 import com.example.mk.mysmartsns.fragment.fragment__search.HashTagSearchFragment;
+import com.example.mk.mysmartsns.network.info.BigHashInfo;
+
+import java.util.ArrayList;
 
 /**
  * Created by mk on 2017-02-02.
@@ -16,12 +19,20 @@ import com.example.mk.mysmartsns.fragment.fragment__search.HashTagSearchFragment
 public class TabPagerAdapter extends FragmentStatePagerAdapter{
     private static final String TAG = LoginActivity.class.getSimpleName();
     private int tabCount;
+    private int smallhash_no;
+    private int bighash_no;
+    private int judge;
     String hash;
+    ArrayList<BigHashInfo> bigHash_list;
 
-    public TabPagerAdapter(FragmentManager fm, int tabCount, String hash){
+    public TabPagerAdapter(FragmentManager fm, int tabCount, String hash, ArrayList<BigHashInfo> bighash_list, int bighash_no, int smallhash_no, int judge){
         super(fm);
         this.tabCount = tabCount;
         this.hash = hash;
+        this.bigHash_list = bighash_list;
+        this.smallhash_no = smallhash_no;
+        this.bighash_no = bighash_no;
+        this.judge = judge;
     }
 
 
@@ -30,7 +41,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter{
         Log.d(TAG, "[탭확인] position : " + position);
         switch (position){
             case 0 :
-                HashTagSearchFragment tabFragment1 = HashTagSearchFragment.newInstance(hash);
+                HashTagSearchFragment tabFragment1 = HashTagSearchFragment.newInstance(hash, bigHash_list, bighash_no, smallhash_no, judge);
                 return tabFragment1;
             case 1:
                 FriendSearchFragment tabFragment2 = new FriendSearchFragment();
