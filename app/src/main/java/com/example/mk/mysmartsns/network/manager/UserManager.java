@@ -9,9 +9,14 @@ import com.example.mk.mysmartsns.model.CallManagement;
 import com.example.mk.mysmartsns.network.SNSService;
 import com.example.mk.mysmartsns.network.ServerController;
 import com.example.mk.mysmartsns.network.info.LoginInfo;
-import com.example.mk.mysmartsns.network.info.RegisterInfo;
 import com.example.mk.mysmartsns.network.info.UserInfo;
 
+import java.io.File;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,30 +84,89 @@ public class UserManager {
         });
     }
 
-    // register
-    public void requestUserRegister(String id, String pw, String name, int age, String gender, int user_interest_bighash1,int user_interest_bighash2,int user_interest_bighash3,String user_profile_url) {
+    public void requestUserRegister(String id, String pw, String name, String gender, String user_interest_first, String user_interest_second,
+                                    String user_interest_third, String user_profile_url) {
         SNSService snsService = ServerController.getInstance().getSnsService();
+        File file = new File(user_profile_url);
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
 
-        final CallManagement callManagement = CallManagement.getInstance();
-        Call<Void> callRegisterUser = snsService.registerUser(new RegisterInfo(id, pw, name, age, gender, user_interest_bighash1, user_interest_bighash2, user_interest_bighash3, user_profile_url));
-        callRegisterUser.enqueue(new Callback<Void>() {
+        RequestBody idBody =
+                RequestBody.create(
+                        okhttp3.MultipartBody.FORM, id);
+        RequestBody pwBody =
+                RequestBody.create(
+                        okhttp3.MultipartBody.FORM, pw);
+        RequestBody nameBody =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), name);
+        RequestBody genderBody =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), gender);
+
+        RequestBody user_interest_firstBody =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), user_interest_first);
+        RequestBody user_interest_secondBody =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), user_interest_second);
+
+        RequestBody user_interest_thirdBody =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), user_interest_third);
+
+        Call<ResponseBody> call = snsService.registerUser(idBody, pwBody, nameBody, genderBody,
+                user_interest_firstBody, user_interest_secondBody, user_interest_thirdBody, body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
                     Log.d(TAG, "requestUserRegister::isSuccessful() : " + response.code());
-                    Toast.makeText(context, "회원가입이 성공적으로 완료되었습니다.", Toast.LENGTH_SHORT).show();
                     listener.success(response.body());
-                }else{
+                }else {
                     Log.d(TAG, "requestUserRegister::isNotSuccessful() : " + response.code());
-                    Toast.makeText(context, "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();       // 아이디 중복 확인 해야됨
+                    Toast.makeText(context, "upload failure", Toast.LENGTH_SHORT).show();
+                    listener.fail();
                 }
             }
+
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d(TAG, "requestUserRegister::onFailure() : " + t.getMessage());
-                Toast.makeText(context, "네트워크 상황을 확인하여 주세요", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                t.printStackTrace();
             }
         });
     }
+
+
+
+    // register
+//    public void requestUserRegister(String id, String pw, String name, int age, String gender, int user_interest_bighash1,int user_interest_bighash2,int user_interest_bighash3,String user_profile_url) {
+//        SNSService snsService = ServerController.getInstance().getSnsService();
+//
+//        final CallManagement callManagement = CallManagement.getInstance();
+//        Call<Void> callRegisterUser = snsService.registerUser(new RegisterInfo(id, pw, name, age, gender, user_interest_bighash1, user_interest_bighash2, user_interest_bighash3, user_profile_url));
+//        callRegisterUser.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                if(response.isSuccessful()){
+//                    Log.d(TAG, "requestUserRegister::isSuccessful() : " + response.code());
+//                    Toast.makeText(context, "회원가입이 성공적으로 완료되었습니다.", Toast.LENGTH_SHORT).show();
+//                    listener.success(response.body());
+//                }else{
+//                    Log.d(TAG, "requestUserRegister::isNotSuccessful() : " + response.code());
+//                    Toast.makeText(context, "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();       // 아이디 중복 확인 해야됨
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                Log.d(TAG, "requestUserRegister::onFailure() : " + t.getMessage());
+//                Toast.makeText(context, "네트워크 상황을 확인하여 주세요", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 }
 

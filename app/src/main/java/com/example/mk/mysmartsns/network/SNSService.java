@@ -5,7 +5,6 @@ import com.example.mk.mysmartsns.network.info.CommentInfo;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.info.LoginInfo;
 import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
-import com.example.mk.mysmartsns.network.info.RegisterInfo;
 import com.example.mk.mysmartsns.network.info.SmallHashInfo;
 import com.example.mk.mysmartsns.network.info.UserInfo;
 
@@ -41,8 +40,16 @@ public interface SNSService {
 
 
     // register 할때 post 형식으로 서버에게 register 정보들 넘겨줌
+//    @POST("/intro/regist")
+//    Call<Void> registerUser(@Body RegisterInfo registerInfo);
+
+    @Multipart
     @POST("/intro/regist")
-    Call<Void> registerUser(@Body RegisterInfo registerInfo);
+    Call<ResponseBody> registerUser(@Part("id") RequestBody id, @Part("pw") RequestBody pw, @Part("name") RequestBody name, @Part("gender") RequestBody gender,
+                                    @Part("user_interest_bighash1") RequestBody bighash1,
+                                    @Part("user_interest_bighash2") RequestBody bighash2,
+                                    @Part("user_interest_bighash3") RequestBody bighash3,
+                                    @Part MultipartBody.Part file);
 
     // login 할때 아이디 비밀번호 서버에게 넘겨줌
     @POST("/intro/login")

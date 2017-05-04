@@ -59,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     CheckBox checkbox_for_woman;
 
     InterestsAdapter interestsAdapter;
-    ArrayList<Integer> bigHashArrayList;
+    ArrayList<String> bigHashArrayList;
     RegisterInfo registerInfo;
     String imagePath;
     boolean isImageUpload;
@@ -124,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 for(int i=0; i < bigHashList.size(); i++){
                     // 우선 click이 3개인걸 세야됨
                     if(bigHashList.get(i).isCheck() == true){
-                        bigHashArrayList.add(bigHashList.get(i).getBighash_no());
+                        bigHashArrayList.add(bigHashList.get(i).getBighash_name());
                         count = count + 1;
                     }
                 }
@@ -132,14 +132,14 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                     // ** User Register
                     Toast.makeText(this, "정상적으로 3개 들어옴", Toast.LENGTH_SHORT).show();
 
-                    int user_interest_bighash1, user_interest_bighash2, user_interest_bighash3=0;
+                    String user_interest_bighash1, user_interest_bighash2, user_interest_bighash3= "";
 //                    Gson gson = new Gson();
 //                    String jsonBigHash = gson.toJson(bigHashArrayList);                             // bighash 정보를 json형태로 바꾼다.
                     user_interest_bighash1 = bigHashArrayList.get(0);
                     user_interest_bighash2 = bigHashArrayList.get(1);
                     user_interest_bighash3 = bigHashArrayList.get(2);
                     int age = 20;
-                    InteractionManager.getInstance(this).requestUserRegister(id, pw, name, age, gender, user_interest_bighash1, user_interest_bighash2, user_interest_bighash3, user_profile_url, new OnMyApiListener() {
+                    InteractionManager.getInstance(this).requestUserRegister(id, pw, name, gender, user_interest_bighash1, user_interest_bighash2, user_interest_bighash3, user_profile_url, new OnMyApiListener() {
                         @Override
                         public void success(Object response) {
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -152,6 +152,8 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
                         }
                     });
+
+
                 }else{
                     Toast.makeText(this, "3개 이상 선택해주세요", Toast.LENGTH_SHORT).show();
                     bigHashArrayList.clear();
