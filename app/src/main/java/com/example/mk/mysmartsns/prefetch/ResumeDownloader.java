@@ -18,6 +18,7 @@ public class ResumeDownloader {
     private int timeout;
     private File downloadedFile;
     private boolean startNewDownload;
+    private boolean isCompletedDownload;
 
     private long fileLength = 0;
 
@@ -66,16 +67,21 @@ public class ResumeDownloader {
             // save remote last modified data to local
         }
         try {
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int count;
-            while (getStatus() == DOWNLOADING && (count = in.read(buffer)) != -1) {
-                progressLength += count;
-                writer.write(buffer, 0, count);
-                // progress....
-                downloadListener.progressUpdate();
-                if (progressLength == fileLength) {
-                    progressLength = 0;
-                    setStatus(COMPLETE);
+            if(isCompletedDownload){
+                setStatus(COMPLETE);
+            }else {
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int count;
+
+                while (getStatus() == DOWNLOADING && (count = in.read(buffer)) != -1) {
+                    progressLength += count;
+                    writer.write(buffer, 0, count);
+                    // progress....
+                    downloadListener.progressUpdate();
+                    if (progressLength == fileLength) {
+                        progressLength = 0;
+                        setStatus(COMPLETE);
+                    }
                 }
             }
         } finally {
@@ -94,9 +100,13 @@ public class ResumeDownloader {
 
 //        startNewDownload = (!downloadedFile.exists() || downloadedFile.length() >= fileLength ||        // downloadedFile.length()>=fileLength ?
 //                !remoteLastModified.equalsIgnoreCase(lastModified));
-        startNewDownload = (!downloadedFile.exists() || downloadedFile.length() >= fileLength);
+        startNewDownload = (!downloadedFile.exists() || downloadedFile.length() > fileLength);         // 이거 이상해 뭔지는 알겟으나
+        isCompletedDownload = (downloadedFile.length() >= fileLength);
+
         Log.d(TAG, "url : " + urlStr);
         Log.d(TAG, "code : " + conn.getResponseCode() + ", message : " + conn.getResponseMessage());
+        Log.d(TAG, "startNewDownload : "+startNewDownload);
+        Log.d(TAG, "isCompletedDownload : "+isCompletedDownload);
         conn.disconnect();
         downloadListener.progressUpdate();
         Log.d(TAG, "=========================================");

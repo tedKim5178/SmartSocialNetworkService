@@ -13,15 +13,15 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * Created by gilsoo on 2017-03-26.
+ * Created by gilsoo on 2017-05-08.
  */
-public class PrefetchDownload {
+public class OriginalDownload {         // Original Download with prefeching
 
-    private static final String TAG = PrefetchDownload.class.getSimpleName();
+    private static final String TAG = OriginalDownload.class.getSimpleName();
     private String urlStr;
     private String filename;
     private String fileExtension;
-//    private final String PREFS_NAME = PrefetchConfig.PREFS_NAME;
+    //    private final String PREFS_NAME = PrefetchConfig.PREFS_NAME;
 //    private final String PREFS_KEY_PROGRESS = PrefetchConfig.PREFS_KEY_PROGRESS;
 //    private final String Local_Name = PrefetchConfig.Local_Name;
     private File fileDir;
@@ -30,18 +30,18 @@ public class PrefetchDownload {
 
     private AsyncTask asyncTask;
     private boolean asytaskFinished = true;
-    private static PrefetchDownload prefetchDownload;
+    private static OriginalDownload prefetchDownload;
     ResumeDownloadListener resumeDownloadListener;
 
-    public PrefetchDownload(ResumeDownloadListener resumeDownloadListener) {
+    public OriginalDownload(ResumeDownloadListener resumeDownloadListener) {
         fileDir = new File(String.valueOf(Environment.getExternalStorageDirectory()) + PrefetchConfig.Local_Name);
         mDownloader = new ResumeDownloader(mDownloader.PAUSE);
         this.resumeDownloadListener = resumeDownloadListener;
     }
 
-    public static PrefetchDownload newInstance(ResumeDownloadListener resumeDownloadListener) {             // 프리페칭 용
+    public static OriginalDownload newInstance(ResumeDownloadListener resumeDownloadListener) {             // 프리페칭 용
         if(prefetchDownload == null){
-            prefetchDownload = new PrefetchDownload(resumeDownloadListener);
+            prefetchDownload = new OriginalDownload(resumeDownloadListener);
         }
         return prefetchDownload;
     }
@@ -54,7 +54,7 @@ public class PrefetchDownload {
      * @param urlStr
      * @param settings
      */
-    public PrefetchDownload initUrl(String urlStr, SharedPreferences settings) {
+    public OriginalDownload initUrl(String urlStr, SharedPreferences settings) {
         this.urlStr = urlStr;
         this.settings = settings;
         String file = urlStr.substring(urlStr.lastIndexOf("/") + 1);
@@ -65,7 +65,7 @@ public class PrefetchDownload {
         return prefetchDownload;
     }
 
-    public PrefetchDownload initUrl(String urlStr) {
+    public OriginalDownload initUrl(String urlStr) {
         this.urlStr = urlStr;
 
         Log.d(TAG, "file extension: " + fileExtension + ", file name: " + filename);
@@ -106,7 +106,7 @@ public class PrefetchDownload {
                     }
                     mDownloader.downloadFile(urlStr,
                             (new File(fileDir.getAbsolutePath(), filename + fileExtension)).getAbsolutePath(),
-                           resumeDownloadListener);
+                            resumeDownloadListener);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     Log.d(TAG, "File not found !");
@@ -125,8 +125,6 @@ public class PrefetchDownload {
             protected void onPostExecute(ResumeDownloader o) {
                 super.onPostExecute(o);
                 Log.d(TAG, "Async task finished :: fileName - " + filename);
-                //ToDo, 여기 수정 - 원본이미지 받는거랑 같이사용하기 때문
-                //ToDO. 만일 프리페칭 되야 할 이미지가 시작하기도 전에 서버로부터 받았다. 그러면 큐에서 찾아서 제거해줘야된다..
                 PrefetchConfig.prefetching_queue.poll();        // 완료된 프레페칭 콘텐츠 큐에서 제거
                 asytaskFinished = true;
 
@@ -141,5 +139,4 @@ public class PrefetchDownload {
             }
         }.execute();
     }
-
 }
