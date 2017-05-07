@@ -21,7 +21,8 @@ import java.util.List;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-public class OtherTimelineActivity extends AppCompatActivity {
+public class
+OtherTimelineActivity extends AppCompatActivity {
 
     private static final String TAG = MyTimelineFragment.class.getSimpleName();
 

@@ -59,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     CheckBox checkbox_for_woman;
 
     InterestsAdapter interestsAdapter;
-    ArrayList<String> bigHashArrayList;
+    ArrayList<Integer> bigHashArrayList;
     RegisterInfo registerInfo;
     String imagePath;
     boolean isImageUpload;
@@ -124,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 for(int i=0; i < bigHashList.size(); i++){
                     // 우선 click이 3개인걸 세야됨
                     if(bigHashList.get(i).isCheck() == true){
-                        bigHashArrayList.add(bigHashList.get(i).getBighash_name());
+                        bigHashArrayList.add(bigHashList.get(i).getBighash_no());
                         count = count + 1;
                     }
                 }
@@ -132,7 +132,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                     // ** User Register
                     Toast.makeText(this, "정상적으로 3개 들어옴", Toast.LENGTH_SHORT).show();
 
-                    String user_interest_bighash1, user_interest_bighash2, user_interest_bighash3= "";
+                    int user_interest_bighash1, user_interest_bighash2, user_interest_bighash3= 0;
 //                    Gson gson = new Gson();
 //                    String jsonBigHash = gson.toJson(bigHashArrayList);                             // bighash 정보를 json형태로 바꾼다.
                     user_interest_bighash1 = bigHashArrayList.get(0);

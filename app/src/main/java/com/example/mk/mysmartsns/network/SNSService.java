@@ -46,10 +46,18 @@ public interface SNSService {
     @Multipart
     @POST("/intro/regist")
     Call<ResponseBody> registerUser(@Part("id") RequestBody id, @Part("pw") RequestBody pw, @Part("name") RequestBody name, @Part("gender") RequestBody gender,
-                                    @Part("user_interest_bighash1") RequestBody bighash1,
-                                    @Part("user_interest_bighash2") RequestBody bighash2,
-                                    @Part("user_interest_bighash3") RequestBody bighash3,
+                                    @Part("bighash1") RequestBody bighash1,
+                                    @Part("bighash2") RequestBody bighash2,
+                                    @Part("bighash3") RequestBody bighash3,
                                     @Part MultipartBody.Part file);
+
+
+    // contents upload
+    @Multipart
+    @POST("/upload/single")
+    Call<ResponseBody> uploadContents(@Part("description") RequestBody description, @Part("host") RequestBody host
+            , @Part("bighash") RequestBody bighash, @Part("smallhash") RequestBody smallhash, @Part MultipartBody.Part file);
+
 
     // login 할때 아이디 비밀번호 서버에게 넘겨줌
     @POST("/intro/login")
@@ -71,11 +79,6 @@ public interface SNSService {
 //    Call<ContentInfo> requestOriginContent(@Path("thumb_content_url") String thumb_content_url);         // original image 받아오기
 
 
-    // contents upload
-    @Multipart
-    @POST("/upload/single")
-    Call<ResponseBody> uploadContents(@Part("description") RequestBody description, @Part("host") RequestBody host
-            , @Part("bighash") RequestBody bighash, @Part("smallhash") RequestBody smallhash, @Part MultipartBody.Part file);
 
     // 추가
     // 좋아요 눌렀을때

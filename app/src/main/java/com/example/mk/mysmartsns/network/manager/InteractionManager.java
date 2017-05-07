@@ -35,7 +35,7 @@ public class InteractionManager {
 //    }
 
     public void requestUserRegister(String id, String pw, String name, String gender,
-                                    String user_interest_first, String user_interest_second, String user_interest_third,String user_profile_url, OnMyApiListener listener){
+                                    int user_interest_first, int user_interest_second, int user_interest_third, String user_profile_url, OnMyApiListener listener){
         new UserManager(context, listener).requestUserRegister(id, pw, name, gender, user_interest_first, user_interest_second, user_interest_third, user_profile_url);
     }
 

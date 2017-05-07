@@ -48,6 +48,8 @@ public class MyTimelineFragment extends android.support.v4.app.Fragment {
         Log.d(TAG, "프레그먼트2속온크리에이트");
 
         imgMyTimeline = (ImageView)view.findViewById(R.id.imgMyTimeline);
+
+        Toast.makeText(getContext(), MyConfig.myInfo.getUser_profile_url(),Toast.LENGTH_SHORT).show();
         if(MyConfig.myInfo.getUser_profile_url() == null)
             Glide.with(getContext()).load(R.drawable.personurl).bitmapTransform(new CropCircleTransformation(getContext())).into(imgMyTimeline);
         else

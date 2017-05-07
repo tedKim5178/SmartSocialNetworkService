@@ -48,7 +48,7 @@ public class UserInfo  {
     }
 
     public String getUser_profile_url() {
-        return user_profile_url;
+        return "profile_image/"+user_profile_url;
     }
 
     public void setUser_profile_url(String user_profile_url) {

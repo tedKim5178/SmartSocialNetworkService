@@ -84,21 +84,22 @@ public class UserManager {
         });
     }
 
-    public void requestUserRegister(String id, String pw, String name, String gender, String user_interest_first, String user_interest_second,
-                                    String user_interest_third, String user_profile_url) {
+    public void requestUserRegister(String id, String pw, String name, String gender, int user_interest_first, int user_interest_second,
+                                    int user_interest_third, String user_profile_url) {
         SNSService snsService = ServerController.getInstance().getSnsService();
         File file = new File(user_profile_url);
+        Log.d(TAG, "requestUserRegister");
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part body =
-                MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
+                MultipartBody.Part.createFormData("profile_image", file.getName(), requestFile);
 
         RequestBody idBody =
                 RequestBody.create(
-                        okhttp3.MultipartBody.FORM, id);
+                        MediaType.parse("multipart/form-data"), id);
         RequestBody pwBody =
                 RequestBody.create(
-                        okhttp3.MultipartBody.FORM, pw);
+                        MediaType.parse("multipart/form-data"), pw);
         RequestBody nameBody =
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), name);
@@ -108,18 +109,20 @@ public class UserManager {
 
         RequestBody user_interest_firstBody =
                 RequestBody.create(
-                        MediaType.parse("multipart/form-data"), user_interest_first);
+                        MediaType.parse("multipart/form-data"), String.valueOf(user_interest_first));
         RequestBody user_interest_secondBody =
                 RequestBody.create(
-                        MediaType.parse("multipart/form-data"), user_interest_second);
+                        MediaType.parse("multipart/form-data"), String.valueOf(user_interest_second));
 
         RequestBody user_interest_thirdBody =
                 RequestBody.create(
-                        MediaType.parse("multipart/form-data"), user_interest_third);
+                        MediaType.parse("multipart/form-data"), String.valueOf(user_interest_third));
 
         Call<ResponseBody> call = snsService.registerUser(idBody, pwBody, nameBody, genderBody,
                 user_interest_firstBody, user_interest_secondBody, user_interest_thirdBody, body);
 
+        Log.d(TAG, "requestUserRegister " + user_profile_url + " , " + user_interest_first + " , " + name + " , " + gender);
+        Log.d(TAG, "requestUserRegister" + call.request().toString() + " , " +call.toString());
         call.enqueue(new Callback<ResponseBody>() {
 
             @Override
@@ -136,7 +139,7 @@ public class UserManager {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                t.printStackTrace();
+                Log.d(TAG, "requestUserRegister::isFailure() " + t.toString());
             }
         });
     }

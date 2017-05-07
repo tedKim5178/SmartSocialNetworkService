@@ -84,10 +84,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Integer.parseInt(contentInfoList.get(position).getContent_width()), Integer.parseInt(contentInfoList.get(position).getContent_height()));        // 크기 지정
         holder.image_view.setLayoutParams(params);
         Glide.with(mContext).load(baseUrl + "/" + contentInfoList.get(position).getContent_url()).into(holder.image_view);
-        if(contentInfoList.get(position).getHost_url() == null)
+        Log.d(TAG, "profiletest: " + baseUrl + "profile_image/" + contentInfoList.get(position).getContent_host_profile_url());
+        if(contentInfoList.get(position).getContent_host_profile_url() == null)
             Glide.with(mContext).load(R.drawable.personurl).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.poster_profile);
-        else
-            Glide.with(mContext).load(baseUrl + "/" + contentInfoList.get(position).getHost_url()).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.poster_profile);
+        else {
+            Glide.with(mContext).load(baseUrl + "profile_image/" + contentInfoList.get(position).getContent_host_profile_url()).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.poster_profile);
+        }
         holder.the_number_of_likes.setText(String.valueOf(contentInfoList.get(position).getContent_like_count()) + "명이 좋아합니다");
         holder.the_number_of_comments.setText(String.valueOf(contentInfoList.get(position).getContent_comment_count()) + "개의 댓글 보기");
         holder.poster_name.setText(contentInfoList.get(position).getContent_host());
@@ -224,6 +226,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
                 intent.putExtra("big_hash_info", bigHashInfo);
                 intent.putExtra("small_hash_info", smallHashInfo);
                 intent.putExtra("thumbnail_url", contentInfoList.get(getAdapterPosition()).getContent_url());
+
+                // 원본이지지 볼 때 새로운 activity를 띄워준뒤에 그 이미지를 intent로 넘겨준다. 띄워줄 때 만약 이 사진이 프리패칭 되어있다면
+                // 내부 저장소에 담겨져 있는 파일들 갯수 가져와야지...!
+
                 mContext.startActivity(intent);
             }else if(viewId == R.id.like_button){
                 // 좋아요 눌렀을때
