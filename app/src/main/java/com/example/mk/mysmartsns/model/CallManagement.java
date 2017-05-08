@@ -86,7 +86,9 @@ public class CallManagement implements ResumeDownloadListener{
 
     @Override
     public void onComplete() {
-        Log.d(TAG, "Prefetching onComplete");
+        Log.d(TAG, "CallManagerMent:::Prefetching onComplete");
+        Log.d(TAG, "CallManagerMent::: element - " +  PrefetchConfig.prefetching_queue.peek());
+        PrefetchConfig.prefetching_queue.poll();        // 완료된 프레페칭 콘텐츠 큐에서 제거
         if(!PrefetchConfig.prefetching_queue.isEmpty()) {
             PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek()).startPrefetching();
         }

@@ -33,19 +33,22 @@ public class OriginalDownload {         // Original Download with prefeching
     private static OriginalDownload prefetchDownload;
     ResumeDownloadListener resumeDownloadListener;
 
-    public OriginalDownload(ResumeDownloadListener resumeDownloadListener) {
+    public OriginalDownload() {
         fileDir = new File(String.valueOf(Environment.getExternalStorageDirectory()) + PrefetchConfig.Local_Name);
         mDownloader = new ResumeDownloader(mDownloader.PAUSE);
-        this.resumeDownloadListener = resumeDownloadListener;
     }
 
-    public static OriginalDownload newInstance(ResumeDownloadListener resumeDownloadListener) {             // 프리페칭 용
+    public static OriginalDownload newInstance() {             // 프리페칭 용
         if(prefetchDownload == null){
-            prefetchDownload = new OriginalDownload(resumeDownloadListener);
+            prefetchDownload = new OriginalDownload();
         }
         return prefetchDownload;
     }
 
+    public  OriginalDownload setResumeDownloader(ResumeDownloadListener resumeDownloadListener){
+        this.resumeDownloadListener = resumeDownloadListener;
+        return prefetchDownload;
+    }
 
 
 
@@ -125,7 +128,7 @@ public class OriginalDownload {         // Original Download with prefeching
             protected void onPostExecute(ResumeDownloader o) {
                 super.onPostExecute(o);
                 Log.d(TAG, "Async task finished :: fileName - " + filename);
-                PrefetchConfig.prefetching_queue.poll();        // 완료된 프레페칭 콘텐츠 큐에서 제거
+
                 asytaskFinished = true;
 
                 // 콜백

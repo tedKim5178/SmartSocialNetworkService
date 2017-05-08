@@ -125,11 +125,7 @@ public class PrefetchDownload {
             protected void onPostExecute(ResumeDownloader o) {
                 super.onPostExecute(o);
                 Log.d(TAG, "Async task finished :: fileName - " + filename);
-                //ToDo, 여기 수정 - 원본이미지 받는거랑 같이사용하기 때문
-                //ToDO. 만일 프리페칭 되야 할 이미지가 시작하기도 전에 서버로부터 받았다. 그러면 큐에서 찾아서 제거해줘야된다..
-                PrefetchConfig.prefetching_queue.poll();        // 완료된 프레페칭 콘텐츠 큐에서 제거
                 asytaskFinished = true;
-
                 // 콜백
                 resumeDownloadListener.onComplete();
             }
