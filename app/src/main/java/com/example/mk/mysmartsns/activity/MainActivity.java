@@ -14,20 +14,14 @@ import android.widget.Toast;
 
 import com.example.mk.mysmartsns.BottomNavigationViewHelper;
 import com.example.mk.mysmartsns.R;
-import com.example.mk.mysmartsns.config.MyConfig;
-import com.example.mk.mysmartsns.config.PrefetchConfig;
 import com.example.mk.mysmartsns.fragment.fragment__search.HashTagSearchFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.LogFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.MyTimelineFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.PostFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.SearchFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.TimelineFragment;
-import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
-import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
-import com.example.mk.mysmartsns.network.manager.InteractionManager;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * Created by mk on 2017-02-02.
@@ -127,26 +121,6 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-
-        InteractionManager.getInstance(getApplicationContext()).requestPrefetchingList(MyConfig.myInfo.getUser_no(), new OnMyApiListener() {
-            @Override
-            public void success(Object response) {
-                List<PrefetchImageInfo> prefetching_image = (List<PrefetchImageInfo>)response;
-                Log.d(TAG, "프리페칭테스트 정상적으로 success! 콜백 완료");
-                for(int i=0; i< prefetching_image.size(); i++){
-                    String str = "thumbnail_contents/";
-                    int str_length = str.length();
-                    String prefetchImageUrl = prefetching_image.get(i).getContent_url().substring(str_length);
-                    Log.d(TAG, "프리페칭테스트 : " + prefetchImageUrl);
-                    PrefetchConfig.prefetching_queue.offer(prefetchImageUrl);
-                }
-            }
-
-            @Override
-            public void fail() {
-
-            }
-        });
 
         // 프레그먼트
         fragmentManager = getSupportFragmentManager();

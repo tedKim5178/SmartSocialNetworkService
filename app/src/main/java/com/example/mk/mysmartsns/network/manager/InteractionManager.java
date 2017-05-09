@@ -40,8 +40,8 @@ public class InteractionManager {
     }
 
     //** To ContentManager
-    public void requestContentThumbnailDownload(int user_no, OnMyApiListener listener){
-        new ContentManager(context, listener).requestContentThumbnailDownload(user_no);
+    public void requestContentThumbnailDownload(int user_no, int current_page, OnMyApiListener listener){
+        new ContentManager(context, listener).requestContentThumbnailDownload(user_no, current_page);
     }
     public void requestContentOriginalDownload(String thumbnail_url, String bigHashInfo, String smallHashInfo, int user_no, OnMyApiListener listener){
         new ContentManager(context, listener).requestContentOriginalDownload(thumbnail_url, bigHashInfo, smallHashInfo, user_no);
@@ -118,7 +118,7 @@ public class InteractionManager {
         new ContentManager(context, listener).requestCountSearchedHashIncrease(user_no, hash);
     }
 
-    public void requestPrefetchingList(int user_no, OnMyApiListener listener){
-        new ContentManager(context, listener).requestPrefetchingList(user_no);
+    public void requestPrefetchingList(int user_no, int current_page, OnMyApiListener listener){
+        new ContentManager(context, listener).requestPrefetchingList(user_no, current_page);
     }
 }

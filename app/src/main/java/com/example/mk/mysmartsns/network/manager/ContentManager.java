@@ -119,13 +119,13 @@ public class ContentManager {
     }
 
     // dwonload thumbnail contents
-    public void requestContentThumbnailDownload(int user_no){
+    public void requestContentThumbnailDownload(int user_no, int current_page){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
         final CallManagement callManagement = CallManagement.getInstance();
         callManagement.addCall("requestContentThumbnailDownload", true);
 
-        Call<List<ContentInfo>> callRequestThumbnailContents = snsService.requestThumbnailContents(user_no);
+        Call<List<ContentInfo>> callRequestThumbnailContents = snsService.requestThumbnailContents(user_no, current_page);
         callRequestThumbnailContents.enqueue(new Callback<List<ContentInfo>>() {
             @Override
             public void onResponse(Call<List<ContentInfo>> call, Response<List<ContentInfo>> response) {
@@ -529,12 +529,12 @@ public class ContentManager {
         });
     }
 
-    public void requestPrefetchingList(int user_no){
+    public void requestPrefetchingList(int user_no, int current_page){
         SNSService snsService = ServerController.getInstance().getSnsService();
         final CallManagement callManagement = CallManagement.getInstance();
         callManagement.addCall("requestPrefetchingList", true);
 
-        Call<List<PrefetchImageInfo>> call = snsService.requestPrefetchingList(user_no);
+        Call<List<PrefetchImageInfo>> call = snsService.requestPrefetchingList(user_no, current_page);
         call.enqueue(new Callback<List<PrefetchImageInfo>>() {
             @Override
             public void onResponse(Call<List<PrefetchImageInfo>> call, Response<List<PrefetchImageInfo>> response) {
@@ -545,14 +545,11 @@ public class ContentManager {
                     Log.d(TAG, "프리페칭테스트 isFail");
                     Log.d(TAG, response.message());
                 }
-
                 callManagement.subtractCall("requestPrefetchingList", false);
             }
 
             @Override
             public void onFailure(Call<List<PrefetchImageInfo>> call, Throwable t) {
-                Log.d(TAG, "프리페칭테스트 onFail");
-
                 callManagement.subtractCall("requestPrefetchingList", false);
             }
         });

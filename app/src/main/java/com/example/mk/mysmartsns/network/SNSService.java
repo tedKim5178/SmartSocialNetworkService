@@ -65,7 +65,7 @@ public interface SNSService {
 
     // login 해서 들어가면 get방식으로 이미지랑, 정보들 받아와야됨
     @GET("/download/thumbnail")
-    Call<List<ContentInfo>> requestThumbnailContents(@Query("user_no") int user_no);
+    Call<List<ContentInfo>> requestThumbnailContents(@Query("user_no") int user_no, @Query("current_page") int current_page);
 
     // original image !!
     // user_no, bighash, smallhash 넘겨줘야됨... 즉 그냥 컨텐츠 정보를 넘겨주자
@@ -130,5 +130,5 @@ public interface SNSService {
     Call<Void> countSearchedHashIncrease(@Query("user_no") int user_no, @Query("searched_hash") String hash);
 
     @GET("/prefetch/list/{user_no}")
-    Call<List<PrefetchImageInfo>> requestPrefetchingList(@Path("user_no") int user_no);
+    Call<List<PrefetchImageInfo>> requestPrefetchingList(@Path("user_no") int user_no, @Query("current_page") int current_page);
 }

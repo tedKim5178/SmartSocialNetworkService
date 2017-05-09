@@ -39,20 +39,20 @@ public class CallManagement implements ResumeDownloadListener{
         return callManageHashMap;
     }
 
+    // Singleton
     public static CallManagement getInstance(){
         if(callManagement == null){
             callManagement = new CallManagement();
         }
         return callManagement;
     }
+
     public void addCall(String key, boolean isUsed){
         callManageHashMap.put(key, isUsed);
-        // addCall이 실행되면 무조건 prefetching stop!!
-//        prefetchingThread.pause();
-
         PrefetchDownload.newInstance(this).stopPrefetching();
         Log.d(TAG, "Prefetching Stop");
     }
+
     public  void subtractCall(String key, boolean isUsed){
         callManageHashMap.put(key, isUsed);
 
@@ -65,16 +65,9 @@ public class CallManagement implements ResumeDownloadListener{
             }
         }
         if(count == callManageHashMap.size()){
-            // 모두 사용 안하고 있으니까 prefetching start!
-            Log.d(TAG, "Prefetching test get Status : " + prefetchingThread.getStatus());
-//            if(prefetchingThread.getStatus() == 2){
-//                prefetchingThread.resume();
-//            }
             if(PrefetchConfig.prefetching_queue.size() != 0) {
                 PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek()).startPrefetching();
             }
-
-            Log.d(TAG, "Prefetching Start");
         }
     }
 
