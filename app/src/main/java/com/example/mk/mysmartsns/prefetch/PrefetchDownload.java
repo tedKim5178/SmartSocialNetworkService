@@ -46,9 +46,6 @@ public class PrefetchDownload {
         return prefetchDownload;
     }
 
-
-
-
     /**
      * 인자 url정보, SharePreferences
      * @param urlStr
@@ -67,8 +64,6 @@ public class PrefetchDownload {
 
     public PrefetchDownload initUrl(String urlStr) {
         this.urlStr = urlStr;
-
-        Log.d(TAG, "file extension: " + fileExtension + ", file name: " + filename);
         String file = urlStr.substring(urlStr.lastIndexOf("/") + 1);
         fileExtension = file.substring(file.lastIndexOf("."));
         filename = file.substring(0, file.lastIndexOf("."));
@@ -78,10 +73,12 @@ public class PrefetchDownload {
     }
 
     public void startPrefetching() {
+
         if (asytaskFinished && mDownloader.getStatus() != mDownloader.DOWNLOADING) {
             startDownload();
         }
-        Log.d(TAG, "status: " + mDownloader.getStatusStr());
+        Log.d(TAG, "startPrefetching ::: asytaskFinsished : " + asytaskFinished);
+        Log.d(TAG, "startPrefetching ::: status: " + mDownloader.getStatusStr());
 
     }
 
@@ -89,9 +86,10 @@ public class PrefetchDownload {
         if (mDownloader.getStatus() == mDownloader.DOWNLOADING) {
             mDownloader.setStatus(mDownloader.PAUSE);
             asyncTask.cancel(true);
-            Log.d(TAG, "paused & asyncTask is cancelled - " + asyncTask.isCancelled());
+            Log.d(TAG, "stopPrefetching ::: paused & asyncTask is cancelled - " + asyncTask.isCancelled());
         }
-        Log.d(TAG, "status: " + mDownloader.getStatusStr());
+        Log.d(TAG, "stopPrefetching ::: asytaskFinsished : " + asytaskFinished);
+        Log.d(TAG, "stopPrefetching ::: status: " + mDownloader.getStatusStr());
     }
 
     private void startDownload() {
@@ -125,15 +123,15 @@ public class PrefetchDownload {
             protected void onPostExecute(ResumeDownloader o) {
                 super.onPostExecute(o);
                 Log.d(TAG, "Async task finished :: fileName - " + filename);
-                asytaskFinished = true;
+                asytaskFinished = true;                 // 완료되면 true
                 // 콜백
                 resumeDownloadListener.onComplete();
             }
 
             protected void onCancelled() {
                 super.onCancelled();
-                Log.d(TAG, "async Task is cancelled: " + asyncTask.isCancelled());
-                asytaskFinished = true;
+                Log.d(TAG, "Async Task is cancelled: " + asyncTask.isCancelled());
+                asytaskFinished = true;                 // 취소되도 true로
             }
         }.execute();
     }
