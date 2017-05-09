@@ -13,15 +13,15 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * Created by gilsoo on 2017-03-26.
+ * Created by gilsoo on 2017-05-08.
  */
-public class PrefetchDownload {
+public class OriginalDownload {         // Original Download with prefeching
 
-    private static final String TAG = PrefetchDownload.class.getSimpleName();
+    private static final String TAG = OriginalDownload.class.getSimpleName();
     private String urlStr;
     private String filename;
     private String fileExtension;
-//    private final String PREFS_NAME = PrefetchConfig.PREFS_NAME;
+    //    private final String PREFS_NAME = PrefetchConfig.PREFS_NAME;
 //    private final String PREFS_KEY_PROGRESS = PrefetchConfig.PREFS_KEY_PROGRESS;
 //    private final String Local_Name = PrefetchConfig.Local_Name;
     private File fileDir;
@@ -30,28 +30,34 @@ public class PrefetchDownload {
 
     private AsyncTask asyncTask;
     private boolean asytaskFinished = true;
-    private static PrefetchDownload prefetchDownload;
+    private static OriginalDownload prefetchDownload;
     ResumeDownloadListener resumeDownloadListener;
 
-    public PrefetchDownload(ResumeDownloadListener resumeDownloadListener) {
+    public OriginalDownload() {
         fileDir = new File(String.valueOf(Environment.getExternalStorageDirectory()) + PrefetchConfig.Local_Name);
         mDownloader = new ResumeDownloader(mDownloader.PAUSE);
-        this.resumeDownloadListener = resumeDownloadListener;
     }
 
-    public static PrefetchDownload newInstance(ResumeDownloadListener resumeDownloadListener) {             // 프리페칭 용
+    public static OriginalDownload newInstance() {             // 프리페칭 용
         if(prefetchDownload == null){
-            prefetchDownload = new PrefetchDownload(resumeDownloadListener);
+            prefetchDownload = new OriginalDownload();
         }
         return prefetchDownload;
     }
+
+    public  OriginalDownload setResumeDownloader(ResumeDownloadListener resumeDownloadListener){
+        this.resumeDownloadListener = resumeDownloadListener;
+        return prefetchDownload;
+    }
+
+
 
     /**
      * 인자 url정보, SharePreferences
      * @param urlStr
      * @param settings
      */
-    public PrefetchDownload initUrl(String urlStr, SharedPreferences settings) {
+    public OriginalDownload initUrl(String urlStr, SharedPreferences settings) {
         this.urlStr = urlStr;
         this.settings = settings;
         String file = urlStr.substring(urlStr.lastIndexOf("/") + 1);
@@ -62,8 +68,10 @@ public class PrefetchDownload {
         return prefetchDownload;
     }
 
-    public PrefetchDownload initUrl(String urlStr) {
+    public OriginalDownload initUrl(String urlStr) {
         this.urlStr = urlStr;
+
+        Log.d(TAG, "file extension: " + fileExtension + ", file name: " + filename);
         String file = urlStr.substring(urlStr.lastIndexOf("/") + 1);
         fileExtension = file.substring(file.lastIndexOf("."));
         filename = file.substring(0, file.lastIndexOf("."));
@@ -73,12 +81,10 @@ public class PrefetchDownload {
     }
 
     public void startPrefetching() {
-
         if (asytaskFinished && mDownloader.getStatus() != mDownloader.DOWNLOADING) {
             startDownload();
         }
-        Log.d(TAG, "startPrefetching ::: asytaskFinsished : " + asytaskFinished);
-        Log.d(TAG, "startPrefetching ::: status: " + mDownloader.getStatusStr());
+        Log.d(TAG, "status: " + mDownloader.getStatusStr());
 
     }
 
@@ -86,10 +92,9 @@ public class PrefetchDownload {
         if (mDownloader.getStatus() == mDownloader.DOWNLOADING) {
             mDownloader.setStatus(mDownloader.PAUSE);
             asyncTask.cancel(true);
-            Log.d(TAG, "stopPrefetching ::: paused & asyncTask is cancelled - " + asyncTask.isCancelled());
+            Log.d(TAG, "paused & asyncTask is cancelled - " + asyncTask.isCancelled());
         }
-        Log.d(TAG, "stopPrefetching ::: asytaskFinsished : " + asytaskFinished);
-        Log.d(TAG, "stopPrefetching ::: status: " + mDownloader.getStatusStr());
+        Log.d(TAG, "status: " + mDownloader.getStatusStr());
     }
 
     private void startDownload() {
@@ -104,7 +109,7 @@ public class PrefetchDownload {
                     }
                     mDownloader.downloadFile(urlStr,
                             (new File(fileDir.getAbsolutePath(), filename + fileExtension)).getAbsolutePath(),
-                           resumeDownloadListener);
+                            resumeDownloadListener);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     Log.d(TAG, "File not found !");
@@ -123,17 +128,18 @@ public class PrefetchDownload {
             protected void onPostExecute(ResumeDownloader o) {
                 super.onPostExecute(o);
                 Log.d(TAG, "Async task finished :: fileName - " + filename);
-                asytaskFinished = true;                 // 완료되면 true
+
+                asytaskFinished = true;
+
                 // 콜백
                 resumeDownloadListener.onComplete();
             }
 
             protected void onCancelled() {
                 super.onCancelled();
-                Log.d(TAG, "Async Task is cancelled: " + asyncTask.isCancelled());
-                asytaskFinished = true;                 // 취소되도 true로
+                Log.d(TAG, "async Task is cancelled: " + asyncTask.isCancelled());
+                asytaskFinished = true;
             }
         }.execute();
     }
-
 }

@@ -22,7 +22,10 @@ public class PrefetchTestActivity extends AppCompatActivity implements ResumeDow
         setContentView(R.layout.activity_prefetch_test);
 //      'thumbnail_contents/' 자르고 보내야함!
         // ToDo. gilsoo_이런식으로 큐에다가 받을 이미지 담아논다. 그리고 그냥 시작하면 큐에서 하나씩 빼와서 받아옴, 완료되면 큐에서 제거
-
+        // thumb_[2017-02-19-08-17-43]3
+        // thumb_[2017-03-04-16-21-31]1217780500_tMBpgmLU_1319513078_11
+        PrefetchConfig.prefetching_queue.add("thumb_[2017-02-19-08-17-43]3.jpg");
+        PrefetchConfig.prefetching_queue.add("thumb_[2017-03-04-16-21-31]1217780500_tMBpgmLU_1319513078_11.jpg");
         textPrefetch = (TextView)findViewById(R.id.textPrefetch);
         Iterator<String> iterator = PrefetchConfig.prefetching_queue.iterator();
         String text = "";
@@ -36,7 +39,8 @@ public class PrefetchTestActivity extends AppCompatActivity implements ResumeDow
     public void onPrefetchBtnClick(View v){
         switch(v.getId()){
             case R.id.btnStartPrefetch:
-                PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek(), getSharedPreferences(PrefetchConfig.PREFS_NAME, 0)).startPrefetching();
+                if(!PrefetchConfig.prefetching_queue.isEmpty())
+                    PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek(), getSharedPreferences(PrefetchConfig.PREFS_NAME, 0)).startPrefetching();
                 break;
             case R.id.btnStopPrefetch:
                 PrefetchDownload.newInstance(this).stopPrefetching();
@@ -69,6 +73,6 @@ public class PrefetchTestActivity extends AppCompatActivity implements ResumeDow
 
     @Override
     public void onComplete() {
-
+        PrefetchConfig.prefetching_queue.poll();
     }
 }

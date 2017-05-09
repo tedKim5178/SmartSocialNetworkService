@@ -27,7 +27,7 @@ public class CallManagement implements ResumeDownloadListener{
         callManageHashMap = new HashMap();
         prefetchingThread = new PrefetchingThread();
 //        prefetchingThread.start();
-        // ToDo. gilsoo_이런식으로 큐에다가 받을 이미지 담아논다. 그리고 그냥 시작하면 큐에서 하나씩 빼와서 받아옴, 완료되면 큐에서 제거
+
 
     }
 
@@ -79,7 +79,9 @@ public class CallManagement implements ResumeDownloadListener{
 
     @Override
     public void onComplete() {
-        Log.d(TAG, "Prefetching onComplete");
+        Log.d(TAG, "CallManagerMent:::Prefetching onComplete");
+        Log.d(TAG, "CallManagerMent::: element - " +  PrefetchConfig.prefetching_queue.peek());
+        PrefetchConfig.prefetching_queue.poll();        // 완료된 프레페칭 콘텐츠 큐에서 제거
         if(!PrefetchConfig.prefetching_queue.isEmpty()) {
             PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek()).startPrefetching();
         }

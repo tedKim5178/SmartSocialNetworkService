@@ -20,7 +20,7 @@
         <activity android:name=".activity.OriginalImageActivity" />
         <activity
             android:name=".activity.RegisterActivity"
-            android:windowSoftInputMode="adjustNothing"></activity>
+            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".activity.CommentActivity" />
         <activity android:name=".PeopleWhoLikeThisPostActivity" />
         <activity
@@ -33,6 +33,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".prefetch.PrefetchTestActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
     </application>
 

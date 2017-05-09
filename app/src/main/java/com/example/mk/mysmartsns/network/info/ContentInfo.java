@@ -24,6 +24,7 @@ public class ContentInfo implements Serializable{
     private int content_like_count;
     private int content_like_flag;          // 추가
     private int content_comment_count;
+    private int content_size;                // 추가
     List<BigHashInfo> hash_list;
     List<SmallHashInfo> small_hash_list;
 
@@ -155,5 +156,13 @@ public class ContentInfo implements Serializable{
 
     public void setContent_host_id(String content_host_id) {
         this.content_host_id = content_host_id;
+    }
+
+    public int getContent_size() {
+        return content_size;
+    }
+
+    public void setContent_size(int content_size) {
+        this.content_size = content_size;
     }
 }

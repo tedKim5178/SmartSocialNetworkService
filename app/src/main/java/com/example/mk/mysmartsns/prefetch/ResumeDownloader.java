@@ -17,7 +17,8 @@ public class ResumeDownloader {
     private static final String TAG = ResumeDownloader.class.getSimpleName();
     private int timeout;
     private File downloadedFile;
-    private boolean startNewDownload;
+    private boolean startNewDownload;                   // 새로 시작되거나, 이어 받거나 확인 flag
+    private boolean isCompletedDownload;                // 이미 파일이 로컬에 존재하는지 확인 flag
 
     private long fileLength = 0;
 
@@ -42,40 +43,41 @@ public class ResumeDownloader {
 
     public void downloadFile(String urlStr, String toFile, ResumeDownloadListener downloadListener) throws IOException {
         Log.d(TAG, toFile);
-//        Log.d(TAG, "length : " + new File(toFile).length());
-
         prepareDownload(urlStr, toFile, downloadListener);
         HttpURLConnection connection = createConnection(urlStr, downloadListener);
         setStatus(DOWNLOADING);
-        if (!startNewDownload) {
-//            connection.setRequestProperty("Range", "bytes="+String.valueOf(downloadedFile.length()) + "-");
+        if (!startNewDownload) {                // 새로받는게 아니라면 서버로부터 범위 가져와야 함 - 현재 로컬에 있는 파일 크기를 보내준다.
             connection.setRequestProperty("Range", String.valueOf(downloadedFile.length()));
         }
         downloadListener.progressUpdate();
         InputStream in = new BufferedInputStream(connection.getInputStream(), BUFFER_SIZE);
         FileOutputStream writer;
         long progressLength = 0;
-        if (!startNewDownload) {
+        if (!startNewDownload) {                    // 이어 받는 거라면
             progressLength = downloadedFile.length();
             downloadListener.progressUpdate();
-            // append to exist downloadedFile
-            writer = new FileOutputStream(toFile, true);
-        } else {
+            writer = new FileOutputStream(toFile, true);                    // append flag = true; (이어서 쓰기)
+        } else {                                    // 새로 받는 거라면
             downloadListener.progressUpdate();
             writer = new FileOutputStream(toFile);
             // save remote last modified data to local
         }
         try {
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int count;
-            while (getStatus() == DOWNLOADING && (count = in.read(buffer)) != -1) {
-                progressLength += count;
-                writer.write(buffer, 0, count);
-                // progress....
-                downloadListener.progressUpdate();
-                if (progressLength == fileLength) {
-                    progressLength = 0;
-                    setStatus(COMPLETE);
+            if(isCompletedDownload){
+                setStatus(COMPLETE);
+            }else {
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int count;
+
+                while (getStatus() == DOWNLOADING && (count = in.read(buffer)) != -1) {
+                    progressLength += count;
+                    writer.write(buffer, 0, count);
+                    // progress....
+                    downloadListener.progressUpdate();
+                    if (progressLength == fileLength) {
+                        progressLength = 0;
+                        setStatus(COMPLETE);
+                    }
                 }
             }
         } finally {
@@ -94,9 +96,13 @@ public class ResumeDownloader {
 
 //        startNewDownload = (!downloadedFile.exists() || downloadedFile.length() >= fileLength ||        // downloadedFile.length()>=fileLength ?
 //                !remoteLastModified.equalsIgnoreCase(lastModified));
-        startNewDownload = (!downloadedFile.exists() || downloadedFile.length() >= fileLength);
+        startNewDownload = (!downloadedFile.exists());                                                      // 파일이 없으면 새로받기
+        isCompletedDownload = (downloadedFile.exists() && downloadedFile.length() >= fileLength);           // 파일이 있다 -> 다운로드가 완료 or 미완료
+
         Log.d(TAG, "url : " + urlStr);
         Log.d(TAG, "code : " + conn.getResponseCode() + ", message : " + conn.getResponseMessage());
+        Log.d(TAG, "startNewDownload : "+startNewDownload);
+        Log.d(TAG, "isCompletedDownload : "+isCompletedDownload);
         conn.disconnect();
         downloadListener.progressUpdate();
         Log.d(TAG, "=========================================");
@@ -112,7 +118,7 @@ public class ResumeDownloader {
         conn.setDoOutput(true);
         conn.setReadTimeout(timeout);
         conn.setConnectTimeout(timeout);
-//        Log.d("prepare", "code : " + conn.getResponseCode() + ", message : " + conn.getResponseMessage());
+//        Log.d(TAG, "createConnection ::: - code : " + conn.getResponseCode() + ", message : " + conn.getResponseMessage());           // ** 이거를 하고 뒤에 setRquest 하면 오류난다. 기억하자
         return conn;
     }
 
