@@ -22,7 +22,6 @@ import com.example.mk.mysmartsns.prefetch.ResumeDownloadListener;
 
 import java.io.File;
 import java.util.Iterator;
-
 /**
  * Created by mk on 2017-02-15.
  */
@@ -37,6 +36,7 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
     File file;
     String prefetchImageUrl;
     ImageView original_image_view;
+    boolean hit = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,21 +49,41 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
 
         String str = "thumbnail_contents/";
         int str_length = str.length();
-       prefetchImageUrl = thumbnail_url.substring(str_length);
+        prefetchImageUrl = thumbnail_url.substring(str_length);
 
         file = new File(String.valueOf(Environment.getExternalStorageDirectory()) + PrefetchConfig.Local_Name + "/" + prefetchImageUrl);
 
         int user_no = MyConfig.myInfo.getUser_no();
 
+        // if the prefetching_Queue contains the image clicked
+        if(file.exists() || PrefetchConfig.prefetching_queue.contains(prefetchImageUrl)){
+            hit = true;
+        }
+
+        Log.d(TAG, "reqeustHitInformation hit : " + hit);
+
+        InteractionManager.getInstance(this).requestHitInformation(user_no, hit, new OnMyApiListener() {
+            @Override
+            public void success(Object response) {
+
+            }
+
+            @Override
+            public void fail() {
+
+            }
+        });
+
+
         // 서버와 통신하여 original image url 과 original image size를 받아온다.
-        CallManagement.getInstance().addCall(DOWNLOAD_ORIGINAL_IMAGE, true);
+//        CallManagement.getInstance().addCall(DOWNLOAD_ORIGINAL_IMAGE, true);
         InteractionManager.getInstance(this).requestContentOriginalDownload(thumbnail_url,bigHashInfo, smallHashInfo, user_no, new OnMyApiListener() {
             @Override
             public void success(Object response) {
                 ContentInfo contentInfo = (ContentInfo) response;
 
                 if(contentInfo != null) {
-                    if(file.exists() && file.length() >= contentInfo.getContent_size()){              // 로컬에 다 받아져 있다면
+                    if(file.exists() && file.length() >= contentInfo.getContent_size()){              // 로컬에 받아져 있다면
                         Log.d(TAG, "InLocal :: file.length() : " + file.length() + ", content_size : " + contentInfo.getContent_size());
                         Toast.makeText(getBaseContext(), "로컬에서 이미지 로드", Toast.LENGTH_SHORT).show();
                         Glide.with(OriginalImageActivity.this).load(file).into(original_image_view);
@@ -87,7 +107,7 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
                     }
 
                 }
-                CallManagement.getInstance().subtractCall(DOWNLOAD_ORIGINAL_IMAGE, false);
+//                CallManagement.getInstance().subtractCall(DOWNLOAD_ORIGINAL_IMAGE, false);
             }
 
             @Override

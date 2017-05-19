@@ -17,7 +17,6 @@ import com.example.mk.mysmartsns.network.info.CommentInfo;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
-
 /**
  * Created by mk on 2017-02-23.
  */

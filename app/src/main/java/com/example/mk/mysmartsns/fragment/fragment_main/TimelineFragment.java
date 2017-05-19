@@ -19,17 +19,17 @@ import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
+import com.example.mk.mysmartsns.prefetch.ResumeDownloadListener;
 import com.example.mk.mysmartsns.ztest.ListItems;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Created by mk on 2017-02-02.
  */
 
-public class TimelineFragment extends android.support.v4.app.Fragment {
+public class TimelineFragment extends android.support.v4.app.Fragment implements ResumeDownloadListener {
     private static final String TAG = TimelineFragment.class.getSimpleName();
     private TimelineAdapter mAdapter;
     RecyclerView mRecyclerView;
@@ -69,10 +69,9 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
             public void onLoadMore(int current_page) {
                 Log.d(TAG, "프리패칭테스트 Current Page : " + current_page);
                 // 프리패칭 queue에서 사진들 지워주는 부분..!
-                deleteImagesFromQueue();
+//                deleteImagesFromQueue();
                 getThumbnailContentsFromServer(current_page);
                 getPrefetchingImageFromServer(current_page+1);
-                mAdapter.notifyDataSetChanged();
             }
         });
 
@@ -85,7 +84,6 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
     }
 
     public void setDataChanged(int position, int the_number_of_comment){
-        Toast.makeText(getContext(),"tqtqtq", Toast.LENGTH_SHORT).show();
         mAdapter.contentInfoList.get(position).setContent_comment_count(the_number_of_comment);
         mAdapter.notifyItemChanged(position);
     }
@@ -96,16 +94,14 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
             @Override
             public void success(Object response) {
                 List<PrefetchImageInfo> prefetching_image = (List<PrefetchImageInfo>)response;
-                Log.d(TAG, "프리페칭테스트 정상적으로 success! 콜백 완료");
                 for(int i=0; i< prefetching_image.size(); i++){
                     String str = "thumbnail_contents/";
                     int str_length = str.length();
                     String prefetchImageUrl = prefetching_image.get(i).getContent_url().substring(str_length);
-                    Log.d(TAG, "프리페칭테스트 : " + prefetchImageUrl);
+                    Log.d(TAG, "CallManagerMent:::Prefetching offer prefetchImageUrl : " + prefetchImageUrl);
                     PrefetchConfig.prefetching_queue.offer(prefetchImageUrl);
                 }
             }
-
             @Override
             public void fail() {
 
@@ -137,8 +133,15 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
                     }
                 }
                 if(getActivity() != null){
-                    mAdapter = new TimelineAdapter(getContext(), contentInfoList, getActivity().getSupportFragmentManager());
-                    mRecyclerView.setAdapter(mAdapter);
+                    if(mAdapter == null){
+                        Log.d(TAG, "contentInfoList size : " + contentInfoList.size());
+                        mAdapter = new TimelineAdapter(getContext(), contentInfoList, getActivity().getSupportFragmentManager());
+                        mRecyclerView.setAdapter(mAdapter);
+                    }else{
+                        Log.d(TAG, "contentInfoList size : " + contentInfoList.size());
+                        mAdapter.addContentInfo(contentInfoList);
+                        mAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
@@ -151,6 +154,16 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
 
     // queue에서 image 지워주기
     public void deleteImagesFromQueue(){
+
+    }
+
+    @Override
+    public void progressUpdate() {
+
+    }
+
+    @Override
+    public void onComplete() {
 
     }
 }

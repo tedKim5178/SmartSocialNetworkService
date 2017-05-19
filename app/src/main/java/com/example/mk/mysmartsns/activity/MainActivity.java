@@ -3,6 +3,7 @@ package com.example.mk.mysmartsns.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.mk.mysmartsns.BottomNavigationViewHelper;
 import com.example.mk.mysmartsns.R;
+import com.example.mk.mysmartsns.config.PrefetchConfig;
 import com.example.mk.mysmartsns.fragment.fragment__search.HashTagSearchFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.LogFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.MyTimelineFragment;
@@ -52,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // delete files prefetched before
+        deletePrefetchedFiles();
         // Butterknife bind
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
@@ -191,15 +196,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initView(){
-
-    }
-
     private void initUrl(){
         String file = urlStr.substring(urlStr.lastIndexOf("/") + 1);
         fileExtension = file.substring(file.lastIndexOf("."));
         filename = file.substring(0, file.lastIndexOf("."));
         Log.d(TAG, "프리페칭테스트 : " + fileExtension + " , " + filename);
     }
+
+    public void deletePrefetchedFiles(){
+        String filePath = String.valueOf(Environment.getExternalStorageDirectory()) + PrefetchConfig.Local_Name;
+        File file = new File(filePath);
+        if(file.isDirectory()){
+            String[] fileList = file.list();
+            for(int i=0; i<fileList.length; i++){
+                File fileDelete = new File(filePath + "/" + fileList[i]);
+                fileDelete.delete();
+            }
+        }
+    }
+
 }
+
 

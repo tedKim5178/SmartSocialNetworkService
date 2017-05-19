@@ -47,17 +47,21 @@ import static com.example.mk.mysmartsns.config.APIConfig.baseUrl;
  * Created by mk on 2017-02-02.
  */
 
+/**
+ * Created by mk on 2017-02-02.
+ */
+
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostViewHolder>{
     private static final String TAG = TimelineAdapter.class.getSimpleName();
     private Context mContext;
     Spannable span;
 
     private FragmentManager fragmentManager;
-    EndlessScrollListener endlessScrollListener;
+    //    EndlessScrollListener endlessScrollListener;
     public List<ContentInfo> contentInfoList;
-    public void setEndlessScrollListener(EndlessScrollListener endlessScrollListener){
-        this.endlessScrollListener = endlessScrollListener;
-    }
+//    public void setEndlessScrollListener(EndlessScrollListener endlessScrollListener){
+//        this.endlessScrollListener = endlessScrollListener;
+//    }
 
     public TimelineAdapter(Context mContext, List<ContentInfo> contentInfoList, FragmentManager fragmentManager){
         this.mContext = mContext;
@@ -74,17 +78,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
 
     @Override
     public void onBindViewHolder(TimelineAdapter.PostViewHolder holder, final int position) {
-        if(position == getItemCount() -1){
-            if(endlessScrollListener != null){
-                endlessScrollListener.onLoadMore(position);
-            }
-        }
 
-        Log.d(TAG, "레이아웃크기테스트 width, height in adapter: " + contentInfoList.get(position).getContent_width() + " , " + contentInfoList.get(position).getContent_height());
+        Log.d(TAG, "ThumbnailContentsNo : " + contentInfoList.get(position).getContent_no());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Integer.parseInt(contentInfoList.get(position).getContent_width()), Integer.parseInt(contentInfoList.get(position).getContent_height()));        // 크기 지정
         holder.image_view.setLayoutParams(params);
         Glide.with(mContext).load(baseUrl + "/" + contentInfoList.get(position).getContent_url()).into(holder.image_view);
-        Log.d(TAG, "profiletest: " + baseUrl + "profile_image/" + contentInfoList.get(position).getContent_host_profile_url());
         if(contentInfoList.get(position).getContent_host_profile_url() == null)
             Glide.with(mContext).load(R.drawable.personurl).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.poster_profile);
         else {
@@ -94,14 +92,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
         holder.the_number_of_comments.setText(String.valueOf(contentInfoList.get(position).getContent_comment_count()) + "개의 댓글 보기");
         holder.poster_name.setText(contentInfoList.get(position).getContent_host());
 
-        // 여기서 디스크립션을 그냥 setText 해준다. 결국 이부분에서 로직을 돌려야 할거같음...!
         String description = contentInfoList.get(position).getContent_desc();
         span = Spannable.Factory.getInstance().newSpannable(description);
         descriptionToHashNavigation(description, holder.post_description_textview, position);
         holder.post_description_textview.setText(span);
         holder.post_description_textview.setMovementMethod(LinkMovementMethod.getInstance());
-//        holder.post_description.setText(contentInfoList.get(position).getContent_desc());
-
 
         // add bighash
         holder.layoutPostBigHash.removeAllViews();                                     // 부모의 자식 뷰를 모두 지우고
@@ -477,4 +472,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
         span.setSpan(new StyleSpan(Typeface.BOLD), start,end-1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
+    public void addContentInfo(List<ContentInfo> contentInfos){
+        for(int i=0; i<contentInfos.size(); i++){
+            contentInfoList.add(contentInfos.get(i));
+        }
+    }
 }

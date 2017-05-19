@@ -36,11 +36,34 @@ public class ContentManager {
     private OnMyApiListener listener;
     private Context context;
 
+    private final String REQUEST_HIT_INFORMATION = "requestHitInformation";
+
     public ContentManager(Context context, OnMyApiListener listener){
         this.context = context;
         this.listener = listener;
     }
+    public void requestHitInformation(int user_no, boolean hit){
+        SNSService snsService = ServerController.getInstance().getSnsService();
 
+        final CallManagement callManagement = CallManagement.getInstance();
+        callManagement.addCall(REQUEST_HIT_INFORMATION, true);
+        Call<Void> callRequestHitInformation = snsService.requestHitInformation(user_no, hit);
+        callRequestHitInformation.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "requestHitInformation::isSuccessful() : " + response.code());
+                }else{
+                    Log.d(TAG, "requestHitInformation::isNotSuccessful() : " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d(TAG, "requestHitInformation::onFailure() : " + t.getMessage());
+            }
+        });
+    }
     public void requestAddComment(int user_no, String host_no, int content_no, String uc_comment_name){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
@@ -511,19 +534,11 @@ public class ContentManager {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
-                    Log.d(TAG, "서치해쉬카운트테스트 isSuccessful");
-                }else{
-                    Log.d(TAG, "서치해쉬카운트테스트 isFail");
-                }
-
                 callManagement.subtractCall("requestCountSearchedHashIncrease", false);
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d(TAG, "커멘트onFailure");
-
                 callManagement.subtractCall("requestCountSearchedHashIncrease", false);
             }
         });
@@ -533,21 +548,17 @@ public class ContentManager {
         SNSService snsService = ServerController.getInstance().getSnsService();
         final CallManagement callManagement = CallManagement.getInstance();
         callManagement.addCall("requestPrefetchingList", true);
-
         Call<List<PrefetchImageInfo>> call = snsService.requestPrefetchingList(user_no, current_page);
         call.enqueue(new Callback<List<PrefetchImageInfo>>() {
             @Override
             public void onResponse(Call<List<PrefetchImageInfo>> call, Response<List<PrefetchImageInfo>> response) {
                 if(response.isSuccessful()){
-                    Log.d(TAG, "프리페칭테스트 isSuccessful");
                     listener.success(response.body());
                 }else{
-                    Log.d(TAG, "프리페칭테스트 isFail");
                     Log.d(TAG, response.message());
                 }
                 callManagement.subtractCall("requestPrefetchingList", false);
             }
-
             @Override
             public void onFailure(Call<List<PrefetchImageInfo>> call, Throwable t) {
                 callManagement.subtractCall("requestPrefetchingList", false);

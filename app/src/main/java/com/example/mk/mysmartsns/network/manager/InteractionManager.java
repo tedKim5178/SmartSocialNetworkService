@@ -47,6 +47,10 @@ public class InteractionManager {
         new ContentManager(context, listener).requestContentOriginalDownload(thumbnail_url, bigHashInfo, smallHashInfo, user_no);
     }
 
+    public void requestHitInformation(int user_no, boolean hit, OnMyApiListener listener){
+        new ContentManager(context, listener).requestHitInformation(user_no, hit);
+    }
+
     public void requestContentBighashDownload(OnMyApiListener listener){
         new ContentManager(context, listener).requestContentBighashDownload();
     }
