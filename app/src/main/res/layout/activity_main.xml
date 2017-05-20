@@ -5,13 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:orientation="vertical"
+        android:background="?attr/colorPrimary">
+        <ProgressBar
+            android:id="@+id/progressPrefetch"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"/>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="4"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/headerLayout"
         android:layout_above="@+id/bottom_navigation"
         >
     </FrameLayout>

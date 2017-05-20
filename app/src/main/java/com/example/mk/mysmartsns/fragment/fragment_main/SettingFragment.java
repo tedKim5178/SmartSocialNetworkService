@@ -14,20 +14,20 @@ import com.example.mk.mysmartsns.R;
  * Created by mk on 2017-02-03.
  */
 
-public class LogFragment extends android.support.v4.app.Fragment {
+public class SettingFragment extends android.support.v4.app.Fragment {
 
     ImageView person_who_post;
     TextView text_about_log;
     ImageView image_I_post;
 
-    public static LogFragment newInstance() {
-        LogFragment fragment = new LogFragment();
+    public static SettingFragment newInstance() {
+        SettingFragment fragment = new SettingFragment();
         return fragment;
     }
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.fragment_log, container, false);
+        View view  = inflater.inflate(R.layout.fragment_setting, container, false);
 
         // 활동 로그를 보여주는 곳이다.
         // 리스트 뷰 형식으로 보여 줄 것이다. 모든 로그 기록을 다 보여주는가..?

@@ -1,7 +1,6 @@
 package com.example.mk.mysmartsns.activity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -11,17 +10,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mk.mysmartsns.BottomNavigationViewHelper;
 import com.example.mk.mysmartsns.R;
 import com.example.mk.mysmartsns.config.PrefetchConfig;
 import com.example.mk.mysmartsns.fragment.fragment__search.HashTagSearchFragment;
-import com.example.mk.mysmartsns.fragment.fragment_main.LogFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.MyTimelineFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.PostFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.SearchFragment;
+import com.example.mk.mysmartsns.fragment.fragment_main.SettingFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.TimelineFragment;
+import com.example.mk.mysmartsns.prefetch.Message;
 
 import java.io.File;
 
@@ -37,18 +41,14 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     private long backKeyPressedTime = 0;
 
-    private AsyncTask asyncTask;
     private String urlStr = "http://114.70.21.116:3001/prefetch/original/dodo.jpg";
     private String filename;
     private String fileExtension;
 
-    public final String PREFS_NAME = "MyResumableDownloadPrefsFile";
-    public final String PREFS_KEY_PROGRESS = "Progress";
-    public final String PREFS_KEY_LASTMODIFIED = "LastModified";
+    private static LinearLayout headerLayout;
+    private static ProgressBar progressPrefetch;
+    private static TextView textPrefetch;
 
-    private File fileDir;
-
-    private boolean asyncTaskFinished = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +57,16 @@ public class MainActivity extends AppCompatActivity {
 
         // delete files prefetched before
         deletePrefetchedFiles();
+
+        headerLayout = (LinearLayout) findViewById(R.id.headerLayout);
+        progressPrefetch = (ProgressBar)findViewById(R.id.progressPrefetch);
+        progressPrefetch.setProgress(0);
+        progressPrefetch.setMax(100);
+        progressPrefetch.setIndeterminate(false);
+        textPrefetch = (TextView)findViewById(R.id.textPrefetch);
+        onShowProgressbar(PrefetchConfig.isPrefetchingShow);
+
+
         // Butterknife bind
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
@@ -97,18 +107,7 @@ public class MainActivity extends AppCompatActivity {
                                     transaction.commit();
                                 }
                                 break;
-                            case R.id.action_log:
-                                if(bottomNavigationView.getMenu().getItem(0).isChecked())
-                                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
-                                if (!fragment.getTag().equals("log_fragment")) {
-//                                    if (fragment.getTag().equals("timeline_fragment")) {
-//                                        transaction.addToBackStack(null);
-//                                    }
-                                    transaction.remove(fragment).replace(R.id.frame_layout, LogFragment.newInstance(), "log_fragment");
-                                    transaction.commit();
 
-                                }
-                                break;
                             case R.id.action_mytimeline:
                                 if(bottomNavigationView.getMenu().getItem(0).isChecked())
                                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
@@ -118,6 +117,19 @@ public class MainActivity extends AppCompatActivity {
 //                                    }
                                     transaction.remove(fragment).replace(R.id.frame_layout, MyTimelineFragment.newInstance(), "my_timeline_fragment");
                                     transaction.commit();
+                                }
+                                break;
+
+                            case R.id.action_setting:
+                                if(bottomNavigationView.getMenu().getItem(0).isChecked())
+                                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                                if (!fragment.getTag().equals("setting_fragment")) {
+//                                    if (fragment.getTag().equals("timeline_fragment")) {
+//                                        transaction.addToBackStack(null);
+//                                    }
+                                    transaction.remove(fragment).replace(R.id.frame_layout, SettingFragment.newInstance(), "setting_fragment");
+                                    transaction.commit();
+
                                 }
                                 break;
                         }
@@ -212,6 +224,24 @@ public class MainActivity extends AppCompatActivity {
                 File fileDelete = new File(filePath + "/" + fileList[i]);
                 fileDelete.delete();
             }
+        }
+    }
+
+    public static void updateProgressBar(Message message){
+        if(progressPrefetch != null)
+          progressPrefetch.setProgress((int)((message.getLength()*100)/message.getTotalLength()));
+        textPrefetch.setText(message.getFileName());
+    }
+
+    public static void onShowProgressbar(boolean isShow){
+        if(isShow){
+//            headerLayout.setVisibility(View.VISIBLE);
+            progressPrefetch.setVisibility(View.VISIBLE);
+            textPrefetch.setVisibility(View.VISIBLE);
+        }else{
+//            headerLayout.setVisibility(View.INVISIBLE);
+            progressPrefetch.setVisibility(View.INVISIBLE);
+            textPrefetch.setVisibility(View.INVISIBLE);
         }
     }
 

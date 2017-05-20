@@ -4,8 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.mk.mysmartsns.PrefetchingThread;
+import com.example.mk.mysmartsns.activity.MainActivity;
 import com.example.mk.mysmartsns.config.APIConfig;
 import com.example.mk.mysmartsns.config.PrefetchConfig;
+import com.example.mk.mysmartsns.prefetch.Message;
 import com.example.mk.mysmartsns.prefetch.PrefetchDownload;
 import com.example.mk.mysmartsns.prefetch.ResumeDownloadListener;
 
@@ -23,12 +25,11 @@ public class CallManagement implements ResumeDownloadListener{
     HashMap callManageHashMap;
     Context context;
 
-    public CallManagement(){
+    public CallManagement(Context context){
         callManageHashMap = new HashMap();
         prefetchingThread = new PrefetchingThread();
 //        prefetchingThread.start();
-
-
+        this.context = context;
     }
 
     public static void test(){
@@ -40,9 +41,9 @@ public class CallManagement implements ResumeDownloadListener{
     }
 
     // Singleton
-    public static CallManagement getInstance(){
+    public static CallManagement getInstance(Context context){
         if(callManagement == null){
-            callManagement = new CallManagement();
+            callManagement = new CallManagement(context);
         }
         return callManagement;
     }
@@ -73,7 +74,9 @@ public class CallManagement implements ResumeDownloadListener{
 
 
     @Override
-    public void progressUpdate() {
+    public void progressUpdate(Message message) {
+//        ((MainActivity)context).updateProgressBar(message);
+        MainActivity.updateProgressBar(message);
 
     }
 
@@ -83,6 +86,7 @@ public class CallManagement implements ResumeDownloadListener{
         Log.d(TAG, "CallManagerMent::: element - " +  PrefetchConfig.prefetching_queue.peek());
         PrefetchConfig.prefetching_queue.poll();        // 완료된 프레페칭 콘텐츠 큐에서 제거
         if(!PrefetchConfig.prefetching_queue.isEmpty()) {
+            MainActivity.updateProgressBar(new Message(0,PrefetchConfig.prefetching_queue.peek() ,100));
             PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek()).startPrefetching();
         }
     }

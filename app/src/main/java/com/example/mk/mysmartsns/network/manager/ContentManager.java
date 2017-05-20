@@ -45,7 +45,7 @@ public class ContentManager {
     public void requestHitInformation(int user_no, boolean hit){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall(REQUEST_HIT_INFORMATION, true);
         Call<Void> callRequestHitInformation = snsService.requestHitInformation(user_no, hit);
         callRequestHitInformation.enqueue(new Callback<Void>() {
@@ -67,7 +67,7 @@ public class ContentManager {
     public void requestAddComment(int user_no, String host_no, int content_no, String uc_comment_name){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestAddComment", true);
 
         Call<List<CommentInfo>> callRequestAddComment = snsService.requestAddComment(user_no, host_no, content_no, uc_comment_name);
@@ -93,7 +93,7 @@ public class ContentManager {
 
     public void requestDownloadComment(int content_no){
         SNSService snsService = ServerController.getInstance().getSnsService();
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestDownloadComment", true);
         Call<List<CommentInfo>> callRequestDownloadComment = snsService.requestDownloadComment(content_no);
         callRequestDownloadComment.enqueue(new Callback<List<CommentInfo>>() {
@@ -118,7 +118,7 @@ public class ContentManager {
 
     public void requestUserThumbnailContents(int user_no, int host_no){
         SNSService snsService = ServerController.getInstance().getSnsService();
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestUserThumbnailContents", true);
         Call<List<ContentInfo>> callRequestThumbnailContents = snsService.requestUserThumbnailContents(user_no, host_no);
         callRequestThumbnailContents.enqueue(new Callback<List<ContentInfo>>() {
@@ -145,7 +145,7 @@ public class ContentManager {
     public void requestContentThumbnailDownload(int user_no, int current_page){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestContentThumbnailDownload", true);
 
         Call<List<ContentInfo>> callRequestThumbnailContents = snsService.requestThumbnailContents(user_no, current_page);
@@ -173,7 +173,7 @@ public class ContentManager {
     public void requestContentOriginalDownload(String thumnbail_url, String bigHashInfo, String smallHashInfo, int user_no){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestContentOriginalDownload", true);
 
         Call<ContentInfo> callRequestOriginContent = snsService.requestOriginContent(thumnbail_url, bigHashInfo, smallHashInfo, user_no);
@@ -201,7 +201,7 @@ public class ContentManager {
     public void requestLikeClicked(int user_no, int content_no){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestLikeClicked", true);
 
         Call<ContentInfo> likeClicked = snsService.requestLikeClicked(user_no, content_no);
@@ -228,7 +228,7 @@ public class ContentManager {
     public void requestUnLikeClicked(int user_no, int content_no){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestUnLikeClicked", true);
 
         Call<ContentInfo> likeClicked = snsService.requestUnLikeClicked(user_no, content_no);
@@ -254,7 +254,7 @@ public class ContentManager {
     public void requestPeopleWhoLikeThisPost(int content_no){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestPeopleWhoLikeThisPost", true);
 
         Call<List<UserInfo>> likeClicked = snsService.requestPeopleWhoLikeThisPost(content_no);
@@ -281,7 +281,7 @@ public class ContentManager {
     public void requestContentBighashDownload(){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestContentBighashDownload", true);
 
         Call<List<BigHashInfo>> callRequestBighash = snsService.requestBighash();
@@ -310,7 +310,7 @@ public class ContentManager {
     public void requestContentSmallhashDownload(String smallhash){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestContentSmallhashDownload", true);
 
         Call<List<SmallHashInfo>> callRequestSmallhash = snsService.requestSmallhash(smallhash);
@@ -339,7 +339,7 @@ public class ContentManager {
     public void requestSearchContents(String hash, int user_no){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestSearchContents", true);
 
         Call<List<ContentInfo>> callRequestSearchContents = snsService.requestSearchContents(hash, user_no);
@@ -386,7 +386,7 @@ public class ContentManager {
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), smallhash);
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestContentUpload", true);
 
         Call<ResponseBody> call = snsService.uploadContents(descriptionBody, hostBody, bigHashBody, smallHashBody, body);
@@ -418,7 +418,7 @@ public class ContentManager {
 
     public void requestCountLikeIncrease(int user_no, ContentInfo contentInfo){
         SNSService snsService = ServerController.getInstance().getSnsService();
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestCountLikeIncrease", true);
         Gson gson = new Gson();
         String contentInfoJson = gson.toJson(contentInfo);
@@ -445,7 +445,7 @@ public class ContentManager {
 
     public void requestCountCommentIncrease(int user_no, ContentInfo contentInfo){
         SNSService snsService = ServerController.getInstance().getSnsService();
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestCountCommentIncrease", true);
         Gson gson = new Gson();
         String contentInfoJson = gson.toJson(contentInfo);
@@ -472,7 +472,7 @@ public class ContentManager {
 
     public void requestCountSmallHashIncrease(int user_no, String bighash, int hash){
         SNSService snsService = ServerController.getInstance().getSnsService();
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestCountSmallHashIncrease", true);
 
         Call<Void> call = snsService.countSmallHashIncrease(user_no, bighash, hash);
@@ -499,7 +499,7 @@ public class ContentManager {
 
     public void requestCountBigHashIncrease(int user_no, int bighash_no){
         SNSService snsService = ServerController.getInstance().getSnsService();
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestCountBigHashIncrease", true);
 
         Log.d(TAG, "빅해쉬카운트테스트 : " + user_no + " , " + bighash_no);
@@ -527,7 +527,7 @@ public class ContentManager {
 
     public void requestCountSearchedHashIncrease(int user_no, String hash){
         SNSService snsService = ServerController.getInstance().getSnsService();
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestCountSearchedHashIncrease", true);
 
         Call<Void> call = snsService.countSearchedHashIncrease(user_no, hash);
@@ -546,7 +546,7 @@ public class ContentManager {
 
     public void requestPrefetchingList(int user_no, int current_page){
         SNSService snsService = ServerController.getInstance().getSnsService();
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestPrefetchingList", true);
         Call<List<PrefetchImageInfo>> call = snsService.requestPrefetchingList(user_no, current_page);
         call.enqueue(new Callback<List<PrefetchImageInfo>>() {

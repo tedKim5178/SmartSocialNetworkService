@@ -5,7 +5,11 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +21,7 @@ import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.model.CallManagement;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
+import com.example.mk.mysmartsns.prefetch.Message;
 import com.example.mk.mysmartsns.prefetch.OriginalDownload;
 import com.example.mk.mysmartsns.prefetch.ResumeDownloadListener;
 
@@ -29,13 +34,19 @@ import java.util.Iterator;
 public class OriginalImageActivity extends AppCompatActivity implements ResumeDownloadListener{
     private static final String TAG = OriginalImageActivity.class.getSimpleName();
 
-    //ToDo. gilsoo_변수명 바꾸기 영어로 뭐라해야될지 모르겟따 ㅠ
-    final String DOWNLOAD_ORIGINAL_SEMI_IMAGE = "download the original image semi prefetched";
-    final String DOWNLOAD_ORIGINAL_IMAGE = "download the original image";
+
+    private final String DOWNLOAD_ORIGINAL_SEMI_IMAGE = "download the original image semi prefetched";
+    private final String DOWNLOAD_ORIGINAL_IMAGE = "download the original image";
     boolean isFollowing = false;
-    File file;
-    String prefetchImageUrl;
-    ImageView original_image_view;
+    private  File file;
+    private  String prefetchImageUrl;
+    private  ImageView original_image_view;
+
+    private LinearLayout headerLayout;
+    private ProgressBar progressPrefetch;
+    private TextView textPrefetch;
+
+
     boolean hit = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +54,12 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
         setContentView(R.layout.activity_original_image);
 
         original_image_view = (ImageView)findViewById(R.id.original_image_view);
+        headerLayout = (LinearLayout)findViewById(R.id.headerLayout);
+        progressPrefetch = (ProgressBar)findViewById(R.id.progressPrefetch);
+        textPrefetch = (TextView)findViewById(R.id.textPrefetch);
+
+        onShowProgressbar(PrefetchConfig.isPrefetchingShow);
+
         String bigHashInfo = getIntent().getStringExtra("big_hash_info");
         String smallHashInfo = getIntent().getStringExtra("small_hash_info");
         String thumbnail_url = getIntent().getStringExtra("thumbnail_url");
@@ -92,7 +109,7 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
                         Log.d(TAG, "InLocal&Server :: file.length() : " + file.length() + ", content_size : " + contentInfo.getContent_size());
                         Toast.makeText(getBaseContext(), "로컬+서버 이미지 로드", Toast.LENGTH_SHORT).show();
 
-                        CallManagement.getInstance().addCall(DOWNLOAD_ORIGINAL_SEMI_IMAGE, true);
+                        CallManagement.getInstance(getBaseContext()).addCall(DOWNLOAD_ORIGINAL_SEMI_IMAGE, true);
                         Log.d(TAG, "prefetchImageUrl : " + prefetchImageUrl);
                         OriginalDownload.newInstance().setResumeDownloader(OriginalImageActivity.this).initUrl(APIConfig.prefetchUrl + prefetchImageUrl).startPrefetching();
 
@@ -112,7 +129,7 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
 
             @Override
             public void fail() {
-                CallManagement.getInstance().subtractCall(DOWNLOAD_ORIGINAL_IMAGE, false);
+                CallManagement.getInstance(getBaseContext()).subtractCall(DOWNLOAD_ORIGINAL_IMAGE, false);
             }
         });
 
@@ -123,17 +140,19 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CallManagement.getInstance().subtractCall(DOWNLOAD_ORIGINAL_IMAGE, false);
+        CallManagement.getInstance(getBaseContext()).subtractCall(DOWNLOAD_ORIGINAL_IMAGE, false);
         if(isFollowing) {
-            CallManagement.getInstance().subtractCall(DOWNLOAD_ORIGINAL_SEMI_IMAGE, false);
+            CallManagement.getInstance(getBaseContext()).subtractCall(DOWNLOAD_ORIGINAL_SEMI_IMAGE, false);
             OriginalDownload.newInstance().stopPrefetching();
             isFollowing = false;
         }
     }
 
-    @Override
-    public void progressUpdate() {
 
+    @Override
+    public void progressUpdate(Message message) {
+        progressPrefetch.setProgress((int)((message.getLength()*100)/message.getTotalLength()));
+        textPrefetch.setText(message.getFileName());
     }
 
     @Override
@@ -145,8 +164,16 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
         while(iter.hasNext()){
             Log.d(TAG, "OriginalImageActivity ::: " + iter.next());
         }
-        CallManagement.getInstance().subtractCall(DOWNLOAD_ORIGINAL_SEMI_IMAGE, false);          // Call 관리에서 빼주고 다른 프리페칭은 시작
+        CallManagement.getInstance(getBaseContext()).subtractCall(DOWNLOAD_ORIGINAL_SEMI_IMAGE, false);          // Call 관리에서 빼주고 다른 프리페칭은 시작
         OriginalDownload.newInstance().stopPrefetching();                      // 다음 프리페칭 안되게 멈춰주고
         Glide.with(OriginalImageActivity.this).load(file).into(original_image_view);        // 이미지 로드
+    }
+
+    public void onShowProgressbar(boolean isShow){
+        if(isShow){
+            headerLayout.setVisibility(View.VISIBLE);
+        }else{
+            headerLayout.setVisibility(View.GONE);
+        }
     }
 }

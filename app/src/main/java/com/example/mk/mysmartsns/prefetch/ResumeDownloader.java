@@ -2,6 +2,8 @@ package com.example.mk.mysmartsns.prefetch;
 
 import android.util.Log;
 
+import com.example.mk.mysmartsns.config.PrefetchConfig;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 
 /**
  * Created by gilsoo on 2017-03-26.
@@ -22,6 +25,7 @@ public class ResumeDownloader {
 
     private long fileLength = 0;
 
+
     // CONSTANT
     public static final int DOWNLOADING = 0;
     public static final int COMPLETE = 1;
@@ -34,6 +38,8 @@ public class ResumeDownloader {
     private int status;
     private String[] statuses;
 
+//    private ProgressBarListener progressBarListener;
+
     public ResumeDownloader(int status) {
         timeout = 9000;                     // 9초동안 응답없으면 종료
         startNewDownload = true;
@@ -41,7 +47,7 @@ public class ResumeDownloader {
         statuses = new String[]{"Downloading", "Complete", "Pause", "Error"};
     }
 
-    public void downloadFile(String urlStr, String toFile, ResumeDownloadListener downloadListener) throws IOException {
+    public void downloadFile(String urlStr, String toFile, ResumeDownloadListener downloadListener, ProgressBarListener progressBarListener) throws IOException {
         Log.d(TAG, toFile);
         prepareDownload(urlStr, toFile, downloadListener);
         HttpURLConnection connection = createConnection(urlStr, downloadListener);
@@ -49,20 +55,20 @@ public class ResumeDownloader {
         if (!startNewDownload) {                // 새로받는게 아니라면 서버로부터 범위 가져와야 함 - 현재 로컬에 있는 파일 크기를 보내준다.
             connection.setRequestProperty("Range", String.valueOf(downloadedFile.length()));
         }
-        downloadListener.progressUpdate();
+//        downloadListener.progressUpdate();
         InputStream in = new BufferedInputStream(connection.getInputStream(), BUFFER_SIZE);
         FileOutputStream writer;
         long progressLength = 0;
-        if (!startNewDownload) {                    // 이어 받는 거라면
+        if (!startNewDownload && !isCompletedDownload) {                    // 이어 받는 거라면
             progressLength = downloadedFile.length();
-            downloadListener.progressUpdate();
+//  //        downloadListener.progressUpdate();
             writer = new FileOutputStream(toFile, true);                    // append flag = true; (이어서 쓰기)
         } else {                                    // 새로 받는 거라면
-            downloadListener.progressUpdate();
+//            downloadListener.progressUpdate();
             writer = new FileOutputStream(toFile);
             // save remote last modified data to local
         }
-        try {
+        try  {
             if(isCompletedDownload){
                 setStatus(COMPLETE);
             }else {
@@ -73,7 +79,8 @@ public class ResumeDownloader {
                     progressLength += count;
                     writer.write(buffer, 0, count);
                     // progress....
-                    downloadListener.progressUpdate();
+//                    downloadListener.progressUpdate();
+                    progressBarListener.progress(new Message(progressLength, toFile, fileLength));
                     if (progressLength == fileLength) {
                         progressLength = 0;
                         setStatus(COMPLETE);
@@ -88,8 +95,13 @@ public class ResumeDownloader {
     }
 
     private void prepareDownload(String urlStr, String toFile, ResumeDownloadListener downloadListener) throws IOException {
+        Log.d(TAG, "========= prefetch_list==============");
+        Iterator<String> iter = PrefetchConfig.prefetching_queue.iterator();
+        while(iter.hasNext()){
+            Log.d(TAG, iter.next());
+        }
         Log.d(TAG, "=============== prepare ================");
-        downloadListener.progressUpdate();
+//        downloadListener.progressUpdate();
         HttpURLConnection conn = createConnection(urlStr, downloadListener);
         downloadedFile = new File(toFile);
         fileLength = conn.getContentLength();
@@ -102,15 +114,15 @@ public class ResumeDownloader {
         Log.d(TAG, "url : " + urlStr);
         Log.d(TAG, "code : " + conn.getResponseCode() + ", message : " + conn.getResponseMessage());
         Log.d(TAG, "startNewDownload : "+startNewDownload);
-        Log.d(TAG, "isCompletedDownload : "+isCompletedDownload);
+        Log.d(TAG, "isCompletedDownload : " + isCompletedDownload);
         conn.disconnect();
-        downloadListener.progressUpdate();
+//        downloadListener.progressUpdate();
         Log.d(TAG, "=========================================");
 
     }
 
     private HttpURLConnection createConnection(String urlStr, ResumeDownloadListener downloadListener) throws IOException {
-        downloadListener.progressUpdate();
+//        downloadListener.progressUpdate();
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection(); // Open connection to URL.
         conn.setRequestMethod("POST");

@@ -5,6 +5,6 @@ package com.example.mk.mysmartsns.prefetch;
  */
 public interface ResumeDownloadListener {
     // 나중에 prgreeBar 표시할 때 사용할 것임
-    void progressUpdate();
+    void progressUpdate(Message message);
     void onComplete();
 }

@@ -54,7 +54,7 @@ public class UserManager {
     public void requestUserLogin(String id, String pw) {
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestUserLogin", true);
 
         Call<UserInfo> callLoginUser = snsService.loginUser(new LoginInfo(id, pw));

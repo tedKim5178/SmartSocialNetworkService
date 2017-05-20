@@ -99,7 +99,7 @@ public class OriginalDownload {         // Original Download with prefeching
 
     private void startDownload() {
         asytaskFinished = false;
-        asyncTask = new AsyncTask<URL, Void, ResumeDownloader>() {
+        asyncTask = new AsyncTask<URL, Message, ResumeDownloader>() {
 
             protected ResumeDownloader doInBackground(URL... params) {
                 try {
@@ -109,7 +109,12 @@ public class OriginalDownload {         // Original Download with prefeching
                     }
                     mDownloader.downloadFile(urlStr,
                             (new File(fileDir.getAbsolutePath(), filename + fileExtension)).getAbsolutePath(),
-                            resumeDownloadListener);
+                            resumeDownloadListener, new ProgressBarListener() {
+                                @Override
+                                public void progress(Message message) {
+                                    publishProgress(message);
+                                }
+                            });
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     Log.d(TAG, "File not found !");
@@ -121,8 +126,9 @@ public class OriginalDownload {         // Original Download with prefeching
                 return mDownloader;
             }
 
-            protected void onProgressUpdate() {
+            protected void onProgressUpdate(Message... values) {
                 super.onProgressUpdate();
+                resumeDownloadListener.progressUpdate(values[0]);
             }
 
             protected void onPostExecute(ResumeDownloader o) {

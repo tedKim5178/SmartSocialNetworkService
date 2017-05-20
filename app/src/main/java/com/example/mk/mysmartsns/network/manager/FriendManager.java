@@ -32,7 +32,7 @@ public class FriendManager {
     public void requestFriendsList(){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestFriendsList", true);
 
         Call<List<UserInfo>> friendsList = snsService.requestFriendsList();
@@ -59,7 +59,7 @@ public class FriendManager {
     public void requestSearchUser(int user_no, String search_name){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
-        final CallManagement callManagement = CallManagement.getInstance();
+        final CallManagement callManagement = CallManagement.getInstance(context);
         callManagement.addCall("requestSearchUser", true);
 
         Call<List<UserInfo>> friendsList = snsService.requestSearchUser(user_no, search_name);
