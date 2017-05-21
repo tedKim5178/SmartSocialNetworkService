@@ -41,7 +41,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:enabled="false"
         android:text="로그인하기"
         android:textColor="#ffffff"
         android:textSize="14dp"

@@ -117,7 +117,6 @@ public class PrefetchDownload {
                 } catch (IOException e) {
                     e.printStackTrace();
                     mDownloader.setStatus(mDownloader.ERROR);
-                    Log.d(TAG, e.getMessage().substring(0, 50));
                 }
                 return mDownloader;
             }

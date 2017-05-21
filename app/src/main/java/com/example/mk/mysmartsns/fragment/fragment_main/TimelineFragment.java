@@ -38,14 +38,6 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
         return fragment;
     }
 
-    //---------------
-    private int previousTotal = 0;
-    private boolean loading = true;
-    private int visibleThreshold = 5;
-    int firstVisibleItem, visibleItemCount, totalItemCount;
-
-    List<ListItems> listItemsList = new ArrayList<>();
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,8 +51,12 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
         // 서버로부터 thumbnail image를 포함한 contents 받기
         getThumbnailContentsFromServer(INITIAL_CURRENT_PAGE);
         // 서버로부터 프리패칭 리스트 받기, 받기가 완료되면 네트워크 사용 여부에 따라 프리패칭 시작됨
-        getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE);
-        getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE+1);
+
+        if(PrefetchConfig.isPrefetching){
+            getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE);
+            getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE+1);
+            PrefetchConfig.isPrefetching = false;
+        }
 
         mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
@@ -70,6 +66,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
 //                deleteImagesFromQueue();
                 getThumbnailContentsFromServer(current_page);
                 getPrefetchingImageFromServer(current_page+1);
+
             }
         });
 

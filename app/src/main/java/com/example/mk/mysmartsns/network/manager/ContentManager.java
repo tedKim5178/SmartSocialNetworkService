@@ -56,11 +56,13 @@ public class ContentManager {
                 }else{
                     Log.d(TAG, "requestHitInformation::isNotSuccessful() : " + response.code());
                 }
+                callManagement.subtractCall(REQUEST_HIT_INFORMATION, false);
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.d(TAG, "requestHitInformation::onFailure() : " + t.getMessage());
+                callManagement.subtractCall(REQUEST_HIT_INFORMATION, false);
             }
         });
     }

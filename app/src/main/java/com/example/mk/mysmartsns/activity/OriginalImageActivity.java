@@ -93,7 +93,7 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
 
 
         // 서버와 통신하여 original image url 과 original image size를 받아온다.
-//        CallManagement.getInstance().addCall(DOWNLOAD_ORIGINAL_IMAGE, true);
+        CallManagement.getInstance(getBaseContext()).addCall(DOWNLOAD_ORIGINAL_IMAGE, true);
         InteractionManager.getInstance(this).requestContentOriginalDownload(thumbnail_url,bigHashInfo, smallHashInfo, user_no, new OnMyApiListener() {
             @Override
             public void success(Object response) {
@@ -124,7 +124,7 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
                     }
 
                 }
-//                CallManagement.getInstance().subtractCall(DOWNLOAD_ORIGINAL_IMAGE, false);
+                CallManagement.getInstance(getBaseContext()).subtractCall(DOWNLOAD_ORIGINAL_IMAGE, false);
             }
 
             @Override

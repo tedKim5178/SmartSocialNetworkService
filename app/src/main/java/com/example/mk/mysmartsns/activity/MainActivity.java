@@ -51,13 +51,14 @@ public class MainActivity extends AppCompatActivity {
     private static TextView textPrefetch;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // delete files prefetched before
-//        deletePrefetchedFiles();
+        deletePrefetchedFiles();
 
         headerLayout = (LinearLayout) findViewById(R.id.headerLayout);
         progressPrefetch = (ProgressBar)findViewById(R.id.progressPrefetch);
@@ -221,11 +222,13 @@ public class MainActivity extends AppCompatActivity {
     public void deletePrefetchedFiles(){
         String filePath = String.valueOf(Environment.getExternalStorageDirectory()) + PrefetchConfig.Local_Name;
         File file = new File(filePath);
-        if(file.isDirectory()){
-            String[] fileList = file.list();
-            for(int i=0; i<fileList.length; i++){
-                File fileDelete = new File(filePath + "/" + fileList[i]);
-                fileDelete.delete();
+        if(file != null){
+            if(file.isDirectory()){
+                String[] fileList = file.list();
+                for(int i=0; i<fileList.length; i++){
+                    File fileDelete = new File(filePath + "/" + fileList[i]);
+                    fileDelete.delete();
+                }
             }
         }
     }

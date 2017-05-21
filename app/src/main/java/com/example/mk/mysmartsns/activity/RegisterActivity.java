@@ -126,14 +126,28 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 // hash들은 지금 어디에있냐면.... 바로 adapter에 있다...!
                 // 여기서 arraylist 접근해볼까..?
                 int count = 0;
-                for(int i=0; i < bigHashList.size(); i++){
-                    // 우선 click이 3개인걸 세야됨
-                    if(bigHashList.get(i).isCheck() == true){
-                        bigHashArrayList.add(bigHashList.get(i).getBighash_no());
-                        count = count + 1;
+                if(bigHashList != null){
+                    for(int i=0; i < bigHashList.size(); i++){
+                        // 우선 click이 3개인걸 세야됨
+                        if(bigHashList.get(i).isCheck() == true){
+                            bigHashArrayList.add(bigHashList.get(i).getBighash_no());
+                            count = count + 1;
+                        }
                     }
                 }
-                if(count == 3){
+
+                String str = "";
+                if(id.length()==0){
+                    str = str + "이름 ";
+                }
+                if(pw.length()==0){
+                    str = str + "비밀번호 ";
+                }
+                if(name.length()==0){
+                    str = str + "이름 ";
+                }
+                if(count == 3 && id.length()>0 && pw.length()>0 && name.length()>0){
+
                     // ** User Register
                     Toast.makeText(this, "정상적으로 3개 들어옴", Toast.LENGTH_SHORT).show();
 
@@ -160,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
 
                 }else{
-                    Toast.makeText(this, "3개 이상 선택해주세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, str + "를 설정해주세요", Toast.LENGTH_SHORT).show();
                     bigHashArrayList.clear();
                 }
 
