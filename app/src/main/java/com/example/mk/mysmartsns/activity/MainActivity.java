@@ -27,6 +27,8 @@ import com.example.mk.mysmartsns.fragment.fragment_main.SearchFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.SettingFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.TimelineFragment;
 import com.example.mk.mysmartsns.prefetch.Message;
+import com.example.mk.mysmartsns.prefetch.PrefetchDownload;
+import com.example.mk.mysmartsns.prefetch.ResumeDownloadListener;
 
 import java.io.File;
 
@@ -226,15 +228,14 @@ public class MainActivity extends AppCompatActivity {
     public void deletePrefetchedFiles(){
         String filePath = String.valueOf(Environment.getExternalStorageDirectory()) + PrefetchConfig.Local_Name;
         File file = new File(filePath);
-        if(file != null){
-            if(file.isDirectory()){
-                String[] fileList = file.list();
-                for(int i=0; i<fileList.length; i++){
-                    File fileDelete = new File(filePath + "/" + fileList[i]);
-                    fileDelete.delete();
-                }
+        if(file.isDirectory()){
+            String[] fileList = file.list();
+            for(int i=0; i<fileList.length; i++){
+                File fileDelete = new File(filePath + "/" + fileList[i]);
+                fileDelete.delete();
             }
         }
+
     }
 
     public static void updateProgressBar(Message message){
@@ -255,6 +256,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PrefetchDownload.newInstance(new ResumeDownloadListener() {
+            @Override
+            public void progressUpdate(Message message) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }).stopPrefetching();
+    }
 }
 
 

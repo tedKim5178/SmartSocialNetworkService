@@ -15,12 +15,11 @@ import com.example.mk.mysmartsns.adapter.TimelineAdapter;
 import com.example.mk.mysmartsns.config.MyConfig;
 import com.example.mk.mysmartsns.config.PrefetchConfig;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
+import com.example.mk.mysmartsns.model.CallManagement;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
-import com.example.mk.mysmartsns.ztest.ListItems;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,8 +49,8 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
 
         // 서버로부터 thumbnail image를 포함한 contents 받기
         getThumbnailContentsFromServer(INITIAL_CURRENT_PAGE);
-        // 서버로부터 프리패칭 리스트 받기, 받기가 완료되면 네트워크 사용 여부에 따라 프리패칭 시작됨
 
+        // 서버로부터 프리패칭 리스트 받기, 받기가 완료되면 네트워크 사용 여부에 따라 프리패칭 시작됨
         if(PrefetchConfig.isPrefetching){
             getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE);
             getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE+1);
@@ -61,9 +60,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
         mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int current_page) {
-                Log.d(TAG, "프리패칭테스트 Current Page : " + current_page);
-                // 프리패칭 queue에서 사진들 지워주는 부분..!
-//                deleteImagesFromQueue();
+                Log.d(TAG, "onLoadMore:::::gilsoo");
                 getThumbnailContentsFromServer(current_page);
                 getPrefetchingImageFromServer(current_page+1);
 
@@ -83,24 +80,48 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
         mAdapter.notifyItemChanged(position);
     }
 
-    public void getPrefetchingImageFromServer(int current_page){
+
+    public void getPrefetchingImageFromServer(final int current_page){
         // current_page를 이용해서 prefetching을 진행하자. 즉 server로 current_page를 넘겨줘야한다.
+        CallManagement.getInstance(getContext()).addCall("requestPrefetchingList", true);
         InteractionManager.getInstance(getContext()).requestPrefetchingList(MyConfig.myInfo.getUser_no(), current_page, new OnMyApiListener() {
             @Override
             public void success(Object response) {
+                Log.d("gilsoo", "getPrefetchingImageFromServer::: success");
+                // prefetch image 들의 정보를 가지고 있다...
+                // 넣어주기 전에 queue의 상태 확인
+                int remainImagesInQueue = PrefetchConfig.prefetching_queue.size();
+
                 List<PrefetchImageInfo> prefetching_image = (List<PrefetchImageInfo>) response;
                 for (int i = 0; i < prefetching_image.size(); i++) {
                     String str = "thumbnail_contents/";
                     int str_length = str.length();
                     String prefetchImageUrl = prefetching_image.get(i).getContent_url().substring(str_length);
                     Log.d(TAG, "CallManagerMent:::Prefetching offer prefetchImageUrl : " + prefetchImageUrl);
-                    PrefetchConfig.prefetching_queue.offer(prefetchImageUrl);
+                    synchronized (PrefetchConfig.prefetching_queue) {
+                        PrefetchConfig.prefetching_queue.offer(prefetchImageUrl);
+                    }
                 }
+
+                // queue 순서 바꾸기
+                if(current_page > 2){
+                    for(int i=0; i<remainImagesInQueue; i++){
+                        synchronized (PrefetchConfig.prefetching_queue) {
+                            String temp = PrefetchConfig.prefetching_queue.poll();
+                            PrefetchConfig.prefetching_queue.offer(temp);
+                        }
+                    }
+                }
+
+                // 프리페칭 시작
+                CallManagement.getInstance(getContext()).subtractCall("requestPrefetchingList", false);
             }
 
             @Override
             public void fail() {
+                Log.d("gilsoo", "getPrefetchingImageFromServer::: fail");
 
+                CallManagement.getInstance(getContext()).subtractCall("requestPrefetchingList", false);
             }
         });
     }
@@ -110,6 +131,8 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
         InteractionManager.getInstance(getContext()).requestContentThumbnailDownload(MyConfig.myInfo.getUser_no(), current_page, new OnMyApiListener() {
             @Override
             public void success(Object response) {
+                Log.d("gilsoo", "getThumbnailContentsFromServer::: success");
+                CallManagement.getInstance(getContext()).printCall();
                 List<ContentInfo> contentInfoList = (List<ContentInfo>) response;
 
                 for (int i = 0; i < contentInfoList.size(); i++) {
@@ -143,7 +166,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void fail() {
-
+                Log.d("gilsoo", "getThumbnailContentsFromServer::: fail");
             }
         });
     }

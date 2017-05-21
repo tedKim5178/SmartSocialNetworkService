@@ -72,7 +72,11 @@ public class UserManager {
                     if(response.code() == 401)
                         Toast.makeText(context, "아이디 혹은 비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show();
                 }
+                // MainActivity에서 지워주기때문에 isPrefetching flag와 queue 비워준다. by gilsoo
                 PrefetchConfig.isPrefetching = true;
+                synchronized (PrefetchConfig.prefetching_queue) {
+                    PrefetchConfig.prefetching_queue.clear();
+                }
                 callManagement.subtractCall("requestUserLogin", false);
             }
 

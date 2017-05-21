@@ -105,6 +105,7 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
                         Toast.makeText(getBaseContext(), "로컬에서 이미지 로드", Toast.LENGTH_SHORT).show();
                         progressPrefetch.setProgress(100);
                         textPrefetch.setText(file.getName());
+//                        original_image_view.setImageURI(Uri.fromFile(file));
                         Glide.with(OriginalImageActivity.this).load(file).error(R.drawable.ic_close).into(original_image_view);
                     }else if(file.exists() && file.length() < contentInfo.getContent_size()){                     // 로컬에 일부분만 받아져 있다면
                         isFollowing = true;

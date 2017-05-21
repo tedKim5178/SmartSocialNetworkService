@@ -96,9 +96,11 @@ public class ResumeDownloader {
 
     private void prepareDownload(String urlStr, String toFile, ResumeDownloadListener downloadListener) throws IOException {
         Log.d(TAG, "========= prefetch_list==============");
-        Iterator<String> iter = PrefetchConfig.prefetching_queue.iterator();
-        while(iter.hasNext()){
-            Log.d(TAG, iter.next());
+         synchronized (PrefetchConfig.prefetching_queue) {
+            Iterator<String> iter = PrefetchConfig.prefetching_queue.iterator();
+            while (iter.hasNext()) {
+                Log.d(TAG, iter.next());
+            }
         }
         Log.d(TAG, "=============== prepare ================");
 //        downloadListener.progressUpdate();

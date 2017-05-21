@@ -28,7 +28,7 @@
         android:layout_weight="4"
         android:padding="20dp"
         android:layout_margin="5dp"
-        android:background="@drawable/gray_border">
+        android:background="@drawable/gray_border_all">
         <ImageView
             android:src="@android:drawable/ic_menu_camera"
             android:id="@+id/uploadImage"
@@ -58,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.8"
-        android:background="@drawable/gray_border">
+        android:background="@drawable/gray_border_all">
     </android.support.v7.widget.RecyclerView>
     <LinearLayout
         android:orientation="horizontal"
@@ -67,7 +67,7 @@
         android:layout_weight="3"
         android:padding="10dp"
         android:layout_margin="5dp"
-        android:background="@drawable/gray_border">
+        android:background="@drawable/gray_border_all">
         <EditText
             android:id="@+id/uploadEditText"
             android:layout_width="0dp"
@@ -83,7 +83,7 @@
     <Button
         android:id="@+id/uploadButton"
         android:layout_width="match_parent"
-        android:background="@drawable/gray_border"
+        android:background="@drawable/gray_border_all"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="5dp"
