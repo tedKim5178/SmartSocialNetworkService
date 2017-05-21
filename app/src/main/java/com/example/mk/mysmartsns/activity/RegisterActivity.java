@@ -2,6 +2,10 @@ package com.example.mk.mysmartsns.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -53,10 +57,8 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     RecyclerView recycler_view_in_register;
     @Bind(R.id.profile_picture_in_register)
     ImageView profile_picture_in_register;
-    @Bind(R.id.checkbox_for_man)
-    CheckBox checkbox_for_man;
-    @Bind(R.id.checkbox_for_woman)
-    CheckBox checkbox_for_woman;
+    @Bind(R.id.logo_imageView_register)
+    ImageView logo_imageView_register;
 
     InterestsAdapter interestsAdapter;
     ArrayList<Integer> bigHashArrayList;
@@ -64,6 +66,8 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     String imagePath;
     boolean isImageUpload;
     ArrayAdapter<String> adapter;
+    Bitmap copyBitmap;
+
 
     List<BigHashInfo> bigHashList;
 
@@ -74,6 +78,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         setContentView(R.layout.activity_register);
         // Butterknife bind
         ButterKnife.bind(this);
+        logo_imageView_register.setImageBitmap(deleteBackgroundImage());
         bigHashArrayList = new ArrayList<>();
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         recycler_view_in_register.setLayoutManager(linearLayoutManager);
@@ -103,8 +108,8 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         });
     }
 
-    @OnClick({R.id.sign_up_button, R.id.cancel_button, R.id.profile_picture_in_register, R.id.cancel_image_in_register,
-        R.id.checkbox_for_man, R.id.checkbox_for_woman})
+    @OnClick({R.id.sign_up_button, R.id.cancel_button,
+            R.id.profile_picture_in_register, R.id.cancel_image_in_register})
     void buttonClicked(View view) {
         int clicked = view.getId();
         switch (clicked){
@@ -187,28 +192,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 profile_picture_in_register.setImageResource(android.R.drawable.ic_menu_camera);
                 break;
             }
-            case R.id.checkbox_for_man:
-            {
-
-                if(checkbox_for_man.isChecked() == true){
-                    checkbox_for_woman.setChecked(false);
-                }else{
-                    checkbox_for_man.setChecked(true);
-                }
-
-                break;
-            }
-            case R.id.checkbox_for_woman:
-            {
-
-                if(checkbox_for_woman.isChecked() == true){
-                    checkbox_for_man.setChecked(false);
-                }else{
-                    checkbox_for_woman.setChecked(true);
-                }
-
-                break;
-            }
         }
     }
 
@@ -250,4 +233,35 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
+    public Bitmap deleteBackgroundImage(){
+        Drawable d = logo_imageView_register.getDrawable();
+        Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+        copyBitmap = bitmap.copy(Bitmap.Config.ARGB_8888,true);
+
+        // get image size
+        int width = copyBitmap.getWidth();
+        int height = copyBitmap.getHeight();
+        // create output bitmap
+        // color information
+        int A, R, G, B;
+        int pixel;
+        copyBitmap.setHasAlpha(true);
+        // scan through all pixels
+        for(int x = 0; x < width; ++x) {
+            for(int y = 0; y < height; ++y) {
+                // get pixel color
+                pixel = copyBitmap.getPixel(x, y);
+                A = Color.alpha(pixel);
+                R = Color.red(pixel);
+                G = Color.green(pixel);
+                B = Color.blue(pixel);
+
+                // 흰색이면 (지금 여기선 흰색이 이 값이다)
+                if((R <= 256 && R >=220) && (G <= 256 && G >=220) && (B <= 256 && B >=220)){
+                    copyBitmap.setPixel(x, y, Color.TRANSPARENT);
+                }
+            }
+        }
+        return copyBitmap;
+    }
 }

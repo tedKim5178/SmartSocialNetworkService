@@ -1,91 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:id="@+id/activity_main"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+
 
     tools:context="com.example.mk.mysmartsns.activity.LoginActivity">
 
-    <ImageView
-        android:layout_gravity="center"
-        android:layout_weight="10"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
 
-        android:id="@+id/imageView"
-        android:focusableInTouchMode="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <LinearLayout
-        android:layout_weight="2"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
-
-        <EditText
-            android:background="@drawable/gray_border_for_login"
-            android:hint="ID"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:textSize="18dp"
-            android:fontFamily="monospace"
-            android:singleLine="true"
-            android:gravity="left|center"
-            android:paddingLeft="16dp"
-            android:id="@+id/input_id"/>
-
-        <EditText
-            android:hint="PASSWORD"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:textSize="18dp"
-            android:gravity="left|center"
-            android:paddingLeft="16dp"
-            android:fontFamily="monospace"
-            android:singleLine="true"
-            android:background="@drawable/gray_border_for_password"
-            android:id="@+id/input_password"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:background="#ffffff"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/input_password"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:layout_weight="1"
-            android:text="login"
-            android:textSize="20dp"
-            android:textColor="@color/colorPrimary"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:id="@+id/login_button"/>
-        <Button
-            android:layout_weight="1"
-            android:text="sing up"
-            android:textSize="20dp"
-            android:textColor="@color/colorPrimary"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:id="@+id/register_button"/>
+        android:fontFamily="monospace"
+        android:gravity="left|center"
+        android:hint="PASSWORD"
+        android:paddingLeft="16dp"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:textColorHint="#ffffff"
+        android:textCursorDrawable="@null"
+        android:textSize="14dp"
+        app:layout_constraintLeft_toLeftOf="@+id/v_guildline1"
+        app:layout_constraintRight_toLeftOf="@+id/v_guildline2"
+        app:layout_constraintTop_toBottomOf="@+id/input_id"
+        tools:layout_conversion_absoluteHeight="0dp"
+        tools:layout_conversion_absoluteWidth="0dp"
+        tools:layout_conversion_absoluteX="0dp"
+        tools:layout_conversion_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="0dp" />
 
-    </LinearLayout>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:enabled="false"
+        android:text="로그인하기"
+        android:textColor="#ffffff"
+        android:textSize="14dp"
+        app:layout_constraintLeft_toLeftOf="@+id/v_guildline1"
+        app:layout_constraintRight_toLeftOf="@+id/v_guildline2"
+        app:layout_constraintTop_toBottomOf="@+id/input_password"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/create_acc_button_background"
+        android:enabled="true"
+        android:text="새로운 계정 만들기"
+        android:textColor="#ffffff"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/v_guildline1"
+        app:layout_constraintRight_toRightOf="@+id/v_guildline2"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/v_guildline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/v_guildline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/h_guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/h_guildline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/h_guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/smart"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@+id/v_guildline1"
+        app:layout_constraintRight_toLeftOf="@+id/v_guildline2"
+        app:layout_constraintTop_toBottomOf="@+id/h_guideline3"
+        tools:layout_editor_absoluteX="175dp"
+        tools:layout_editor_absoluteY="227dp" />
+
+    <EditText
+        android:id="@+id/input_id"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="ID"
+        android:paddingLeft="16dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:textSize="16dp"
+        app:layout_constraintLeft_toLeftOf="@+id/v_guildline1"
+        app:layout_constraintRight_toLeftOf="@+id/v_guildline2"
+        app:layout_constraintTop_toBottomOf="@+id/h_guideline3"
+        tools:layout_editor_absoluteX="46dp"
+        tools:layout_editor_absoluteY="227dp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:scaleType="fitCenter"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@+id/v_guildline1"
+        app:layout_constraintRight_toLeftOf="@+id/v_guildline2"
+        app:layout_constraintTop_toBottomOf="@+id/h_guildline1"
+        app:srcCompat="@drawable/smart"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="74dp" />
+
+
+</android.support.constraint.ConstraintLayout>
