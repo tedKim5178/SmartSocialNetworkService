@@ -1,5 +1,6 @@
 package com.example.mk.mysmartsns.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // delete files prefetched before
-        deletePrefetchedFiles();
+//        deletePrefetchedFiles();
 
         headerLayout = (LinearLayout) findViewById(R.id.headerLayout);
         progressPrefetch = (ProgressBar)findViewById(R.id.progressPrefetch);
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         progressPrefetch.setMax(100);
         progressPrefetch.setIndeterminate(false);
         textPrefetch = (TextView)findViewById(R.id.textPrefetch);
+        // ** setting progress mode
+        PrefetchConfig.isPrefetchingShow = (getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE)).getBoolean(PrefetchConfig.PREFETCH_SHOW, false);
         onShowProgressbar(PrefetchConfig.isPrefetchingShow);
 
 

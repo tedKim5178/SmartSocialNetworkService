@@ -1,25 +1,26 @@
 package com.example.mk.mysmartsns.fragment.fragment_main;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.example.mk.mysmartsns.R;
+import com.example.mk.mysmartsns.activity.MainActivity;
+import com.example.mk.mysmartsns.config.PrefetchConfig;
 
 /**
  * Created by mk on 2017-02-03.
  */
 
-public class SettingFragment extends android.support.v4.app.Fragment {
+public class SettingFragment extends android.support.v4.app.Fragment implements CompoundButton.OnCheckedChangeListener{
 
-    ImageView person_who_post;
-    TextView text_about_log;
-    ImageView image_I_post;
-
+    private Switch switchSettingPrefetchMode, switchSettingProgress, switchSettingDataMode, switchSettingNetworkMode;
     public static SettingFragment newInstance() {
         SettingFragment fragment = new SettingFragment();
         return fragment;
@@ -28,23 +29,64 @@ public class SettingFragment extends android.support.v4.app.Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view  = inflater.inflate(R.layout.fragment_setting, container, false);
-
-        // 활동 로그를 보여주는 곳이다.
-        // 리스트 뷰 형식으로 보여 줄 것이다. 모든 로그 기록을 다 보여주는가..?
-        // 2주치만 보여줄것이다..! 그렇다면 서버에서 2주치에 해당하는 정보를 받아와야된다..!
-        // 인스타그램도 인터넷 연결이 없으면 데이터를 못받아오는걸로 봐서 서버에서 정보를 받아오는것이다.
-        // 서버에서 어떤 정보를 받아와야 할까..? 아무래도 로그를 모아두는 데이터베이스가 필요할까..?
-        // 아무튼 서버에서 데이터를 받아왔다고 치자
-        // 필요한것은 누가 나의 어떤 사진에 좋아요를 눌렀는지다..!
-        // 문자열에 누가 에 대한 정보를 넣고 내 사진 정보를 URL로 받아온다고 가정하자
-        // String 배열로 넣어줘야하나..? 서버에서 어떤식으로 넘어올지 잘 모르겠다..!
-        // 좋아요인지, 댓글인지, 태그인지 판단해서 어쨋든 문장이 필요하다
-
-        // 사진 + 텍스트 + 사진
-        person_who_post = (ImageView)view.findViewById(R.id.person_who_post);
-        text_about_log = (TextView) view.findViewById(R.id.text_about_log);
-        image_I_post = (ImageView)view.findViewById(R.id.image_I_post);
+        switchSettingPrefetchMode = (Switch)view.findViewById(R.id.switchSettingPrefetchMode);
+        switchSettingPrefetchMode.setOnCheckedChangeListener(this);
+        switchSettingProgress = (Switch)view.findViewById(R.id.switchSettingProgress);
+        switchSettingProgress.setOnCheckedChangeListener(this);
+        switchSettingDataMode = (Switch)view.findViewById(R.id.switchSettingDataMode);
+        switchSettingDataMode.setOnCheckedChangeListener(this);
+        switchSettingNetworkMode = (Switch)view.findViewById(R.id.switchSettingNetworkMode);
+        switchSettingNetworkMode.setOnCheckedChangeListener(this);
+        settingModeInfo();
 
         return view;
+    }
+
+    /**
+     * 설정 화면 setting - preference로 by gilsoo.
+     */
+    private void settingModeInfo(){
+        // prfetch mode setting
+        switchSettingPrefetchMode.setChecked((getContext().getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE).getBoolean(PrefetchConfig.PREFETCH_MODE, true)));
+        // progress bar setting
+        switchSettingProgress.setChecked((getContext().getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE).getBoolean(PrefetchConfig.PREFETCH_SHOW, false)));
+        // data mode setting
+        switchSettingDataMode.setChecked((getContext().getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE).getBoolean(PrefetchConfig.DATA_MODE, false)));
+        // network mode setting
+        switchSettingNetworkMode.setChecked((getContext().getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE).getBoolean(PrefetchConfig.NETWORK_MODE, false)));
+    }
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        SharedPreferences pref;
+        SharedPreferences.Editor edit;
+        switch(buttonView.getId()){
+            case R.id.switchSettingPrefetchMode:            // prfetching mode
+                pref = getContext().getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE);
+                edit = pref.edit();
+                edit.putBoolean(PrefetchConfig.PREFETCH_MODE, isChecked);
+                edit.apply();
+                break;
+            case R.id.switchSettingProgress:                // progress bar
+                pref = getContext().getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE);
+                edit= pref.edit();
+                edit.putBoolean(PrefetchConfig.PREFETCH_SHOW, isChecked);
+                edit.apply();
+                PrefetchConfig.isPrefetchingShow = isChecked;
+                MainActivity.onShowProgressbar(PrefetchConfig.isPrefetchingShow);
+                break;
+            case R.id.switchSettingDataMode:                // data mode
+                pref = getContext().getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE);
+                edit= pref.edit();
+                edit.putBoolean(PrefetchConfig.DATA_MODE, isChecked);
+                edit.apply();
+                break;
+            case R.id.switchSettingNetworkMode:             // network mode
+                pref = getContext().getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE);
+                edit= pref.edit();
+                edit.putBoolean(PrefetchConfig.NETWORK_MODE, isChecked);
+                edit.apply();
+                break;
+
+        }
     }
 }

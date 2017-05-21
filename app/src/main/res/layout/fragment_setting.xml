@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#ffffff">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -18,18 +19,136 @@
             android:gravity="center"/>
     </android.support.v7.widget.Toolbar>
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/person_who_post"/>
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prefetch"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           android:padding="@dimen/activity_horizontal_margin"
+            android:background="@drawable/gray_border">
+            <TextView
+                android:id="@+id/textSettingPrefetch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prefetching Mode"
+                android:textSize="20sp"
+                />
+            <Switch
+                android:id="@+id/switchSettingPrefetchMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:switchMinWidth="80dp"
+                android:layout_alignParentEnd="true"
+                android:checked="true"
+                android:textOn="on"
+                android:textOff="off"
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@drawable/gray_border_top_bottom">
+            <TextView
+                android:id="@+id/textSettingProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show Progress"
+                android:textSize="20sp"
+                />
+            <Switch
+                android:id="@+id/switchSettingProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:switchMinWidth="80dp"
+                android:layout_alignParentEnd="true"
+                android:checked="false"
+                android:textOn="on"
+                android:textOff="off"
+                />
+        </RelativeLayout>
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/text_about_log" />
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@drawable/gray_border_top_bottom">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data Mode"
+                android:textSize="20sp"
+                />
+            <Switch
+                android:id="@+id/switchSettingDataMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:switchMinWidth="80dp"
+                android:layout_alignParentEnd="true"
+                android:checked="false"
+                android:textOn="on"
+                android:textOff="off"
+                />
+        </RelativeLayout>
+    </LinearLayout>
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/image_I_post"/>
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Network"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@drawable/gray_border_top_bottom">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Network Mode"
+                android:textSize="20sp"
+                />
+            <Switch
+                android:id="@+id/switchSettingNetworkMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:switchMinWidth="80dp"
+                android:layout_alignParentEnd="true"
+                android:checked="false"
+                android:textOn="on"
+                android:textOff="off"
+                />
+        </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>
