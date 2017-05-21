@@ -33,7 +33,6 @@ public class PrefetchTestActivity extends AppCompatActivity implements ResumeDow
             text += iterator.next() + "\n";
         }
         textPrefetch.setText(text);
-
     }
 
     public void onPrefetchBtnClick(View v){
@@ -66,8 +65,10 @@ public class PrefetchTestActivity extends AppCompatActivity implements ResumeDow
         editor.commit();
     }
 
+
+
     @Override
-    public void progressUpdate() {
+    public void progressUpdate(Message message) {
 
     }
 

@@ -20,15 +20,16 @@
         android:icon="@drawable/ic_post_24dp"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_log"
-        android:enabled="true"
-        android:title=""
-        android:icon="@drawable/ic_log_24dp"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/action_mytimeline"
         android:enabled="true"
         android:title=""
         android:icon="@drawable/ic_mytimeline_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_setting"
+        android:enabled="true"
+        android:title=""
+        android:icon="@drawable/ic_setting_24dp"
         app:showAsAction="ifRoom" />
 </menu>

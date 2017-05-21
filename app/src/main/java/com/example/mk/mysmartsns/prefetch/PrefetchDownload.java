@@ -31,7 +31,8 @@ public class PrefetchDownload {
     private AsyncTask asyncTask;
     private boolean asytaskFinished = true;
     private static PrefetchDownload prefetchDownload;
-    ResumeDownloadListener resumeDownloadListener;
+    private ResumeDownloadListener resumeDownloadListener;
+
 
     public PrefetchDownload(ResumeDownloadListener resumeDownloadListener) {
         fileDir = new File(String.valueOf(Environment.getExternalStorageDirectory()) + PrefetchConfig.Local_Name);
@@ -94,7 +95,8 @@ public class PrefetchDownload {
 
     private void startDownload() {
         asytaskFinished = false;
-        asyncTask = new AsyncTask<URL, Void, ResumeDownloader>() {
+        asyncTask = new AsyncTask<URL, Message, ResumeDownloader>() {
+
 
             protected ResumeDownloader doInBackground(URL... params) {
                 try {
@@ -102,9 +104,13 @@ public class PrefetchDownload {
                     if (!fileDir.exists()) {
                         fileDir.mkdirs();
                     }
-                    mDownloader.downloadFile(urlStr,
-                            (new File(fileDir.getAbsolutePath(), filename + fileExtension)).getAbsolutePath(),
-                           resumeDownloadListener);
+                    mDownloader.downloadFile(urlStr, (new File(fileDir.getAbsolutePath(), filename + fileExtension)).getAbsolutePath(),
+                            resumeDownloadListener, new ProgressBarListener() {
+                                @Override
+                                public void progress(Message message) {
+                                    publishProgress(message);
+                                }
+                            });
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     Log.d(TAG, "File not found !");
@@ -116,8 +122,11 @@ public class PrefetchDownload {
                 return mDownloader;
             }
 
-            protected void onProgressUpdate() {
+
+            protected void onProgressUpdate(Message... values) {
                 super.onProgressUpdate();
+//                Log.d(TAG, "onProgressUpdate ::: " + values[0].getFileName() + ", ::: " + values[0].getLength());
+                resumeDownloadListener.progressUpdate(values[0]);
             }
 
             protected void onPostExecute(ResumeDownloader o) {

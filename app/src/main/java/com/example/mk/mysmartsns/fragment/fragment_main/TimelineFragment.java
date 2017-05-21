@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.mk.mysmartsns.R;
 import com.example.mk.mysmartsns.adapter.EndlessRecyclerOnScrollListener;
@@ -19,7 +18,6 @@ import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
-import com.example.mk.mysmartsns.prefetch.ResumeDownloadListener;
 import com.example.mk.mysmartsns.ztest.ListItems;
 
 import java.util.ArrayList;
@@ -29,7 +27,7 @@ import java.util.List;
  * Created by mk on 2017-02-02.
  */
 
-public class TimelineFragment extends android.support.v4.app.Fragment implements ResumeDownloadListener {
+public class TimelineFragment extends android.support.v4.app.Fragment {
     private static final String TAG = TimelineFragment.class.getSimpleName();
     private TimelineAdapter mAdapter;
     RecyclerView mRecyclerView;
@@ -90,11 +88,11 @@ public class TimelineFragment extends android.support.v4.app.Fragment implements
 
     public void getPrefetchingImageFromServer(int current_page){
         // current_page를 이용해서 prefetching을 진행하자. 즉 server로 current_page를 넘겨줘야한다.
-        InteractionManager.getInstance(getContext()).requestPrefetchingList(MyConfig.myInfo.getUser_no(), current_page , new OnMyApiListener() {
+        InteractionManager.getInstance(getContext()).requestPrefetchingList(MyConfig.myInfo.getUser_no(), current_page, new OnMyApiListener() {
             @Override
             public void success(Object response) {
-                List<PrefetchImageInfo> prefetching_image = (List<PrefetchImageInfo>)response;
-                for(int i=0; i< prefetching_image.size(); i++){
+                List<PrefetchImageInfo> prefetching_image = (List<PrefetchImageInfo>) response;
+                for (int i = 0; i < prefetching_image.size(); i++) {
                     String str = "thumbnail_contents/";
                     int str_length = str.length();
                     String prefetchImageUrl = prefetching_image.get(i).getContent_url().substring(str_length);
@@ -102,6 +100,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment implements
                     PrefetchConfig.prefetching_queue.offer(prefetchImageUrl);
                 }
             }
+
             @Override
             public void fail() {
 
@@ -111,33 +110,33 @@ public class TimelineFragment extends android.support.v4.app.Fragment implements
 
     public void getThumbnailContentsFromServer(int current_page){
         // Download Thmbnail Contents
-        InteractionManager.getInstance(getContext()).requestContentThumbnailDownload(MyConfig.myInfo.getUser_no(),current_page, new OnMyApiListener() {
+        InteractionManager.getInstance(getContext()).requestContentThumbnailDownload(MyConfig.myInfo.getUser_no(), current_page, new OnMyApiListener() {
             @Override
             public void success(Object response) {
                 List<ContentInfo> contentInfoList = (List<ContentInfo>) response;
 
-                for(int i=0; i<contentInfoList.size(); i++){
-                    if(contentInfoList.get(i).getHash_list() != null){
-                        for(int j=0; j<contentInfoList.get(i).getHash_list().size(); j++){
-                            Log.d(TAG, "빅해쉬테스트 : " +contentInfoList.get(i).getHash_list().get(j).getBighash_no() + ", " + contentInfoList.get(i).getHash_list().get(j).getBighash_name());
+                for (int i = 0; i < contentInfoList.size(); i++) {
+                    if (contentInfoList.get(i).getHash_list() != null) {
+                        for (int j = 0; j < contentInfoList.get(i).getHash_list().size(); j++) {
+                            Log.d(TAG, "빅해쉬테스트 : " + contentInfoList.get(i).getHash_list().get(j).getBighash_no() + ", " + contentInfoList.get(i).getHash_list().get(j).getBighash_name());
                         }
                     }
                     Log.d(TAG, "빅해쉬테스트 : 절취선 =================================");
                 }
 
-                for(int i=0; i<contentInfoList.size(); i++){
-                    if(contentInfoList.get(i).getSmallHash_list() != null){
-                        for(int j=0; j<contentInfoList.get(i).getSmallHash_list().size(); j++){
-                            Log.d(TAG, "스몰해시테스트 : " + contentInfoList.get(i).getSmallHash_list().get(j).getSmallhash_name() + " , " +contentInfoList.get(i).getSmallHash_list().get(j).getSmallhash_no());
+                for (int i = 0; i < contentInfoList.size(); i++) {
+                    if (contentInfoList.get(i).getSmallHash_list() != null) {
+                        for (int j = 0; j < contentInfoList.get(i).getSmallHash_list().size(); j++) {
+                            Log.d(TAG, "스몰해시테스트 : " + contentInfoList.get(i).getSmallHash_list().get(j).getSmallhash_name() + " , " + contentInfoList.get(i).getSmallHash_list().get(j).getSmallhash_no());
                         }
                     }
                 }
-                if(getActivity() != null){
-                    if(mAdapter == null){
+                if (getActivity() != null) {
+                    if (mAdapter == null) {
                         Log.d(TAG, "contentInfoList size : " + contentInfoList.size());
                         mAdapter = new TimelineAdapter(getContext(), contentInfoList, getActivity().getSupportFragmentManager());
                         mRecyclerView.setAdapter(mAdapter);
-                    }else{
+                    } else {
                         Log.d(TAG, "contentInfoList size : " + contentInfoList.size());
                         mAdapter.addContentInfo(contentInfoList);
                         mAdapter.notifyDataSetChanged();
@@ -157,13 +156,5 @@ public class TimelineFragment extends android.support.v4.app.Fragment implements
 
     }
 
-    @Override
-    public void progressUpdate() {
 
-    }
-
-    @Override
-    public void onComplete() {
-
-    }
 }
