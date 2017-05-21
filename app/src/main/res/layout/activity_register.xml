@@ -1,242 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_in_youtube_activity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:subtitleTextColor="#FFFFFF"
-        android:titleTextColor="#FFFFFF" />
+    android:layout_height="match_parent"
+    android:background="@drawable/red_gradient"
+    android:orientation="vertical"
 
 
+    tools:context="com.example.mk.mysmartsns.activity.LoginActivity">
+
+    <LinearLayout
+
+        android:padding="16dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="28dp"
+        tools:layout_editor_absoluteX="28dp">
 
         <LinearLayout
-            android:padding="16dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal">
+
+
+
+            <Button
+                android:id="@+id/cancel_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/gray_border_for_login"
+                android:fontFamily="monospace"
+                android:text="Cancel"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"></LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/v10_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="37dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/v90_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="328dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/h10_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1"
+        tools:layout_editor_absoluteY="55dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/h40_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="219dp" />
+
+
+
+
+    <android.support.v7.widget.CardView
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="5dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/h40_guideline"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
+        app:layout_constraintLeft_toLeftOf="@+id/v10_guideline"
+        app:layout_constraintTop_toTopOf="@+id/h10_guideline"
+        android:id="@+id/cardView">
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Profile Picture"
-                android:textColor="#000000"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textStyle="bold"
-                android:fontFamily="monospace"
-                android:textSize="16dp"/>
-
-            <FrameLayout
-                android:paddingTop="20dp"
-                android:layout_weight="3"
+            android:background="#ffffff"
+            >
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
+                android:layout_height="match_parent">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@android:drawable/ic_menu_camera"
-                    android:id="@+id/profile_picture_in_register"/>
+                    android:id="@+id/cancel_image_in_register"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_close" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:adjustViewBounds="true"
-                        android:layout_alignParentRight="true"
-                        android:id="@+id/cancel_image_in_register"
-                        android:src="@drawable/ic_close"/>
-
-                </RelativeLayout>
-
-
-            </FrameLayout>
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:text="Id"
-                android:textColor="#000000"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textStyle="bold"
-                android:fontFamily="monospace"
-                android:textSize="16dp"/>
-
-            <EditText
-                android:layout_weight="1"
-                android:paddingBottom="10dp"
-                android:singleLine="true"
+            <ImageView
+                android:id="@+id/profile_picture_in_register"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/register_id"
-                android:textSize="20dp"/>
+                android:layout_height="match_parent"
+                android:src="@android:drawable/ic_menu_camera" />
+        </FrameLayout>
 
+    </android.support.v7.widget.CardView>
 
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:textColor="#000000"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textStyle="bold"
-                android:fontFamily="monospace"
-                android:text="Password"
-                android:textSize="16dp"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/h50_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.50"
+        tools:layout_editor_absoluteY="274dp"
+        tools:layout_editor_absoluteX="0dp" />
 
-            <EditText
-                android:layout_weight="1"
-                android:paddingBottom="10dp"
-                android:singleLine="true"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/register_password"
-                android:textSize="20dp"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/h60_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.60"
+        tools:layout_editor_absoluteY="328dp"
+        tools:layout_editor_absoluteX="0dp" />
 
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:textColor="#000000"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textStyle="bold"
-                android:fontFamily="monospace"
-                android:text="Name"
-                android:textSize="16dp"/>
+    <android.support.v7.widget.CardView
+        android:id="@+id/id_linear_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/h50_guideline"
+        app:layout_constraintLeft_toLeftOf="@+id/v10_guideline"
+        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
+        app:layout_constraintTop_toTopOf="@+id/h40_guideline"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="5dp">
 
-            <EditText
-                android:layout_weight="1"
-                android:paddingBottom="10dp"
-                android:singleLine="true"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/register_name"
-                android:textSize="20dp"/>
+        <EditText
+            android:id="@+id/register_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="monospace"
+            android:hint="ID를 입력해주세요"
+            android:singleLine="true"
+            android:textColor="#666666"
+            android:textColorHint="#bbbbbb"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+    </android.support.v7.widget.CardView>
 
-            <LinearLayout
-                android:layout_weight="1"
-                android:paddingTop="10dp"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_weight="1.5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:fontFamily="monospace"
-                    android:text="Gender"
-                    android:textSize="16dp"/>
-
-                <CheckBox
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:id="@+id/checkbox_for_man"/>
-
-                <TextView
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16dp"
-                    android:text="남자"
-                    android:fontFamily="monospace"
-                    android:textStyle="bold"/>
-
-                <CheckBox
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:checked="false"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/checkbox_for_woman"/>
-
-                <TextView
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16dp"
-                    android:text="여자"
-                    android:fontFamily="monospace"
-                    android:textStyle="bold"/>
+    <android.support.v7.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="5dp"
+        android:id="@+id/pw_linear_layout"
+        app:layout_constraintBottom_toTopOf="@+id/h60_guideline"
+        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
+        app:layout_constraintLeft_toRightOf="@+id/v10_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/h50_guideline"
+        card_view:layout_constraintLeft_toLeftOf="@+id/v10_guideline"
+        card_view:layout_constraintTop_toTopOf="@+id/h50_guideline">
+        <EditText
+            android:hint="Password를 입력해주세요"
+            android:textColor="#666666"
+            android:textColorHint="#bbbbbb"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/register_password"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:textSize="14dp"/>
+    </android.support.v7.widget.CardView>
 
 
 
-            </LinearLayout>
+    <android.support.constraint.Guideline
+        android:id="@+id/h70_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.70"
+        tools:layout_editor_absoluteY="383dp"
+        tools:layout_editor_absoluteX="0dp" />
 
-            <TextView
-                android:layout_weight="1"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:textColor="#000000"
-                android:gravity="center_vertical"
-                android:textStyle="bold"
-                android:fontFamily="monospace"
-                android:singleLine="true"
-                android:text="Interests(3가지 관심사를 선택해주세요)"
-                android:textSize="16dp"
-                />
+    <android.support.v7.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="5dp"
+        android:id="@+id/name_linear_layout"
+        app:layout_constraintBottom_toTopOf="@+id/h70_guideline"
+        app:layout_constraintLeft_toLeftOf="@+id/v10_guideline"
+        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/h60_guideline">
 
-            <android.support.v7.widget.RecyclerView
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:id="@+id/recycler_view_in_register">
-            </android.support.v7.widget.RecyclerView>
+        <EditText
+            android:id="@+id/register_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="monospace"
+            android:hint="이름을 입력해주세요"
+            android:singleLine="true"
+            android:textColor="#666666"
+            android:textColorHint="#bbbbbb"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp" />
 
-            <LinearLayout
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="horizontal">
+    </android.support.v7.widget.CardView>
 
-                <Button
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="SignUp"
-                    android:textStyle="bold"
-                    android:fontFamily="monospace"
-                    android:id="@+id/sign_up_button"
-                    android:textSize="20dp"
-                    android:textColor="@color/colorPrimary"
+    <android.support.constraint.Guideline
+        android:id="@+id/h80_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.80"
+        tools:layout_editor_absoluteY="438dp"
+        tools:layout_editor_absoluteX="0dp" />
 
-                    android:background="@drawable/gray_border_for_login"/>
+    <android.support.v7.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="5dp"
+        android:id="@+id/interst_linear_layout"
+        app:layout_constraintBottom_toTopOf="@+id/h80_guideline"
+        app:layout_constraintLeft_toRightOf="@+id/v10_guideline"
+        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/h70_guideline"
+        card_view:layout_constraintLeft_toLeftOf="@+id/v10_guideline"
+        card_view:layout_constraintTop_toTopOf="@+id/h70_guideline">
+        <android.support.v7.widget.RecyclerView
+            android:layout_gravity="center"
+            android:foregroundGravity="center"
+            android:id="@+id/recycler_view_in_register"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-                <Button
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Cancel"
-                    android:textStyle="bold"
-                    android:fontFamily="monospace"
-                    android:id="@+id/cancel_button"
-                    android:textSize="20dp"
-                    android:textColor="@color/colorPrimary"
-                    android:background="@drawable/gray_border_for_login"/>
+    </android.support.v7.widget.CardView>
 
-            </LinearLayout>
-        </LinearLayout>
+    <Button
+        android:id="@+id/sign_up_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:background="@drawable/gray_border_for_login"
+        android:fontFamily="monospace"
+        android:text="SignUp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/v10_guideline"
+        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
+        card_view:layout_constraintBottom_toBottomOf="parent"
+        card_view:layout_constraintLeft_toLeftOf="@+id/v10_guideline" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/logo_linear_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        card_view:layout_constraintHorizontal_bias="1.0"
+        card_view:layout_constraintLeft_toRightOf="@+id/v10_guideline"
+        card_view:layout_constraintRight_toLeftOf="@+id/v90_guideline"
+        card_view:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        card_view:layout_constraintBottom_toTopOf="@+id/cardView">
+        <ImageView
+            android:id="@+id/logo_imageView_register"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/smart"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

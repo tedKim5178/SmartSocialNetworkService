@@ -39,7 +39,7 @@ public class InterestsAdapter extends RecyclerView.Adapter<InterestsAdapter.Inte
 
         if(bigHashList.get(position).isCheck() == false){
             holder.interest.setText("#" + bigHashList.get(position).getBighash_name() + ", ");
-            holder.interest.setTextColor(Color.BLACK);
+            holder.interest.setTextColor(Color.argb(255, 180, 180, 180));
         }else{
             holder.interest.setText("#" + bigHashList.get(position).getBighash_name() + ", ");
             holder.interest.setTextColor(Color.BLUE);
