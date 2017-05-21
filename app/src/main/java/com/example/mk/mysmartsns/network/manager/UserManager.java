@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.mk.mysmartsns.config.PrefetchConfig;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.model.CallManagement;
 import com.example.mk.mysmartsns.network.SNSService;
@@ -71,6 +72,7 @@ public class UserManager {
                     if(response.code() == 401)
                         Toast.makeText(context, "아이디 혹은 비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show();
                 }
+                PrefetchConfig.isPrefetching = true;
                 callManagement.subtractCall("requestUserLogin", false);
             }
 

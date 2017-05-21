@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
         // delete files prefetched before
         deletePrefetchedFiles();
+        //** isPrefetching flag -> true
+//        PrefetchConfig.isPrefetching = true;          // Login event에서
 
         headerLayout = (LinearLayout) findViewById(R.id.headerLayout);
         progressPrefetch = (ProgressBar)findViewById(R.id.progressPrefetch);
@@ -69,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         // ** setting progress mode
         PrefetchConfig.isPrefetchingShow = (getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE)).getBoolean(PrefetchConfig.PREFETCH_SHOW, false);
         onShowProgressbar(PrefetchConfig.isPrefetchingShow);
+
+
 
 
         // Butterknife bind

@@ -80,7 +80,7 @@ public class ResumeDownloader {
                     writer.write(buffer, 0, count);
                     // progress....
 //                    downloadListener.progressUpdate();
-                    progressBarListener.progress(new Message(progressLength, toFile, fileLength));
+                    progressBarListener.progress(new Message(progressLength, toFile.substring(toFile.lastIndexOf('/')), fileLength));
                     if (progressLength == fileLength) {
                         progressLength = 0;
                         setStatus(COMPLETE);
