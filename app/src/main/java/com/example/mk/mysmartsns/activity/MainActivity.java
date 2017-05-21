@@ -222,15 +222,14 @@ public class MainActivity extends AppCompatActivity {
     public void deletePrefetchedFiles(){
         String filePath = String.valueOf(Environment.getExternalStorageDirectory()) + PrefetchConfig.Local_Name;
         File file = new File(filePath);
-        if(file != null){
-            if(file.isDirectory()){
-                String[] fileList = file.list();
-                for(int i=0; i<fileList.length; i++){
-                    File fileDelete = new File(filePath + "/" + fileList[i]);
-                    fileDelete.delete();
-                }
+        if(file.isDirectory()){
+            String[] fileList = file.list();
+            for(int i=0; i<fileList.length; i++){
+                File fileDelete = new File(filePath + "/" + fileList[i]);
+                fileDelete.delete();
             }
         }
+
     }
 
     public static void updateProgressBar(Message message){

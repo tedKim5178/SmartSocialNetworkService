@@ -65,6 +65,7 @@ public class CallManagement implements ResumeDownloadListener{
                 count = count + 1;
             }
         }
+
         if(count == callManageHashMap.size()){
             if(PrefetchConfig.prefetching_queue.size() != 0) {
                 PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek()).startPrefetching();
@@ -89,5 +90,9 @@ public class CallManagement implements ResumeDownloadListener{
             MainActivity.updateProgressBar(new Message(0,PrefetchConfig.prefetching_queue.peek() ,100));
             PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek()).startPrefetching();
         }
+    }
+
+    public static void remainInQueue(int remainCalls){
+
     }
 }

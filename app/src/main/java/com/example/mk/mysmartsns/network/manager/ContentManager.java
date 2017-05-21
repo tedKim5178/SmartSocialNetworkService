@@ -549,7 +549,6 @@ public class ContentManager {
     public void requestPrefetchingList(int user_no, int current_page){
         SNSService snsService = ServerController.getInstance().getSnsService();
         final CallManagement callManagement = CallManagement.getInstance(context);
-        callManagement.addCall("requestPrefetchingList", true);
         Call<List<PrefetchImageInfo>> call = snsService.requestPrefetchingList(user_no, current_page);
         call.enqueue(new Callback<List<PrefetchImageInfo>>() {
             @Override
@@ -559,11 +558,9 @@ public class ContentManager {
                 }else{
                     Log.d(TAG, response.message());
                 }
-                callManagement.subtractCall("requestPrefetchingList", false);
             }
             @Override
             public void onFailure(Call<List<PrefetchImageInfo>> call, Throwable t) {
-                callManagement.subtractCall("requestPrefetchingList", false);
             }
         });
     }
