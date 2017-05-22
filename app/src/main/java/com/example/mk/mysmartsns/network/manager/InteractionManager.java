@@ -122,7 +122,11 @@ public class InteractionManager {
         new ContentManager(context, listener).requestCountSearchedHashIncrease(user_no, hash);
     }
 
-    public void requestPrefetchingList(int user_no, int current_page, OnMyApiListener listener){
-        new ContentManager(context, listener).requestPrefetchingList(user_no, current_page);
+    public void requestPrefetchingList(int user_no, int current_page, int totalContentCount, OnMyApiListener listener){
+        new ContentManager(context, listener).requestPrefetchingList(user_no, current_page, totalContentCount);
+    }
+
+    public void requestTotalCount(OnMyApiListener listener){
+        new ContentManager(context, listener).requestTotalCount();
     }
 }

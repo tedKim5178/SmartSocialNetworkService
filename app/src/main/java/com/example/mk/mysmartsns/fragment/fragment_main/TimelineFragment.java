@@ -17,12 +17,15 @@ import com.example.mk.mysmartsns.config.PrefetchConfig;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.model.CallManagement;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
+import com.example.mk.mysmartsns.network.info.CountInfo;
 import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
 import com.example.mk.mysmartsns.ztest.ListItems;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.ResponseBody;
 
 /**
  * Created by mk on 2017-02-02.
@@ -49,15 +52,33 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        // 서버로부터 thumbnail image를 포함한 contents 받기
-        getThumbnailContentsFromServer(INITIAL_CURRENT_PAGE);
+        // 서버로부터 총 아이템 갯수 가져오자.!
+        InteractionManager.getInstance(getContext()).requestTotalCount(new OnMyApiListener() {
+            @Override
+            public void success(Object response) {
+                // count.get(0).getCount(); 이런식으로 전체 count를 가져올 수 있다.
+                List<CountInfo> count = (List<CountInfo>) response;
+                PrefetchConfig.totalContentsCount = count.get(0).getCount();
 
-        // 서버로부터 프리패칭 리스트 받기, 받기가 완료되면 네트워크 사용 여부에 따라 프리패칭 시작됨
-        if(PrefetchConfig.isPrefetching){
-            getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE);
-            getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE+1);
-            PrefetchConfig.isPrefetching = false;
-        }
+                // 서버로부터 thumbnail image를 포함한 contents 받기
+                getThumbnailContentsFromServer(INITIAL_CURRENT_PAGE);
+
+                // 서버로부터 프리패칭 리스트 받기, 받기가 완료되면 네트워크 사용 여부에 따라 프리패칭 시작됨
+                if(PrefetchConfig.isPrefetching){
+                    Log.d(TAG, "PrefetchingImage ??");
+                    getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE);
+                    getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE+1);
+                    PrefetchConfig.isPrefetching = false;
+                }
+            }
+
+            @Override
+            public void fail() {
+
+            }
+        });
+
+
 
         mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
@@ -85,7 +106,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
     public void getPrefetchingImageFromServer(final int current_page){
         // current_page를 이용해서 prefetching을 진행하자. 즉 server로 current_page를 넘겨줘야한다.
         CallManagement.getInstance(getContext()).addCall("requestPrefetchingList", true);
-        InteractionManager.getInstance(getContext()).requestPrefetchingList(MyConfig.myInfo.getUser_no(), current_page, new OnMyApiListener() {
+        InteractionManager.getInstance(getContext()).requestPrefetchingList(MyConfig.myInfo.getUser_no(), current_page, PrefetchConfig.totalContentsCount, new OnMyApiListener() {
             @Override
             public void success(Object response) {
                 // prefetch image 들의 정보를 가지고 있다...

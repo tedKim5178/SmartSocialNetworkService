@@ -3,6 +3,7 @@ package com.example.mk.mysmartsns.network;
 import com.example.mk.mysmartsns.network.info.BigHashInfo;
 import com.example.mk.mysmartsns.network.info.CommentInfo;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
+import com.example.mk.mysmartsns.network.info.CountInfo;
 import com.example.mk.mysmartsns.network.info.LoginInfo;
 import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
 import com.example.mk.mysmartsns.network.info.SmallHashInfo;
@@ -130,8 +131,12 @@ public interface SNSService {
     Call<Void> countSearchedHashIncrease(@Query("user_no") int user_no, @Query("searched_hash") String hash);
 
     @GET("/prefetch/list/{user_no}")
-    Call<List<PrefetchImageInfo>> requestPrefetchingList(@Path("user_no") int user_no, @Query("current_page") int current_page);
+    Call<List<PrefetchImageInfo>> requestPrefetchingList(@Path("user_no") int user_no, @Query("current_page") int current_page, @Query("totalContentCount") int totalContentCount);
 
     @GET("/prefetch/hit")
     Call<Void> requestHitInformation(@Query("user_no") int user_no, @Query("hit") boolean hit);
+
+    @GET("/download/total_count")
+    Call<List<CountInfo>> requestTotalCount();
+
 }

@@ -23,4 +23,6 @@ public class PrefetchConfig {
     public static Queue<String> prefetching_queue = new LinkedList<>();
 
     public static boolean isPrefetching = true;
+
+    public static int totalContentsCount = 0;
 }

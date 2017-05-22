@@ -11,6 +11,7 @@ import com.example.mk.mysmartsns.network.ServerController;
 import com.example.mk.mysmartsns.network.info.BigHashInfo;
 import com.example.mk.mysmartsns.network.info.CommentInfo;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
+import com.example.mk.mysmartsns.network.info.CountInfo;
 import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
 import com.example.mk.mysmartsns.network.info.SmallHashInfo;
 import com.example.mk.mysmartsns.network.info.UserInfo;
@@ -42,6 +43,31 @@ public class ContentManager {
         this.context = context;
         this.listener = listener;
     }
+
+    public void requestTotalCount(){
+        SNSService snsService = ServerController.getInstance().getSnsService();
+        final CallManagement callManagement= CallManagement.getInstance(context);
+        callManagement.addCall("requestTotalCount", true);
+        Call<List<CountInfo>> callRequestTotalCount = snsService.requestTotalCount();
+        callRequestTotalCount.enqueue(new Callback<List<CountInfo>>() {
+            @Override
+            public void onResponse(Call<List<CountInfo>> call, Response<List<CountInfo>> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "requestTotalCount::isSuccessful() : " + response.code());
+                    listener.success(response.body());
+                }else{
+                    Log.d(TAG, "requestTotalCount::isNotSuccessful() : " + response.code());
+                }
+                callManagement.subtractCall("requestTotalCount", false);
+            }
+
+            @Override
+            public void onFailure(Call<List<CountInfo>> call, Throwable t) {
+                Log.d(TAG, "requestTotalCount::onFailure() : " + t.getMessage());
+                callManagement.subtractCall("requestTotalCount", false);
+            }
+        });
+    }
     public void requestHitInformation(int user_no, boolean hit){
         SNSService snsService = ServerController.getInstance().getSnsService();
 
@@ -53,6 +79,7 @@ public class ContentManager {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful()){
                     Log.d(TAG, "requestHitInformation::isSuccessful() : " + response.code());
+                    listener.success(response.body());
                 }else{
                     Log.d(TAG, "requestHitInformation::isNotSuccessful() : " + response.code());
                 }
@@ -546,10 +573,10 @@ public class ContentManager {
         });
     }
 
-    public void requestPrefetchingList(int user_no, int current_page){
+    public void requestPrefetchingList(int user_no, int current_page, int totalContentCount){
         SNSService snsService = ServerController.getInstance().getSnsService();
         final CallManagement callManagement = CallManagement.getInstance(context);
-        Call<List<PrefetchImageInfo>> call = snsService.requestPrefetchingList(user_no, current_page);
+        Call<List<PrefetchImageInfo>> call = snsService.requestPrefetchingList(user_no, current_page, totalContentCount);
         call.enqueue(new Callback<List<PrefetchImageInfo>>() {
             @Override
             public void onResponse(Call<List<PrefetchImageInfo>> call, Response<List<PrefetchImageInfo>> response) {
