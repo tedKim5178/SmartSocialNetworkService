@@ -80,7 +80,7 @@ public class ResumeDownloader {
                     writer.write(buffer, 0, count);
                     // progress....
 //                    downloadListener.progressUpdate();
-                    progressBarListener.progress(new Message(progressLength, toFile, fileLength));
+                    progressBarListener.progress(new Message(progressLength, toFile.substring(toFile.lastIndexOf('/')), fileLength));
                     if (progressLength == fileLength) {
                         progressLength = 0;
                         setStatus(COMPLETE);
@@ -96,9 +96,11 @@ public class ResumeDownloader {
 
     private void prepareDownload(String urlStr, String toFile, ResumeDownloadListener downloadListener) throws IOException {
         Log.d(TAG, "========= prefetch_list==============");
-        Iterator<String> iter = PrefetchConfig.prefetching_queue.iterator();
-        while(iter.hasNext()){
-            Log.d(TAG, iter.next());
+         synchronized (PrefetchConfig.prefetching_queue) {
+            Iterator<String> iter = PrefetchConfig.prefetching_queue.iterator();
+            while (iter.hasNext()) {
+                Log.d(TAG, iter.next());
+            }
         }
         Log.d(TAG, "=============== prepare ================");
 //        downloadListener.progressUpdate();

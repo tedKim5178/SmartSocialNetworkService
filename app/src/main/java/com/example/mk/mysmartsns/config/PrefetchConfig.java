@@ -20,7 +20,7 @@ public class PrefetchConfig {
 
     public static boolean isPrefetchingMode = true;                     // 나중에 이 boolean값으로 기능 on/off
     public static boolean isPrefetchingShow = false;
-    public static Queue<String> prefetching_queue = new LinkedList<>();
+     public static Queue<String> prefetching_queue = new LinkedList<>();
 
     public static boolean isPrefetching = true;
 

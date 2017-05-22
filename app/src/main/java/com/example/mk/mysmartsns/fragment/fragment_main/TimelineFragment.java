@@ -20,9 +20,7 @@ import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.info.CountInfo;
 import com.example.mk.mysmartsns.network.info.PrefetchImageInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
-import com.example.mk.mysmartsns.ztest.ListItems;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -83,6 +81,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
         mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int current_page) {
+                Log.d(TAG, "onLoadMore:::::gilsoo");
                 getThumbnailContentsFromServer(current_page);
                 getPrefetchingImageFromServer(current_page+1);
 
@@ -109,6 +108,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
         InteractionManager.getInstance(getContext()).requestPrefetchingList(MyConfig.myInfo.getUser_no(), current_page, PrefetchConfig.totalContentsCount, new OnMyApiListener() {
             @Override
             public void success(Object response) {
+                Log.d("gilsoo", "getPrefetchingImageFromServer::: success");
                 // prefetch image 들의 정보를 가지고 있다...
                 // 넣어주기 전에 queue의 상태 확인
                 int remainImagesInQueue = PrefetchConfig.prefetching_queue.size();
@@ -119,14 +119,18 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
                     int str_length = str.length();
                     String prefetchImageUrl = prefetching_image.get(i).getContent_url().substring(str_length);
                     Log.d(TAG, "CallManagerMent:::Prefetching offer prefetchImageUrl : " + prefetchImageUrl);
-                    PrefetchConfig.prefetching_queue.offer(prefetchImageUrl);
+                    synchronized (PrefetchConfig.prefetching_queue) {
+                        PrefetchConfig.prefetching_queue.offer(prefetchImageUrl);
+                    }
                 }
 
                 // queue 순서 바꾸기
                 if(current_page > 2){
                     for(int i=0; i<remainImagesInQueue; i++){
-                        String temp = PrefetchConfig.prefetching_queue.poll();
-                        PrefetchConfig.prefetching_queue.offer(temp);
+                        synchronized (PrefetchConfig.prefetching_queue) {
+                            String temp = PrefetchConfig.prefetching_queue.poll();
+                            PrefetchConfig.prefetching_queue.offer(temp);
+                        }
                     }
                 }
 
@@ -136,6 +140,8 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void fail() {
+                Log.d("gilsoo", "getPrefetchingImageFromServer::: fail");
+
                 CallManagement.getInstance(getContext()).subtractCall("requestPrefetchingList", false);
             }
         });
@@ -146,6 +152,8 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
         InteractionManager.getInstance(getContext()).requestContentThumbnailDownload(MyConfig.myInfo.getUser_no(), current_page, new OnMyApiListener() {
             @Override
             public void success(Object response) {
+                Log.d("gilsoo", "getThumbnailContentsFromServer::: success");
+                CallManagement.getInstance(getContext()).printCall();
                 List<ContentInfo> contentInfoList = (List<ContentInfo>) response;
 
                 for (int i = 0; i < contentInfoList.size(); i++) {
@@ -179,7 +187,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void fail() {
-
+                Log.d("gilsoo", "getThumbnailContentsFromServer::: fail");
             }
         });
     }

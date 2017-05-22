@@ -103,7 +103,10 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
                     if(file.exists() && file.length() >= contentInfo.getContent_size()){              // 로컬에 받아져 있다면
                         Log.d(TAG, "InLocal :: file.length() : " + file.length() + ", content_size : " + contentInfo.getContent_size());
                         Toast.makeText(getBaseContext(), "로컬에서 이미지 로드", Toast.LENGTH_SHORT).show();
-                        Glide.with(OriginalImageActivity.this).load(file).into(original_image_view);
+                        progressPrefetch.setProgress(100);
+                        textPrefetch.setText(file.getName());
+//                        original_image_view.setImageURI(Uri.fromFile(file));
+                        Glide.with(OriginalImageActivity.this).load(file).error(R.drawable.ic_close).into(original_image_view);
                     }else if(file.exists() && file.length() < contentInfo.getContent_size()){                     // 로컬에 일부분만 받아져 있다면
                         isFollowing = true;
                         Log.d(TAG, "InLocal&Server :: file.length() : " + file.length() + ", content_size : " + contentInfo.getContent_size());
@@ -120,6 +123,7 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
                             PrefetchConfig.prefetching_queue.remove(prefetchImageUrl);
                         }
                         Toast.makeText(getBaseContext(), "서버에서 이미지 로드", Toast.LENGTH_SHORT).show();
+                        textPrefetch.setText("not prefetched image.");
                         Glide.with(OriginalImageActivity.this).load(APIConfig.baseUrl + contentInfo.getContent_url()).into(original_image_view);
                     }
 

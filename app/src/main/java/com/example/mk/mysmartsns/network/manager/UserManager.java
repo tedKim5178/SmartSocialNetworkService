@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.mk.mysmartsns.config.PrefetchConfig;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.model.CallManagement;
 import com.example.mk.mysmartsns.network.SNSService;
@@ -70,6 +71,11 @@ public class UserManager {
                     Log.d(TAG, "requestUserLogin::isNotSuccessful() : " + response.code());
                     if(response.code() == 401)
                         Toast.makeText(context, "아이디 혹은 비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show();
+                }
+                // MainActivity에서 지워주기때문에 isPrefetching flag와 queue 비워준다. by gilsoo
+                PrefetchConfig.isPrefetching = true;
+                synchronized (PrefetchConfig.prefetching_queue) {
+                    PrefetchConfig.prefetching_queue.clear();
                 }
                 callManagement.subtractCall("requestUserLogin", false);
             }

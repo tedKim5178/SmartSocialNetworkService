@@ -13,6 +13,7 @@ import com.example.mk.mysmartsns.prefetch.ResumeDownloadListener;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by mk on 2017-03-16.
@@ -73,6 +74,21 @@ public class CallManagement implements ResumeDownloadListener{
         }
     }
 
+    public void clearCall(){                    // call이 남아있는 경우가 있음 -> clear(),  by gilsoo.
+        if(callManagement != null)
+            callManagement = null;
+    }
+
+    public void printCall(){
+        if(callManagement!=null){
+            Set<String> set = callManagement.callManageHashMap.keySet();
+            Iterator<String> iter = set.iterator();
+            while(iter.hasNext()){
+                String key = iter.next();
+                Log.d(TAG, key + ", " + callManagement.callManageHashMap.get(key));
+            }
+        }
+    }
 
     @Override
     public void progressUpdate(Message message) {
@@ -91,6 +107,8 @@ public class CallManagement implements ResumeDownloadListener{
             PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek()).startPrefetching();
         }
     }
+
+
 
     public static void remainInQueue(int remainCalls){
 
