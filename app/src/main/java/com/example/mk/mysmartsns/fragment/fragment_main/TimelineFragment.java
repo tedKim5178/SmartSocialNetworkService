@@ -153,7 +153,6 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
             @Override
             public void success(Object response) {
                 Log.d("gilsoo", "getThumbnailContentsFromServer::: success");
-                CallManagement.getInstance(getContext()).printCall();
                 List<ContentInfo> contentInfoList = (List<ContentInfo>) response;
 
                 for (int i = 0; i < contentInfoList.size(); i++) {

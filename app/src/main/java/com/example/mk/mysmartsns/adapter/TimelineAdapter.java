@@ -338,12 +338,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
             }else if(viewId == R.id.poster_profile_view){           // 상대방 타임라인 방문
                 if(Integer.parseInt(contentInfoList.get(position).getContent_host_no()) == MyConfig.myInfo.getUser_no()){
                     android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    // TODO:: 다른사람 타임라인 방문할 때 추가적으로 profile_url도 넘겨줘야함
                     transaction.replace(R.id.frame_layout, MyTimelineFragment.newInstance(), "nav_my_timeline_fragment");
                     transaction.addToBackStack("");
                     transaction.commit();
                 }else{
                     Intent intent = new Intent(mContext, OtherTimelineActivity.class);
                     intent.putExtra("user_no", MyConfig.myInfo.getUser_no());
+                    intent.putExtra("host_profile_url", contentInfoList.get(position).getContent_host_profile_url());
                     Log.d(TAG, "host_no : " + contentInfoList.get(position).getContent_host_no());
                     intent.putExtra("host_no", contentInfoList.get(position).getContent_host_no());
                     mContext.startActivity(intent);

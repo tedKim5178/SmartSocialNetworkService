@@ -32,12 +32,14 @@ OtherTimelineActivity extends AppCompatActivity {
     private TextView textOtherTimeLineID;
     private TextView textOtherTimeLineName;
     int user_no, host_no;
+    private String h_profile_url = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_timeline);
         user_no = getIntent().getIntExtra("user_no", -1);
+        h_profile_url = getIntent().getStringExtra("host_profile_url");
         host_no = Integer.parseInt(getIntent().getStringExtra("host_no"));
         initLayout();
     }
@@ -47,7 +49,7 @@ OtherTimelineActivity extends AppCompatActivity {
         if(MyConfig.myInfo.getUser_profile_url() == null)
             Glide.with(this).load(R.drawable.personurl).bitmapTransform(new CropCircleTransformation(this)).into(imgOtherTimeline);
         else
-            Glide.with(this).load(APIConfig.baseUrl + "/" + MyConfig.myInfo.getUser_profile_url()).bitmapTransform(new CropCircleTransformation(this)).into(imgOtherTimeline);
+            Glide.with(this).load(APIConfig.baseUrl + "/" + h_profile_url).bitmapTransform(new CropCircleTransformation(this)).into(imgOtherTimeline);
         textOtherTimeLineID = (TextView)findViewById(R.id.texOtherTimeLineID);
         textOtherTimeLineName = (TextView)findViewById(R.id.textOtherTimeLineName);
         textOtherTimeLineID.setText("");

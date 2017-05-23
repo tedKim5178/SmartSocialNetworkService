@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // delete files prefetched before
-        deletePrefetchedFiles();
+//        deletePrefetchedFiles();
         //** isPrefetching flag -> true
 //        PrefetchConfig.isPrefetching = true;          // Login event에서
 
