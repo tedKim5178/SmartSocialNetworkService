@@ -23,8 +23,6 @@ import com.example.mk.mysmartsns.network.manager.InteractionManager;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
-
 /**
  * Created by mk on 2017-02-02.
  */
@@ -62,10 +60,10 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
                 getThumbnailContentsFromServer(INITIAL_CURRENT_PAGE);
 
                 // 서버로부터 프리패칭 리스트 받기, 받기가 완료되면 네트워크 사용 여부에 따라 프리패칭 시작됨
-                if(PrefetchConfig.isPrefetching){
+                if (PrefetchConfig.isPrefetching) {
                     Log.d(TAG, "PrefetchingImage ??");
                     getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE);
-                    getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE+1);
+                    getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE + 1);
                     PrefetchConfig.isPrefetching = false;
                 }
             }
@@ -141,7 +139,6 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
             @Override
             public void fail() {
                 Log.d("gilsoo", "getPrefetchingImageFromServer::: fail");
-
                 CallManagement.getInstance(getContext()).subtractCall("requestPrefetchingList", false);
             }
         });
@@ -153,7 +150,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
             @Override
             public void success(Object response) {
                 Log.d("gilsoo", "getThumbnailContentsFromServer::: success");
-                CallManagement.getInstance(getContext()).printCall();
+
                 List<ContentInfo> contentInfoList = (List<ContentInfo>) response;
 
                 for (int i = 0; i < contentInfoList.size(); i++) {

@@ -584,10 +584,14 @@ public class ContentManager {
                     listener.success(response.body());
                 }else{
                     Log.d(TAG, response.message());
+                    listener.fail();
                 }
             }
             @Override
             public void onFailure(Call<List<PrefetchImageInfo>> call, Throwable t) {
+                t.printStackTrace();
+                Log.d(TAG, t.getMessage());
+                listener.fail();
             }
         });
     }

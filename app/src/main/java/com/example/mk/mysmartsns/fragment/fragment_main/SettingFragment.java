@@ -4,6 +4,7 @@ package com.example.mk.mysmartsns.fragment.fragment_main;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +14,16 @@ import android.widget.Switch;
 import com.example.mk.mysmartsns.R;
 import com.example.mk.mysmartsns.activity.MainActivity;
 import com.example.mk.mysmartsns.config.PrefetchConfig;
+import com.example.mk.mysmartsns.model.CallManagement;
+
+import java.util.Iterator;
 
 /**
  * Created by mk on 2017-02-03.
  */
 
 public class SettingFragment extends android.support.v4.app.Fragment implements CompoundButton.OnCheckedChangeListener{
-
+    private final String TAG = SettingFragment.class.getSimpleName();
     private Switch switchSettingPrefetchMode, switchSettingProgress, switchSettingDataMode, switchSettingNetworkMode;
     public static SettingFragment newInstance() {
         SettingFragment fragment = new SettingFragment();
@@ -79,12 +83,20 @@ public class SettingFragment extends android.support.v4.app.Fragment implements 
                 edit= pref.edit();
                 edit.putBoolean(PrefetchConfig.DATA_MODE, isChecked);
                 edit.apply();
+                synchronized (PrefetchConfig.prefetching_queue) {
+                    Iterator<String> iter = PrefetchConfig.prefetching_queue.iterator();
+                    Log.d(TAG, "PrefetchingList : "+ PrefetchConfig.prefetching_queue.size());
+                    while (iter.hasNext()) {
+                        Log.d(TAG, iter.next());
+                    }
+                }
                 break;
             case R.id.switchSettingNetworkMode:             // network mode
                 pref = getContext().getSharedPreferences(PrefetchConfig.NAME, Context.MODE_PRIVATE);
                 edit= pref.edit();
                 edit.putBoolean(PrefetchConfig.NETWORK_MODE, isChecked);
                 edit.apply();
+                CallManagement.getInstance(getContext()).printCall();
                 break;
 
         }

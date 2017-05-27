@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,9 +17,7 @@
         android:padding="16dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteY="28dp"
-        tools:layout_editor_absoluteX="28dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_weight="1"
@@ -51,43 +49,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <android.support.constraint.Guideline
-        android:id="@+id/v10_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.1"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="37dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/v90_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="328dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/h10_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1"
-        tools:layout_editor_absoluteY="55dp"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/h40_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="219dp" />
-
-
 
 
     <android.support.v7.widget.CardView
@@ -95,11 +56,7 @@
         card_view:cardElevation="5dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/h40_guideline"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
-        app:layout_constraintLeft_toLeftOf="@+id/v10_guideline"
-        app:layout_constraintTop_toTopOf="@+id/h10_guideline"
+
         android:id="@+id/cardView">
 
         <FrameLayout
@@ -135,27 +92,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.50"
-        tools:layout_editor_absoluteY="274dp"
-        tools:layout_editor_absoluteX="0dp" />
+       />
 
     <android.support.constraint.Guideline
         android:id="@+id/h60_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.60"
-        tools:layout_editor_absoluteY="328dp"
-        tools:layout_editor_absoluteX="0dp" />
+        />
 
     <android.support.v7.widget.CardView
         android:id="@+id/id_linear_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/h50_guideline"
-        app:layout_constraintLeft_toLeftOf="@+id/v10_guideline"
-        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
-        app:layout_constraintTop_toTopOf="@+id/h40_guideline"
+
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="5dp">
 
@@ -178,12 +128,7 @@
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="5dp"
         android:id="@+id/pw_linear_layout"
-        app:layout_constraintBottom_toTopOf="@+id/h60_guideline"
-        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
-        app:layout_constraintLeft_toRightOf="@+id/v10_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/h50_guideline"
-        card_view:layout_constraintLeft_toLeftOf="@+id/v10_guideline"
-        card_view:layout_constraintTop_toTopOf="@+id/h50_guideline">
+        >
         <EditText
             android:hint="Password를 입력해주세요"
             android:textColor="#666666"
@@ -204,9 +149,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.70"
-        tools:layout_editor_absoluteY="383dp"
-        tools:layout_editor_absoluteX="0dp" />
+       />
 
     <android.support.v7.widget.CardView
         android:layout_width="0dp"
@@ -214,10 +157,7 @@
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="5dp"
         android:id="@+id/name_linear_layout"
-        app:layout_constraintBottom_toTopOf="@+id/h70_guideline"
-        app:layout_constraintLeft_toLeftOf="@+id/v10_guideline"
-        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/h60_guideline">
+       >
 
         <EditText
             android:id="@+id/register_name"
@@ -229,9 +169,7 @@
             android:textColor="#666666"
             android:textColorHint="#bbbbbb"
             android:textSize="14dp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="0dp" />
+            android:textStyle="bold" />
 
     </android.support.v7.widget.CardView>
 
@@ -239,10 +177,7 @@
         android:id="@+id/h80_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.80"
-        tools:layout_editor_absoluteY="438dp"
-        tools:layout_editor_absoluteX="0dp" />
+        android:orientation="horizontal" />
 
     <android.support.v7.widget.CardView
         android:layout_width="0dp"
@@ -250,12 +185,7 @@
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="5dp"
         android:id="@+id/interst_linear_layout"
-        app:layout_constraintBottom_toTopOf="@+id/h80_guideline"
-        app:layout_constraintLeft_toRightOf="@+id/v10_guideline"
-        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/h70_guideline"
-        card_view:layout_constraintLeft_toLeftOf="@+id/v10_guideline"
-        card_view:layout_constraintTop_toTopOf="@+id/h70_guideline">
+      >
         <android.support.v7.widget.RecyclerView
             android:layout_gravity="center"
             android:foregroundGravity="center"
@@ -277,23 +207,16 @@
         android:textColor="@color/colorPrimary"
         android:textSize="14dp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/v10_guideline"
-        app:layout_constraintRight_toLeftOf="@+id/v90_guideline"
-        card_view:layout_constraintBottom_toBottomOf="parent"
-        card_view:layout_constraintLeft_toLeftOf="@+id/v10_guideline" />
+     />
 
     <LinearLayout
         android:id="@+id/logo_linear_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        card_view:layout_constraintHorizontal_bias="1.0"
-        card_view:layout_constraintLeft_toRightOf="@+id/v10_guideline"
-        card_view:layout_constraintRight_toLeftOf="@+id/v90_guideline"
-        card_view:layout_constraintTop_toTopOf="parent"
+
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        card_view:layout_constraintBottom_toTopOf="@+id/cardView">
+        android:layout_marginBottom="8dp">
         <ImageView
             android:id="@+id/logo_imageView_register"
             android:layout_width="match_parent"
@@ -302,4 +225,4 @@
             android:src="@drawable/smart"/>
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

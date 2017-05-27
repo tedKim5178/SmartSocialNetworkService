@@ -83,6 +83,7 @@ public class CallManagement implements ResumeDownloadListener{
         if(callManagement!=null){
             Set<String> set = callManagement.callManageHashMap.keySet();
             Iterator<String> iter = set.iterator();
+            Log.d(TAG, String.valueOf(callManagement.callManageHashMap.size()));
             while(iter.hasNext()){
                 String key = iter.next();
                 Log.d(TAG, key + ", " + callManagement.callManageHashMap.get(key));

@@ -105,8 +105,9 @@ public class PostFragment extends android.support.v4.app.Fragment implements Vie
                 uploadImage.setImageResource(android.R.drawable.ic_menu_camera);
                 break;
             case R.id.uploadButton:             // 이미지 서버로 업로드
-                if (isImageUpload)
+                if (isImageUpload) {
                     uploadContents();
+                }
                 else
                     Toast.makeText(getActivity().getBaseContext(), "사진을 선택 하여주세요", Toast.LENGTH_SHORT).show();
                 break;
@@ -261,7 +262,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements Vie
                         startIndex = start + 1;
                     return;
                 }
-
+                // add by gilsoo 20170523 __ 옛날에 예외처리 해준것같은데 왜그러지?
                 smallHashIndexList.add(new SmallHashIndex(startIndex, endIndex, s.toString().substring(startIndex, endIndex)));
 
                 if (s.charAt(start) == 32)                       // 공백을 만났을 때만 startTag -> false
