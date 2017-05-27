@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.mk.mysmartsns.BottomNavigationViewHelper;
 import com.example.mk.mysmartsns.R;
+import com.example.mk.mysmartsns.adapter.TimelineAdapter;
 import com.example.mk.mysmartsns.config.PrefetchConfig;
 import com.example.mk.mysmartsns.fragment.fragment__search.HashTagSearchFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.MyTimelineFragment;
@@ -259,6 +260,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // adapter null로..!
+        TimelineAdapter.setTimelineAdapterNull();
+
         PrefetchDownload.newInstance(new ResumeDownloadListener() {
             @Override
             public void progressUpdate(Message message) {

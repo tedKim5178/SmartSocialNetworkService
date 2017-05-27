@@ -40,14 +40,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public void onBindViewHolder(CommentViewHolder holder, int position) {
-        if(commentInfoList.get(position).getUser_profile() == null)
+        if(commentInfoList.get(position).getUser_profile() == null) {
             Glide.with(mContext).load(R.drawable.personurl).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.profile_picture_in_comment);
-        else
-            Glide.with(mContext).load(APIConfig.baseUrl + "/" + commentInfoList.get(position).getUser_profile()).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.profile_picture_in_comment);
-
+            Log.d(TAG, "CommentAdpaterTest when this user does not set his profile photo : ");
+        }
+        else {
+            Glide.with(mContext).load(APIConfig.baseUrl + "profile_image/" + commentInfoList.get(position).getUser_profile()).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.profile_picture_in_comment);
+            Log.d(TAG, "CommentAdpaterTest when this user has his profile photo : " + APIConfig.baseUrl + "/" + commentInfoList.get(position).getUser_profile());
+        }
         holder.user_name.setText(commentInfoList.get(position).getUser_id());
-        // 이부분에서 길수한테 말해야될듯.. 내용을 받아야지..!
-//        holder.comment.setText(commentInfoList.get(position).get);
         holder.comment.setText(commentInfoList.get(position).getComment_name());
         Log.d(TAG, "BindViewHolder : " + commentInfoList.get(position).getComment_name());
     }
