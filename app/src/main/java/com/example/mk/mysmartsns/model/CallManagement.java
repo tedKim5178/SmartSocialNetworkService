@@ -53,6 +53,9 @@ public class CallManagement implements ResumeDownloadListener{
         callManageHashMap.put(key, isUsed);
         PrefetchDownload.newInstance(this).stopPrefetching();
         Log.d(TAG, "Prefetching Stop");
+        Log.d(TAG, "CallManagementff addCall!!!" + key);
+
+        printCall();
     }
 
     public  void subtractCall(String key, boolean isUsed){
@@ -66,7 +69,8 @@ public class CallManagement implements ResumeDownloadListener{
                 count = count + 1;
             }
         }
-
+        Log.d(TAG, "CallManagementff subTract!!!" + key);
+        printCall();
         if(count == callManageHashMap.size()){
             if(PrefetchConfig.prefetching_queue.size() != 0) {
                 PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek()).startPrefetching();
@@ -86,7 +90,7 @@ public class CallManagement implements ResumeDownloadListener{
             Log.d(TAG, String.valueOf(callManagement.callManageHashMap.size()));
             while(iter.hasNext()){
                 String key = iter.next();
-                Log.d(TAG, key + ", " + callManagement.callManageHashMap.get(key));
+                Log.d(TAG, "CallManagementff : " + key + ", " + callManagement.callManageHashMap.get(key));
             }
         }
     }

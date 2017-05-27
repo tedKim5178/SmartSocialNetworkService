@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mk.mysmartsns.R;
 import com.example.mk.mysmartsns.adapter.EndlessRecyclerOnScrollListener;
@@ -23,6 +24,8 @@ import com.example.mk.mysmartsns.network.manager.InteractionManager;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
+
 /**
  * Created by mk on 2017-02-02.
  */
@@ -33,48 +36,86 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
     RecyclerView mRecyclerView;
     private final int INITIAL_CURRENT_PAGE = 1;
 
+
+    List<ContentInfo> contentInfoList;
+
+    static TimelineFragment timelineFragment;
+
+    int backPosition= 0;
     public static TimelineFragment newInstance() {
         TimelineFragment fragment = new TimelineFragment();
-        return fragment;
+        timelineFragment = fragment;
+        return timelineFragment;
     }
 
+    public static TimelineFragment getInstance(){
+        return timelineFragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_timeline, container, false);
+        Log.d(TAG, "fragmentTest!! onCreateView in TimelineFragment");
 
         // 지금은 어댑터에서 뷰를 연결해줄때 임의의 이미지를 연결해주지만 원래는 데이터베이스에서 가져오는 이미지를 가져와야된다.
         mRecyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
+
+
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Log.d(TAG, "여기1");
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        Log.d(TAG, "여기2");
+
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
+        Log.d(TAG, "여기3");
+        if(TimelineAdapter.getTimelineAdapterInstance() != null){
+            mAdapter = TimelineAdapter.getTimelineAdapterInstance();
+            Log.d(TAG, "여기4");
+        }
+        Log.d(TAG, "여기5");
+        // mAdapter 가 null이라는 뜻은 이 fragment가 처음으로 attach됬단 뜻이다.
+        // mAdapter null이 아니라면 else 부분에서 원래의 포지션 값으로 보내주는 역할을 수행하자 원래 데이터를 이용해서 뷰를 구성해야한다
         // 서버로부터 총 아이템 갯수 가져오자.!
-        InteractionManager.getInstance(getContext()).requestTotalCount(new OnMyApiListener() {
-            @Override
-            public void success(Object response) {
-                // count.get(0).getCount(); 이런식으로 전체 count를 가져올 수 있다.
-                List<CountInfo> count = (List<CountInfo>) response;
-                PrefetchConfig.totalContentsCount = count.get(0).getCount();
 
-                // 서버로부터 thumbnail image를 포함한 contents 받기
-                getThumbnailContentsFromServer(INITIAL_CURRENT_PAGE);
+        if(mAdapter == null){
+            Log.d(TAG, "fragmentTest!! mAdapter is null");
+            InteractionManager.getInstance(getContext()).requestTotalCount(new OnMyApiListener() {
+                @Override
+                public void success(Object response) {
+                    // count.get(0).getCount(); 이런식으로 전체 count를 가져올 수 있다.
+                    List<CountInfo> count = (List<CountInfo>) response;
+                    PrefetchConfig.totalContentsCount = count.get(0).getCount();
 
-                // 서버로부터 프리패칭 리스트 받기, 받기가 완료되면 네트워크 사용 여부에 따라 프리패칭 시작됨
-                if (PrefetchConfig.isPrefetching) {
-                    Log.d(TAG, "PrefetchingImage ??");
-                    getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE);
-                    getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE + 1);
-                    PrefetchConfig.isPrefetching = false;
+                    // 서버로부터 thumbnail image를 포함한 contents 받기
+                    getThumbnailContentsFromServer(INITIAL_CURRENT_PAGE);
+
+                    // 서버로부터 프리패칭 리스트 받기, 받기가 완료되면 네트워크 사용 여부에 따라 프리패칭 시작됨
+                    if(PrefetchConfig.isPrefetching){
+                        Log.d(TAG, "PrefetchingImage ??");
+                        getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE);
+                        getPrefetchingImageFromServer(INITIAL_CURRENT_PAGE+1);
+                        PrefetchConfig.isPrefetching = false;
+                    }
                 }
-            }
 
-            @Override
-            public void fail() {
+                @Override
+                public void fail() {
 
-            }
-        });
-
-
+                }
+            });
+        }else{
+            Log.d(TAG, "fragmentTest!! mAdapter is not null and size @@@ " + mAdapter.contentInfoList.size() + "?? :"+backPosition);
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.scrollToPosition(backPosition);
+            Toast.makeText(getContext(),"바보",Toast.LENGTH_LONG).show();
+        }
 
         mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
@@ -85,13 +126,6 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
 
             }
         });
-
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     public void setDataChanged(int position, int the_number_of_comment){
@@ -139,6 +173,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
             @Override
             public void fail() {
                 Log.d("gilsoo", "getPrefetchingImageFromServer::: fail");
+
                 CallManagement.getInstance(getContext()).subtractCall("requestPrefetchingList", false);
             }
         });
@@ -149,31 +184,13 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
         InteractionManager.getInstance(getContext()).requestContentThumbnailDownload(MyConfig.myInfo.getUser_no(), current_page, new OnMyApiListener() {
             @Override
             public void success(Object response) {
-                Log.d("gilsoo", "getThumbnailContentsFromServer::: success");
-
-                List<ContentInfo> contentInfoList = (List<ContentInfo>) response;
-
-                for (int i = 0; i < contentInfoList.size(); i++) {
-                    if (contentInfoList.get(i).getHash_list() != null) {
-                        for (int j = 0; j < contentInfoList.get(i).getHash_list().size(); j++) {
-                            Log.d(TAG, "빅해쉬테스트 : " + contentInfoList.get(i).getHash_list().get(j).getBighash_no() + ", " + contentInfoList.get(i).getHash_list().get(j).getBighash_name());
-                        }
-                    }
-                    Log.d(TAG, "빅해쉬테스트 : 절취선 =================================");
-                }
-
-                for (int i = 0; i < contentInfoList.size(); i++) {
-                    if (contentInfoList.get(i).getSmallHash_list() != null) {
-                        for (int j = 0; j < contentInfoList.get(i).getSmallHash_list().size(); j++) {
-                            Log.d(TAG, "스몰해시테스트 : " + contentInfoList.get(i).getSmallHash_list().get(j).getSmallhash_name() + " , " + contentInfoList.get(i).getSmallHash_list().get(j).getSmallhash_no());
-                        }
-                    }
-                }
+                contentInfoList = (List<ContentInfo>) response;
                 if (getActivity() != null) {
                     if (mAdapter == null) {
                         Log.d(TAG, "contentInfoList size : " + contentInfoList.size());
                         mAdapter = new TimelineAdapter(getContext(), contentInfoList, getActivity().getSupportFragmentManager());
                         mRecyclerView.setAdapter(mAdapter);
+                        mAdapter.setTimelineAdapterInstance(mAdapter);
                     } else {
                         Log.d(TAG, "contentInfoList size : " + contentInfoList.size());
                         mAdapter.addContentInfo(contentInfoList);
@@ -181,7 +198,6 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
                     }
                 }
             }
-
             @Override
             public void fail() {
                 Log.d("gilsoo", "getThumbnailContentsFromServer::: fail");
@@ -194,5 +210,23 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
 
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "fragmentTest!! onDestroyView in TimelineFragment");
+        super.onDestroyView();
+    }
+
+    public void setBackPosition(int position){
+        Log.d(TAG, "fragmentTest 여기왜작동안해 " + position);
+        backPosition =  position;
+        Log.d(TAG, "fragmentTest 여기왜작동안해 " + + backPosition + " , " + position);
+        mRecyclerView.scrollToPosition(backPosition);
+    }
 
 }

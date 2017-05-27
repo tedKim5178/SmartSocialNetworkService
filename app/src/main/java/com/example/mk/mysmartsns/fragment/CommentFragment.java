@@ -2,6 +2,7 @@ package com.example.mk.mysmartsns.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +17,9 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.example.mk.mysmartsns.R;
 import com.example.mk.mysmartsns.adapter.CommentAdapter;
+import com.example.mk.mysmartsns.config.APIConfig;
 import com.example.mk.mysmartsns.config.MyConfig;
+import com.example.mk.mysmartsns.fragment.fragment_main.TimelineFragment;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.network.info.CommentInfo;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
@@ -47,29 +50,19 @@ public class CommentFragment extends android.support.v4.app.Fragment {
 
     CommentAdapter commentAdapter;
     List<CommentInfo> commentInfoList;
-    int content_no;
-    int user_no;
-    int position;
-    String host_no;
-    String content_url;
-    String width;
-    String height;
     ContentInfo contentInfo;
+    FragmentManager fragmentManager;
 
-    public static CommentFragment newInstance(ContentInfo contentInfo) {
+    int position = 0;
+
+    public static CommentFragment newInstance(ContentInfo contentInfo, FragmentManager fragmentManager, int position) {
         CommentFragment fragment = new CommentFragment();
         Bundle bundle = new Bundle();
-//        bundle.putInt("content_no", content_no);
-//        bundle.putInt("user_no", user_no);
-//        bundle.putInt("position", position);
-//        bundle.putString("host_no", host_no);
-//        bundle.putString("content_url", content_url);
-//        bundle.putString("width", width);
-//        bundle.putString("height", height);
-
         bundle.putSerializable("content_info", contentInfo);
         fragment.setArguments(bundle);
-
+        fragment.position = position;
+        // 이런식으로하면 값 전달이 되려나..?
+        fragment.fragmentManager = fragmentManager;
         return fragment;
     }
 
@@ -81,16 +74,9 @@ public class CommentFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "fragmentTest 2");
         if(getArguments() != null){
-            user_no = getArguments().getInt("user_no");
-//            host_no = getArguments().getString("host_no");
-            position = getArguments().getInt("position");
-            content_url = getArguments().getString("content_url");
-            width = getArguments().getString("width");
-            height = getArguments().getString("height");
-
             this.contentInfo = (ContentInfo)getArguments().getSerializable("content_info");
-
         }
     }
 
@@ -101,14 +87,15 @@ public class CommentFragment extends android.support.v4.app.Fragment {
         ButterKnife.bind(this, view);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView_in_comment.setLayoutManager(linearLayoutManager);
-        Log.d(TAG, "레이아웃크기테스트 width, height in comment fragment: " +width + " , " + height);
-
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Integer.parseInt(contentInfo.getContent_width()), Integer.parseInt(contentInfo.getContent_height()));
         content_image_in_comment_fragment.setLayoutParams(params);
+        content_image_in_comment_fragment.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
-        Glide.with(this).load(contentInfo.getContent_url()).into(content_image_in_comment_fragment);
+        // 이미지 넣기!
+        Glide.with(this).load(APIConfig.baseUrl + "/" + contentInfo.getContent_url()).into(content_image_in_comment_fragment);
 
+        // 댓글 목록 recyclerview 정보 주고 연결해줘야함
         InteractionManager.getInstance(getContext()).requestDownloadComment(contentInfo.getContent_no(), new OnMyApiListener() {
             @Override
             public void success(Object response) {
@@ -116,9 +103,6 @@ public class CommentFragment extends android.support.v4.app.Fragment {
                 // commentInfoList 써서 화면에 보여줘야함..! 즉 adapter 초기화 여기서..!
                 commentAdapter = new CommentAdapter(getContext(),commentInfoList);
                 recyclerView_in_comment.setAdapter(commentAdapter);
-                Log.d(TAG, "requestComment보기" + commentInfoList.size());
-                for(int i=0; i<commentInfoList.size(); i++){
-                }
             }
 
             @Override
@@ -182,8 +166,22 @@ public class CommentFragment extends android.support.v4.app.Fragment {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "이거나오는지테스트");
+
+        // Destroy 되기 전에 position을 넘겨주자
+        Log.d(TAG, "fragmentTest!! Comment fragment destroy!!");
         super.onDestroy();
     }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "fragmentTest onDestroyView in CommentFragment and position : " + position);
+        TimelineFragment timelineFragment = TimelineFragment.getInstance();
+        timelineFragment.setBackPosition(position);
+        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.frame_layout, timelineFragment, "timeline_fragment");
+        transaction.commit();
+        super.onDestroyView();
+    }
+
 
 }

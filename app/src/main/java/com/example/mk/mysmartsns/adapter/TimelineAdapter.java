@@ -31,6 +31,7 @@ import com.example.mk.mysmartsns.fragment.CommentFragment;
 import com.example.mk.mysmartsns.fragment.LikeFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.MyTimelineFragment;
 import com.example.mk.mysmartsns.fragment.fragment_main.SearchFragment;
+import com.example.mk.mysmartsns.fragment.fragment_main.TimelineFragment;
 import com.example.mk.mysmartsns.interfaces.OnMyApiListener;
 import com.example.mk.mysmartsns.network.info.ContentInfo;
 import com.example.mk.mysmartsns.network.manager.InteractionManager;
@@ -56,12 +57,26 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
     private Context mContext;
     Spannable span;
 
+    static TimelineAdapter timelineAdapter;
+
     private FragmentManager fragmentManager;
     //    EndlessScrollListener endlessScrollListener;
     public List<ContentInfo> contentInfoList;
 //    public void setEndlessScrollListener(EndlessScrollListener endlessScrollListener){
 //        this.endlessScrollListener = endlessScrollListener;
 //    }
+
+    public static TimelineAdapter getTimelineAdapterInstance(){
+        return timelineAdapter;
+    }
+
+    public static void setTimelineAdapterInstance(TimelineAdapter tAdapter){
+        timelineAdapter = tAdapter;
+    }
+
+    public static void setTimelineAdapterNull(){
+        timelineAdapter = null;
+    }
 
     public TimelineAdapter(Context mContext, List<ContentInfo> contentInfoList, FragmentManager fragmentManager){
         this.mContext = mContext;
@@ -295,55 +310,29 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
 
             }else if(viewId == R.id.comment_button){
                 // 댓글 버튼 눌렀을 때 이벤트
-                String content_url = APIConfig.baseUrl + "/" + contentInfoList.get(position).getContent_url();
-                int user_no = MyConfig.myInfo.getUser_no();
-                int content_no = contentInfoList.get(position).getContent_no();
-                String width = contentInfoList.get(position).getContent_width();
-                String height = contentInfoList.get(position).getContent_height();
-                String host_no = contentInfoList.get(position).getContent_host_no();
-                Log.d(TAG, "댓글눌렀을때테스트 host_no : " + host_no);
                 android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(contentInfoList.get(position)), "nav_comment_fragment");
+                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(contentInfoList.get(position), fragmentManager, position), "nav_comment_fragment");
                 transaction.addToBackStack("");
                 transaction.commit();
-
-//                Toast.makeText(mContext, "댓글 클릭", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(mContext, CommentActivity.class);
-//                intent.putExtra("position", getLayoutPosition());
-//                intent.putExtra("content_no", contentInfoList.get(position).getContent_no());
-//                intent.putExtra("user_no", MyConfig.myInfo.getUser_no());
-//                ((Activity)mContext).startActivityForResult(intent, 0);
 
             }else if(viewId == R.id.the_number_of_comments){
-                String content_url = APIConfig.baseUrl + "/" + contentInfoList.get(position).getContent_url();
 
-                int user_no = MyConfig.myInfo.getUser_no();
-                int content_no = contentInfoList.get(position).getContent_no();
-                String host_no = contentInfoList.get(position).getContent_host_no();
-                Log.d(TAG, "댓글눌렀을때테스트 host_no : " + host_no);
-                String width = contentInfoList.get(position).getContent_width();
-                String height = contentInfoList.get(position).getContent_height();
+                Log.d(TAG, "comment button clicked !!");
                 android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(contentInfoList.get(position)), "nav_comment_fragment");
-                transaction.addToBackStack("");
+                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(contentInfoList.get(position), fragmentManager, position), "nav_comment_fragment");
                 transaction.commit();
-
-//                Toast.makeText(mContext, "댓글 버튼 클릭", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(mContext, CommentActivity.class);
-//                intent.putExtra("position", getLayoutPosition());
-//                intent.putExtra("user_no", MyConfig.myInfo.getUser_no());
-//                intent.putExtra("content_no", contentInfoList.get(position).getContent_no());
-//                ((Activity)mContext).startActivityForResult(intent, 0);
 
             }else if(viewId == R.id.poster_profile_view){           // 상대방 타임라인 방문
                 if(Integer.parseInt(contentInfoList.get(position).getContent_host_no()) == MyConfig.myInfo.getUser_no()){
                     android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    // TODO:: 다른사람 타임라인 방문할 때 추가적으로 profile_url도 넘겨줘야함
                     transaction.replace(R.id.frame_layout, MyTimelineFragment.newInstance(), "nav_my_timeline_fragment");
                     transaction.addToBackStack("");
                     transaction.commit();
                 }else{
                     Intent intent = new Intent(mContext, OtherTimelineActivity.class);
                     intent.putExtra("user_no", MyConfig.myInfo.getUser_no());
+                    intent.putExtra("host_profile_url", contentInfoList.get(position).getContent_host_profile_url());
                     Log.d(TAG, "host_no : " + contentInfoList.get(position).getContent_host_no());
                     intent.putExtra("host_no", contentInfoList.get(position).getContent_host_no());
                     mContext.startActivity(intent);
@@ -477,4 +466,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
             contentInfoList.add(contentInfos.get(i));
         }
     }
+
+
 }

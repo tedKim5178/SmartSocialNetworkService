@@ -47,6 +47,7 @@ public class MyTimelineFragment extends android.support.v4.app.Fragment {
         View view =  inflater.inflate(R.layout.fragment_my_timeline, container, false);
         Log.d(TAG, "프레그먼트2속온크리에이트");
 
+
         imgMyTimeline = (ImageView)view.findViewById(R.id.imgMyTimeline);
 
         Toast.makeText(getContext(), MyConfig.myInfo.getUser_profile_url(),Toast.LENGTH_SHORT).show();
