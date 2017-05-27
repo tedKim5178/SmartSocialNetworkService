@@ -187,6 +187,17 @@ public class PostFragment extends android.support.v4.app.Fragment implements Vie
             smallList.add(smallHashIndexList.get(i).getHash());
         String jsonSmallHash = gson.toJson(smallList);                          // smallhash 정보를 json형태로 바꾼다.
 
+//        InteractionManager.getInstance(getActivity().getBaseContext()).requestIncreaseTotal(new OnMyApiListener() {
+//            @Override
+//            public void success(Object response) {
+//                Log.d(TAG, "requestIncreaseTotal Success");
+//            }
+//
+//            @Override
+//            public void fail() {
+//                Log.d(TAG, "requestIncreaseTotal Fail");
+//            }
+//        });
         InteractionManager.getInstance(getActivity().getBaseContext())
                 .requestContentUpload(imagePath, description, String.valueOf(MyConfig.myInfo.getUser_no()), jsonBigHash, jsonSmallHash, new OnMyApiListener() {      // "1"->user_no
                     @Override

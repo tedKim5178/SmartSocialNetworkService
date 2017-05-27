@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.DiffUtil;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.mk.mysmartsns.R;
 import com.example.mk.mysmartsns.config.APIConfig;
 import com.example.mk.mysmartsns.config.MyConfig;
@@ -92,6 +96,10 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
         });
 
 
+        // 시작 측정
+        final long start = System.currentTimeMillis();
+
+
         // 서버와 통신하여 original image url 과 original image size를 받아온다.
         CallManagement.getInstance(getBaseContext()).addCall(DOWNLOAD_ORIGINAL_IMAGE, true);
         InteractionManager.getInstance(this).requestContentOriginalDownload(thumbnail_url,bigHashInfo, smallHashInfo, user_no, new OnMyApiListener() {
@@ -106,7 +114,23 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
                         progressPrefetch.setProgress(100);
                         textPrefetch.setText(file.getName());
 //                        original_image_view.setImageURI(Uri.fromFile(file));
-                        Glide.with(OriginalImageActivity.this).load(file).error(R.drawable.ic_close).into(original_image_view);
+                        Glide.with(OriginalImageActivity.this).load(file).error(R.drawable.ic_close).listener(new RequestListener<File, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, File model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                Log.d(TAG, "실행 시간 : onException 로컬");
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, File model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                long end = System.currentTimeMillis();
+                                Log.d(TAG, "실행 시간 : onResourceReady 로컬");
+
+                                Log.d(TAG, "실행 시간 : " + ( end - start )/1000.0 );
+                                return false;
+                            }
+                        }).into(original_image_view);
+
                     }else if(file.exists() && file.length() < contentInfo.getContent_size()){                     // 로컬에 일부분만 받아져 있다면
                         isFollowing = true;
                         Log.d(TAG, "InLocal&Server :: file.length() : " + file.length() + ", content_size : " + contentInfo.getContent_size());
@@ -124,7 +148,22 @@ public class OriginalImageActivity extends AppCompatActivity implements ResumeDo
                         }
                         Toast.makeText(getBaseContext(), "서버에서 이미지 로드", Toast.LENGTH_SHORT).show();
                         textPrefetch.setText("not prefetched image.");
-                        Glide.with(OriginalImageActivity.this).load(APIConfig.baseUrl + contentInfo.getContent_url()).into(original_image_view);
+                        Glide.with(OriginalImageActivity.this).load(APIConfig.baseUrl + contentInfo.getContent_url()).listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                Log.d(TAG, "실행 시간 : onException 서버");
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                Log.d(TAG, "실행 시간 : onResourceReady 서버");
+                                long end = System.currentTimeMillis();
+                                Log.d(TAG, "실행 시간 : " + ( end - start )/1000.0 );
+                                return false;
+                            }
+                        }).into(original_image_view);
+
                     }
 
                 }
