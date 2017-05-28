@@ -110,6 +110,8 @@ public class CallManagement implements ResumeDownloadListener{
         if(!PrefetchConfig.prefetching_queue.isEmpty()) {
             MainActivity.updateProgressBar(new Message(0,PrefetchConfig.prefetching_queue.peek() ,100));
             PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek()).startPrefetching();
+        }else{
+            MainActivity.updateProgressBar(new Message(100, "Prefetch Completed",100));
         }
     }
 
