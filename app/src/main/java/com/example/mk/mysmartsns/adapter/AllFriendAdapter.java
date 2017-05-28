@@ -17,6 +17,10 @@ import com.example.mk.mysmartsns.network.info.UserInfo;
 
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+
+import static com.example.mk.mysmartsns.config.APIConfig.baseUrl;
+
 /**
  * Created by mk on 2017-02-15.
  */
@@ -26,7 +30,7 @@ import java.util.List;
  */
 
 public class AllFriendAdapter extends RecyclerView.Adapter<AllFriendAdapter.AllFriendViewHolder>{
-    private static final String TAG = LikeAdapter.class.getSimpleName();
+    private static final String TAG = AllFriendAdapter.class.getSimpleName();
     private Context mContext;
     TimelineAdapter.EndlessScrollListener endlessScrollListener;
     List<UserInfo> userInfoList;
@@ -47,7 +51,8 @@ public class AllFriendAdapter extends RecyclerView.Adapter<AllFriendAdapter.AllF
     public void onBindViewHolder(AllFriendViewHolder holder, int position) {
         Log.d(TAG, "친구검색테스트 in onBIndViewHolder" );
         if(userInfoList.get(position).getUser_profile_url() != null){
-            Glide.with(mContext).load(userInfoList.get(position).getUser_profile_url()).into(holder.friend_profile_in_friend_search_fragment);
+            // TODO :: check
+            Glide.with(mContext).load(baseUrl + userInfoList.get(position).getUser_profile_url()).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.friend_profile_in_friend_search_fragment);
         }else{
             Glide.with(mContext).load(R.drawable.personurl).into(holder.friend_profile_in_friend_search_fragment);
         }
