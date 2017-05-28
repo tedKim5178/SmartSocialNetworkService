@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/headerLayout"
+        android:id= "@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/progress_height"
         android:orientation="vertical"
