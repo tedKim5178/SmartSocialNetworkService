@@ -45,7 +45,7 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
     public static TimelineFragment newInstance() {
         TimelineFragment fragment = new TimelineFragment();
         timelineFragment = fragment;
-        return timelineFragment;
+        return  timelineFragment;
     }
 
     public static TimelineFragment getInstance(){
@@ -68,18 +68,12 @@ public class TimelineFragment extends android.support.v4.app.Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Log.d(TAG, "여기1");
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        Log.d(TAG, "여기2");
-
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        Log.d(TAG, "여기3");
         if(TimelineAdapter.getTimelineAdapterInstance() != null){
             mAdapter = TimelineAdapter.getTimelineAdapterInstance();
-            Log.d(TAG, "여기4");
         }
-        Log.d(TAG, "여기5");
         // mAdapter 가 null이라는 뜻은 이 fragment가 처음으로 attach됬단 뜻이다.
         // mAdapter null이 아니라면 else 부분에서 원래의 포지션 값으로 보내주는 역할을 수행하자 원래 데이터를 이용해서 뷰를 구성해야한다
         // 서버로부터 총 아이템 갯수 가져오자.!

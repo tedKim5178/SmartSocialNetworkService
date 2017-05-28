@@ -88,6 +88,7 @@ public class CommentFragment extends android.support.v4.app.Fragment {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView_in_comment.setLayoutManager(linearLayoutManager);
 
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Integer.parseInt(contentInfo.getContent_width()), Integer.parseInt(contentInfo.getContent_height()));
         content_image_in_comment_fragment.setLayoutParams(params);
         content_image_in_comment_fragment.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -176,7 +177,7 @@ public class CommentFragment extends android.support.v4.app.Fragment {
     public void onDestroyView() {
         Log.d(TAG, "fragmentTest onDestroyView in CommentFragment and position : " + position);
         TimelineFragment timelineFragment = TimelineFragment.getInstance();
-        timelineFragment.setBackPosition(position);
+        timelineFragment.setBackPosition( position);
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frame_layout, timelineFragment, "timeline_fragment");
         transaction.commit();
