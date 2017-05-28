@@ -9,7 +9,7 @@
     android:id="@+id/relative_layout_in_comment_activity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id= "@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="?attr/colorPrimary"
