@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         onShowProgressbar(PrefetchConfig.isPrefetchingShow);
 
 
-
+        deletePrefetchedFiles();
 
         // Butterknife bind
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -111,10 +111,10 @@ public class MainActivity extends AppCompatActivity {
                                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                                 Log.d(TAG, "프레그먼트 테스트 : " + fragment.getTag().equals("post_fragment"));
                                 if (!fragment.getTag().equals("post_fragment")) {
+                                    transaction.replace(R.id.frame_layout, new PostFragment(), "post_fragment");
                                     if (fragment.getTag().equals("timeline_fragment")) {
                                         transaction.addToBackStack(null);
                                     }
-                                    transaction.remove(fragment).replace(R.id.frame_layout, new PostFragment(), "post_fragment");
                                     transaction.commit();
                                 }
                                 break;
@@ -123,10 +123,11 @@ public class MainActivity extends AppCompatActivity {
                                 if(bottomNavigationView.getMenu().getItem(0).isChecked())
                                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                                 if (!fragment.getTag().equals("my_timeline_fragment")) {
+
+                                    transaction.replace(R.id.frame_layout, MyTimelineFragment.newInstance(), "my_timeline_fragment");
                                     if (fragment.getTag().equals("timeline_fragment")) {
                                         transaction.addToBackStack(null);
                                     }
-                                    transaction.remove(fragment).replace(R.id.frame_layout, MyTimelineFragment.newInstance(), "my_timeline_fragment");
                                     transaction.commit();
                                 }
                                 break;
@@ -166,16 +167,19 @@ public class MainActivity extends AppCompatActivity {
                     || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("search_fragment")
                     || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("post_fragment")
                     || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("my_timeline_fragment")
-                    || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("setting_fragment")){
+                    || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("setting_fragment")
+                    || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("nav_comment_fragment")
+                    || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("nav_like_fragment")){
 //                fragmentManager.beginTransaction().setCustomAnimations(R.anim.activity_transition_end_enter, R.anim.activity_transition_end_exit);
                 fragmentManager.popBackStack();
-                Menu menu = bottomNavigationView.getMenu();
-                for(int i=0; i<menu.size(); i++) {
-                    if(i==0)
-                        menu.getItem(i).setChecked(true);
-                    else
-                        menu.getItem(i).setChecked(false);
-                }
+
+//                Menu menu = bottomNavigationView.getMenu();
+//                for(int i=0; i<menu.size(); i++) {
+//                    if(i==0)
+//                        menu.getItem(i).setChecked(true);
+//                    else
+//                        menu.getItem(i).setChecked(false);
+//                }
                 return;
             }
 //            fragmentManager.beginTransaction().replace(R.id.frame_layout, TimelineFragment.newInstance(),"timeline_fragment")
@@ -272,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // adapter null로..!
-        TimelineAdapter.setTimelineAdapterNull();
 
         PrefetchDownload.newInstance(new ResumeDownloadListener() {
             @Override

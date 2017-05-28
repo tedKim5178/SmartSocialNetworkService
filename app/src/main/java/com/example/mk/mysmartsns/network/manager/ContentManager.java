@@ -439,6 +439,7 @@ public class ContentManager {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d(TAG, "requestContentUpload::onFailure() : " + t.getMessage());
                 t.printStackTrace();
+                listener.fail();
                 callManagement.subtractCall("requestContentUpload", false);
             }
         });

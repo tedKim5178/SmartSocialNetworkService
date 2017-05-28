@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -206,6 +207,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements Vie
                         progressDialog.dismiss();
                         uploadEditText.setText(" ");
                         android.support.v4.app.FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         transaction.replace(R.id.frame_layout, TimelineFragment.newInstance(), "timeline_fragment");
                         transaction.commit();
                     }
@@ -215,6 +217,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements Vie
 
                     }
                 });
+
         progressDialog = ProgressDialog.show(new ContextThemeWrapper(getActivity()
                 , R.style.AppTheme_PopupOverlay), "", "업로드 중입니다. ", false);
     }
@@ -368,4 +371,15 @@ public class PostFragment extends android.support.v4.app.Fragment implements Vie
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView");
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDetach() {
+        Log.d(TAG, "onDetach");
+        super.onDetach();
+    }
 }

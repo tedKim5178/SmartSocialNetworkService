@@ -2,6 +2,7 @@ package com.example.mk.mysmartsns.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,18 +52,14 @@ public class CommentFragment extends android.support.v4.app.Fragment {
     CommentAdapter commentAdapter;
     List<CommentInfo> commentInfoList;
     ContentInfo contentInfo;
-    FragmentManager fragmentManager;
 
-    int position = 0;
 
-    public static CommentFragment newInstance(ContentInfo contentInfo, FragmentManager fragmentManager, int position) {
+    public static CommentFragment newInstance(ContentInfo contentInfo) {
         CommentFragment fragment = new CommentFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("content_info", contentInfo);
         fragment.setArguments(bundle);
-        fragment.position = position;
         // 이런식으로하면 값 전달이 되려나..?
-        fragment.fragmentManager = fragmentManager;
         return fragment;
     }
 
@@ -174,12 +171,6 @@ public class CommentFragment extends android.support.v4.app.Fragment {
 
     @Override
     public void onDestroyView() {
-        Log.d(TAG, "fragmentTest onDestroyView in CommentFragment and position : " + position);
-        TimelineFragment timelineFragment = TimelineFragment.getInstance();
-        timelineFragment.setBackPosition(position);
-        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frame_layout, timelineFragment, "timeline_fragment");
-        transaction.commit();
         super.onDestroyView();
     }
 

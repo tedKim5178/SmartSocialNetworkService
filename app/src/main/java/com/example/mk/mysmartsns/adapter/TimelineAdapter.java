@@ -57,26 +57,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
     private Context mContext;
     Spannable span;
 
-    static TimelineAdapter timelineAdapter;
-
     private FragmentManager fragmentManager;
     //    EndlessScrollListener endlessScrollListener;
     public List<ContentInfo> contentInfoList;
-//    public void setEndlessScrollListener(EndlessScrollListener endlessScrollListener){
-//        this.endlessScrollListener = endlessScrollListener;
-//    }
-
-    public static TimelineAdapter getTimelineAdapterInstance(){
-        return timelineAdapter;
-    }
-
-    public static void setTimelineAdapterInstance(TimelineAdapter tAdapter){
-        timelineAdapter = tAdapter;
-    }
-
-    public static void setTimelineAdapterNull(){
-        timelineAdapter = null;
-    }
 
     public TimelineAdapter(Context mContext, List<ContentInfo> contentInfoList, FragmentManager fragmentManager){
         this.mContext = mContext;
@@ -141,7 +124,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
                         }
                         Log.d(TAG, "빅해쉬카운트테스트 in TimelineAdapter : " + bighash_no);
                         transaction.replace(R.id.frame_layout, SearchFragment.newInstance(hashText.getText().toString().substring(1), bighash_no, 0), "nav_search_fragment");
-                        transaction.addToBackStack("hash_serach_fragment");
+                        transaction.addToBackStack("");
                         transaction.commit();
                     }
                 });
@@ -311,7 +294,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
             }else if(viewId == R.id.comment_button){
                 // 댓글 버튼 눌렀을 때 이벤트
                 android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(contentInfoList.get(position), fragmentManager, position), "nav_comment_fragment");
+                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(contentInfoList.get(position)), "nav_comment_fragment");
                 transaction.addToBackStack("");
                 transaction.commit();
 
@@ -319,7 +302,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.PostVi
 
                 Log.d(TAG, "comment button clicked !!");
                 android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(contentInfoList.get(position), fragmentManager, position), "nav_comment_fragment");
+                transaction.replace(R.id.frame_layout, CommentFragment.newInstance(contentInfoList.get(position)), "nav_comment_fragment");
+                transaction.addToBackStack("");
                 transaction.commit();
 
             }else if(viewId == R.id.poster_profile_view){           // 상대방 타임라인 방문

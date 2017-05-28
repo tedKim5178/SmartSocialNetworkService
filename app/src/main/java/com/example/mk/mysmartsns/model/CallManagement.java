@@ -73,6 +73,7 @@ public class CallManagement implements ResumeDownloadListener{
         printCall();
         if(count == callManageHashMap.size()){
             if(PrefetchConfig.prefetching_queue.size() != 0) {
+                Log.d(TAG, "CallManagementff queue start after subTract");
                 PrefetchDownload.newInstance(this).initUrl(APIConfig.prefetchUrl + PrefetchConfig.prefetching_queue.peek()).startPrefetching();
             }
         }

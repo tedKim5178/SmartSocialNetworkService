@@ -6,6 +6,7 @@
     >
 
     <ImageView
+        android:padding="4dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/person_profile_who_like_post"/>

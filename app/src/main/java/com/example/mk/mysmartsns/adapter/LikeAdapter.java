@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.mk.mysmartsns.R;
 import com.example.mk.mysmartsns.activity.OtherTimelineActivity;
+import com.example.mk.mysmartsns.config.APIConfig;
 import com.example.mk.mysmartsns.config.MyConfig;
 import com.example.mk.mysmartsns.fragment.fragment_main.MyTimelineFragment;
 import com.example.mk.mysmartsns.network.info.UserInfo;
@@ -56,7 +57,7 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeViewHolder
         if(userInfoList.get(position).getUser_profile_url() == null){
             Glide.with(mContext).load(R.drawable.personurl).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.person_profile_like_this_post);
         }else{
-            Glide.with(mContext).load(Uri.parse(userInfoList.get(position).getUser_profile_url())).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.person_profile_like_this_post);
+            Glide.with(mContext).load(Uri.parse(APIConfig.baseUrl + userInfoList.get(position).getUser_profile_url())).bitmapTransform(new CropCircleTransformation(mContext)).into(holder.person_profile_like_this_post);
         }
         Log.d(TAG, "Like리사이클러뷰 정상작동 position " + position);
         holder.person_name_like_this_post.setText(userInfoList.get(position).getUser_name());

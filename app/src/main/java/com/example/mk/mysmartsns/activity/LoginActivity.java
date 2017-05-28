@@ -101,7 +101,6 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
         switch (clicked){
             case R.id.login_button:
             {
-                Toast.makeText(this, "login button clicked", Toast.LENGTH_SHORT).show();
                 // edit text에 있는거 가져오자
                 String id = id_editText.getText().toString();
                 String password = password_editText.getText().toString();

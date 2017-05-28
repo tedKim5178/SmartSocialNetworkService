@@ -12,14 +12,18 @@
         android:orientation="vertical"
         android:background="?attr/colorPrimary">
         <ProgressBar
-            android:id="@+id/progressPrefetch"
+            android:id= "@+id/progressPrefetch"
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"/>
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
         <TextView
             android:id="@+id/textPrefetch"
+            android:textColor="#ffffff"
             android:layout_width="match_parent"
+            android:text="Tesdsdst"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"/>
