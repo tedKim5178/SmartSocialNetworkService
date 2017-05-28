@@ -99,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
                                 if(bottomNavigationView.getMenu().getItem(0).isChecked())
                                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                                 if (!fragment.getTag().equals("search_fragment")) {
-//                                    if (fragment.getTag().equals("timeline_fragment")) {
-//                                        transaction.addToBackStack(null);
-//                                    }
+                                    if (fragment.getTag().equals("timeline_fragment")) {
+                                        transaction.addToBackStack(null);
+                                    }
                                     transaction.remove(fragment).replace(R.id.frame_layout, SearchFragment.newInstance(), "search_fragment");
                                     transaction.commit();
                                 }
@@ -111,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
                                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                                 Log.d(TAG, "프레그먼트 테스트 : " + fragment.getTag().equals("post_fragment"));
                                 if (!fragment.getTag().equals("post_fragment")) {
-//                                    if (fragment.getTag().equals("timeline_fragment")) {
-//                                        transaction.addToBackStack(null);
-//                                    }
+                                    if (fragment.getTag().equals("timeline_fragment")) {
+                                        transaction.addToBackStack(null);
+                                    }
                                     transaction.remove(fragment).replace(R.id.frame_layout, new PostFragment(), "post_fragment");
                                     transaction.commit();
                                 }
@@ -123,9 +123,9 @@ public class MainActivity extends AppCompatActivity {
                                 if(bottomNavigationView.getMenu().getItem(0).isChecked())
                                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                                 if (!fragment.getTag().equals("my_timeline_fragment")) {
-//                                    if (fragment.getTag().equals("timeline_fragment")) {
-//                                        transaction.addToBackStack(null);
-//                                    }
+                                    if (fragment.getTag().equals("timeline_fragment")) {
+                                        transaction.addToBackStack(null);
+                                    }
                                     transaction.remove(fragment).replace(R.id.frame_layout, MyTimelineFragment.newInstance(), "my_timeline_fragment");
                                     transaction.commit();
                                 }
@@ -135,9 +135,9 @@ public class MainActivity extends AppCompatActivity {
                                 if(bottomNavigationView.getMenu().getItem(0).isChecked())
                                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                                 if (!fragment.getTag().equals("setting_fragment")) {
-//                                    if (fragment.getTag().equals("timeline_fragment")) {
-//                                        transaction.addToBackStack(null);
-//                                    }
+                                    if (fragment.getTag().equals("timeline_fragment")) {
+                                        transaction.addToBackStack(null);
+                                    }
                                     transaction.remove(fragment).replace(R.id.frame_layout, SettingFragment.newInstance(), "setting_fragment");
                                     transaction.commit();
 
@@ -162,20 +162,31 @@ public class MainActivity extends AppCompatActivity {
 //        Toast.makeText(this, fragment.getTag() +", "+ fragmentManager.getBackStackEntryCount(), Toast.LENGTH_SHORT).show();
         if(!fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("timeline_fragment")){
             if(fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("nav_search_fragment")
-                    || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("nav_my_timeline_fragment")){
+                    || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("nav_my_timeline_fragment")
+                    || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("search_fragment")
+                    || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("post_fragment")
+                    || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("my_timeline_fragment")
+                    || fragmentManager.findFragmentById(R.id.frame_layout).getTag().equals("setting_fragment")){
 //                fragmentManager.beginTransaction().setCustomAnimations(R.anim.activity_transition_end_enter, R.anim.activity_transition_end_exit);
                 fragmentManager.popBackStack();
+                Menu menu = bottomNavigationView.getMenu();
+                for(int i=0; i<menu.size(); i++) {
+                    if(i==0)
+                        menu.getItem(i).setChecked(true);
+                    else
+                        menu.getItem(i).setChecked(false);
+                }
                 return;
             }
-            fragmentManager.beginTransaction().replace(R.id.frame_layout, TimelineFragment.newInstance(),"timeline_fragment")
-                    .setCustomAnimations(R.anim.activity_transition_end_enter, R.anim.activity_transition_end_exit).commit();
-            Menu menu = bottomNavigationView.getMenu();
-            for(int i=0; i<menu.size(); i++) {
-                if(i==0)
-                    menu.getItem(i).setChecked(true);
-                else
-                    menu.getItem(i).setChecked(false);
-            }
+//            fragmentManager.beginTransaction().replace(R.id.frame_layout, TimelineFragment.newInstance(),"timeline_fragment")
+//                    .setCustomAnimations(R.anim.activity_transition_end_enter, R.anim.activity_transition_end_exit).commit();
+//            Menu menu = bottomNavigationView.getMenu();
+//            for(int i=0; i<menu.size(); i++) {
+//                if(i==0)
+//                    menu.getItem(i).setChecked(true);
+//                else
+//                    menu.getItem(i).setChecked(false);
+//            }
         }
         else{
             if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
