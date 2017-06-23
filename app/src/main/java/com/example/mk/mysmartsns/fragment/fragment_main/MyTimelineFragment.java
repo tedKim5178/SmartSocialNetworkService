@@ -53,8 +53,10 @@ public class MyTimelineFragment extends android.support.v4.app.Fragment {
         Toast.makeText(getContext(), MyConfig.myInfo.getUser_profile_url(),Toast.LENGTH_SHORT).show();
         if(MyConfig.myInfo.getUser_profile_url() == null)
             Glide.with(getContext()).load(R.drawable.personurl).bitmapTransform(new CropCircleTransformation(getContext())).into(imgMyTimeline);
-        else
+        else {
+            Log.d(TAG, "프로필테스트 : " + APIConfig.baseUrl + "/" + MyConfig.myInfo.getUser_profile_url());
             Glide.with(getContext()).load(APIConfig.baseUrl + "/" + MyConfig.myInfo.getUser_profile_url()).bitmapTransform(new CropCircleTransformation(getContext())).into(imgMyTimeline);
+        }
         textMyTimeLineID = (TextView)view.findViewById(R.id.textMyTimeLineID);
         textMyTimeLineName = (TextView)view.findViewById(R.id.textMyTimeLineName);
         textMyTimeLineID.setText(MyConfig.myInfo.getUser_id());

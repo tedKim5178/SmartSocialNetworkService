@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,8 +49,10 @@ OtherTimelineActivity extends AppCompatActivity {
         imgOtherTimeline = (ImageView)findViewById(R.id.imgOtherTimeline);
         if(MyConfig.myInfo.getUser_profile_url() == null)
             Glide.with(this).load(R.drawable.personurl).bitmapTransform(new CropCircleTransformation(this)).into(imgOtherTimeline);
-        else
-            Glide.with(this).load(APIConfig.baseUrl + "/" + h_profile_url).bitmapTransform(new CropCircleTransformation(this)).into(imgOtherTimeline);
+        else {
+            Log.d(TAG, "프로필테스트 : " + APIConfig.baseUrl + "/" + h_profile_url);
+            Glide.with(this).load(APIConfig.baseUrl + "profile_image/" + h_profile_url).bitmapTransform(new CropCircleTransformation(this)).into(imgOtherTimeline);
+        }
         textOtherTimeLineID = (TextView)findViewById(R.id.texOtherTimeLineID);
         textOtherTimeLineName = (TextView)findViewById(R.id.textOtherTimeLineName);
         textOtherTimeLineID.setText("");
